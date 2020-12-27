@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.CronTaskMapper">
+    <resultMap id="BaseResultMap" type="com.aikang.Bean.CronTask">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="tabe" property="tabe" jdbcType="VARCHAR"/>
+        <result column="tabeid" property="tabeid" jdbcType="BIGINT"/>
+		<result column="last" property="last" jdbcType="VARCHAR"/>
+		<result column="cycle" property="cycle" jdbcType="INTEGER"/>
+    </resultMap> 
+    
+    <resultMap id="CronMap" type="com.aikang.Bean.Cron">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="cron" property="cron" jdbcType="VARCHAR"/>
+    </resultMap> 
+    <select id="getACron" resultMap="CronMap" statementType="PREPARED">
+        select * from cron where id=1;
+    </select>
+    
+    <select id="getAllCronTask" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from crontask;
+    </select>
+    
+    <delete id="deleteCronTaskByID">
+    	delete from crontask where id=#{id}
+  	</delete>
+  		
+  	<insert id="addCronTask">
+	    insert into crontask (company,tabe,tabeid,last,cycle) values    
+	      (
+	      #{record.company},
+	      #{record.tabe},
+	      #{record.tabeid},
+	      #{record.last},
+	      #{record.cycle}
+	      )
+	   
+	</insert>
+	<insert id="addListCronTask">
+	    insert into crontask (company,tabe,tabeid,last,cycle) values   
+	    <foreach collection="record" item="CronTask" separator=",">  
+	      (
+	      #{CronTask.company},
+	      #{CronTask.tabe},
+	      #{CronTask.tabeid},
+	      #{CronTask.last},
+	      #{CronTask.cycle}
+	      )
+	   </foreach>
+	</insert>
+	<update id="updateCronTaskByIDSelective" parameterType="com.aikang.Bean.CronTask" statementType="PREPARED">
+        update crontask
+        <set>
+            <if test="record.company != null">
+                num = #{record.company,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tabe != null">
+                type = #{record.tabe,jdbcType=VARCHAR},
+            </if>
+      		<if test="record.tabeid != null">
+                name = #{record.tabeid,jdbcType=BIGINT},
+            </if> 
+      		<if test="record.last != null">
+                mark = #{record.last,jdbcType=VARCHAR},
+            </if>
+           	<if test="record.cycle != null">
+                mark = #{record.cycle,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+</mapper>

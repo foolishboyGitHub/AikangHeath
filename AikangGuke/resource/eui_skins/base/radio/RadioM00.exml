@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RadioM00"  states="up,upAndSelected,downAndSelected,disabledAndSelected" currentState="up" xmlns:e="http://ns.egret.com/eui" width.downAndSelected="160" width.upAndSelected="160" height.downAndSelected="100" height.upAndSelected="100">
+    <e:Group width.disabledAndSelected="100%" height.disabledAndSelected="100%" width.up="100%" height.up="100%" width="100%" height="100%">
+
+        <e:Image fillMode="scale" alpha="1"                  source="service1058"                  source.upAndSelected="service1056"                                   horizontalCenter.disabledAndSelected="0" horizontalCenter.up="0" horizontalCenter="0" source.downAndSelected="service1056"/>
+        <e:Label id="labelDisplay" size="32" textColor="0x000000" textColor.upAndSelected="0x00ff00"  textAlign="center" verticalAlign="middle"                  fontFamily="Tahoma"  y="68" text="服务" y.disabledAndSelected="68" horizontalCenter.disabledAndSelected="0" horizontalCenter="0"/>
+    </e:Group>
+</e:Skin>

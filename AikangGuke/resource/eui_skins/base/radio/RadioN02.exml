@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RadioN02"  states="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" xmlns:e="http://ns.egret.com/eui">
+    <e:Group width="100%" height="100%">
+        <e:layout>
+            <e:HorizontalLayout verticalAlign="middle"/>
+        </e:layout>
+        <e:Image fillMode="scale" alpha="1" alpha.disabled="0.5" alpha.down="0.7"
+                 source="sexw74568"
+                 source.upAndSelected="sexw76568"
+                 source.downAndSelected="sexw76568"
+                 source.disabledAndSelected="sexw76568"/>
+        <e:Label id="labelDisplay" size="32" textColor="0xC0C0C0"
+                 textAlign="center" verticalAlign="middle"
+                 fontFamily="Tahoma"/>
+    </e:Group>
+</e:Skin>

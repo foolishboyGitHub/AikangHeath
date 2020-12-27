@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="normalTimeSetskin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Rect width="100%" height="100%" fillColor="0xedeae8"/>
+    <e:Button id="_btn_back" y="28" label="《——"  width="120" height="50" x="16" skinName="BtnN11Skin"/>
+    <e:Label id="lab_title"  text="营业额查询" size="40" width="500" style="l_brown_1"   bold="true" y="25" stroke="0.5" strokeColor="0x000000" textAlign="left" textColor="0x0b0c01" x="171" fontFamily="Tahoma"/>
+    <e:Scroller id="scrollMy" skinName="scrollHasNoBar" x="0" y="100" height="1160" width="720" anchorOffsetY="0">
+        <e:List id="listItem" width="800" height="395" itemRendererSkinName="normalTimeSetitem">
+          <e:ArrayCollection>
+            <e:Array>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+              <e:Object x="null"/>
+            </e:Array>
+          </e:ArrayCollection>
+					<e:layout>
+						<e:VerticalLayout gap="0"/>
+					</e:layout>
+        </e:List>
+      </e:Scroller>
+</e:Skin>

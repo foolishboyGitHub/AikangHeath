@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RadioL002" states="up,down,upAndSelected,downAndSelected,disabledAndSelected" xmlns:e="http://ns.egret.com/eui" height="46" width="380">
+    <e:Image x="0" source="chekBox338" width="32" height="32" verticalCenter="0"/>
+    <e:Image x="0" y="2" width="32" height="30" verticalCenter="0" source="chekBox336" source.up="" source.down="" source.upAndSelected="chekBox336" source.downAndSelected="chekBox336"/>
+    <e:Label id="labelDisplay" textAlign="left" verticalAlign="middle" 
+            x="50"  size="30" stroke="0.5" strokeColor="0x000000" text="" width="320" anchorOffsetX="0" height="40" verticalCenter="0" textColor="0xf7f0e8" fontFamily="Tahoma"/>
+</e:Skin>

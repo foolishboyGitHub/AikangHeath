@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="MainTableViewSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:ViewStack id="viewStack" width="100%" height="100%" x="0" y="0">
+		
+        <e:Group id="_group_business" name="page1" width="100%" height="100%">
+			<e:Rect width="100%" height="100%" x="0" y="0" fillColor="0xb51010" fillAlpha="0.5"/>
+		</e:Group>
+        <e:Group id="_group_worker" name="page2" width="100%" height="100%">
+			<e:Rect width="100%" height="100%" x="0" y="0" fillColor="0x651010"/>
+		</e:Group>
+        <e:Group id="_group_room" name="page3" width="100%" height="100%">
+			<e:Rect width="100%" height="100%" x="0" y="0" fillColor="0xcccccc"/>
+		</e:Group>
+        <e:Group id="_group_config" name="page3" width="100%" height="100%">
+			<e:Rect width="100%" height="100%" x="0" y="0" fillColor="0xff0000"/>
+		</e:Group>
+	</e:ViewStack>
+	<e:Group  width="100%" height="120" bottom="0">
+		<e:Rect width="100%" height="100%" fillAlpha="1" fillColor="0xf7f6f4" strokeColor="0xffffff"/>
+        <e:RadioButton id="_radio_business" groupName="G1" value="0" x="13.3" y="10" label="服务" skinName="RadioM00"/>
+        <e:RadioButton id="_radio_worker" groupName="G1" value="1" x="192" y="10" label="技师" skinName="RadioM01"/>
+        <e:RadioButton id="_radio_room" groupName="G1" value="2" x="371" y="10" label="房间" skinName="RadioM02"/>
+        <e:RadioButton id="_radio_config" groupName="G1" value="3" x="549.45" y="10" label="操作" skinName="RadioM03"/>
+    </e:Group>
+</e:Skin>

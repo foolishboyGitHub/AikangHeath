@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.PlanWorkMapper">
+    <resultMap id="BaseResultMap" type="com.aikang.Bean.PlanWork">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="hid" property="hid" jdbcType="INTEGER"/>
+        <result column="sdx" property="sdx" jdbcType="INTEGER"/>
+        <result column="sdxlast" property="sdxlast" jdbcType="INTEGER"/>
+        <result column="state" property="state" jdbcType="INTEGER"/>
+        <result column="round" property="round" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="servicecode" property="servicecode" jdbcType="VARCHAR"/>
+        <result column="DayidOfsdxMov" property="DayidOfsdxMov" jdbcType="INTEGER"/>
+    </resultMap> 
+    
+    <select id="getAllPlanWorks" resultMap="BaseResultMap" statementType="PREPARED">
+        select wl.*,hr.name,hr.sex,hr.servicecode from ${company}_worklist wl left join ${company}_hr hr on
+        wl.`hid`=hr.`id`
+        order by wl.sdx
+    </select>
+    <select id="getPlanWorkById" resultMap="BaseResultMap" statementType="PREPARED">
+        select wl.*,hr.name,hr.sex,hr.servicecode from ${company}_worklist wl left join ${company}_hr hr on
+        wl.`hid`=hr.`id`
+        where id=#{id}
+    </select>
+    <select id="getPlanWorkByHid" resultMap="BaseResultMap" statementType="PREPARED">
+        select wl.*,hr.name,hr.sex,hr.servicecode from ${company}_worklist wl left join ${company}_hr hr on
+        wl.`hid`=hr.`id`
+        where hid=#{hid}
+    </select>
+    <insert id="addPlanWorks">
+	    insert into ${company}_worklist (hid,sdx,sdxlast,DayidOfsdxMov,state,round) values
+	    <foreach collection="record" item="PlanWork" separator=",">
+	      (#{PlanWork.hid},#{PlanWork.sdx},#{PlanWork.sdxlast},#{PlanWork.DayidOfsdxMov},#{PlanWork.state},#{PlanWork.round})
+	    </foreach>
+	</insert>
+		<update id="updatePlanWorksByIdSelective" parameterType="com.aikang.Bean.PlanWork" >
+	    update ${company}_worklist
+	    <set >
+	      <if test="record.sdx != null" >
+	        sdx = #{record.sdx,jdbcType=INTEGER},
+	      </if>
+	      <if test="record.sdxlast != null" >
+	        sdxlast = #{record.sdxlast,jdbcType=INTEGER},
+	      </if>
+	      <if test="record.DayidOfsdxMov != null" >
+	        DayidOfsdxMov = #{record.DayidOfsdxMov,jdbcType=INTEGER},
+	      </if>
+	      <if test="record.state != null" >
+	        state = #{record.state,jdbcType=INTEGER},
+	      </if>
+	      <if test="record.round != null" >
+	        round = #{record.round,jdbcType=INTEGER},
+	      </if>
+	    </set>
+	    where id = #{record.id,jdbcType=INTEGER}
+  	</update>
+  	<update id="updatePlanWorksByHidSelective" parameterType="com.aikang.Bean.PlanWork" >
+	    update ${company}_worklist
+	    <set >
+	      <if test="record.sdx != null" >
+	        sdx = #{record.sdx,jdbcType=INTEGER},
+	      </if>
+	      <if test="record.sdx != null" >
+	        sdxlast = #{record.sdxlast,jdbcType=INTEGER},
+	      </if>
+	      <if test="record.DayidOfsdxMov != null" >
+	        DayidOfsdxMov = #{record.DayidOfsdxMov,jdbcType=INTEGER},
+	      </if>
+	      <if test="record.state != null" >
+	        state = #{record.state,jdbcType=VARCHAR},
+	      </if>
+	      <if test="record.round != null" >
+	        round = #{record.round,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	    where hid = #{record.hid,jdbcType=INTEGER}
+  	</update>
+
+    
+    <update id="updateListPlanWorksByHidSelective"  parameterType="java.util.List">
+      update ${company}_worklist
+      <trim prefix="set" suffixOverrides=",">
+        <trim prefix="sdx = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.sdx != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.sdx}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="sdxlast = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.sdxlast != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.sdxlast}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="DayidOfsdxMov = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.DayidOfsdxMov != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.DayidOfsdxMov}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="state = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.state != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.state}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="round = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.round != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.round}
+            </if>
+          </foreach>
+        </trim>
+      </trim>
+      where
+        <foreach collection="record" item="PlanWork" separator="or">
+            hid = #{PlanWork.hid}
+        </foreach>
+  </update>
+  
+  
+	<update id="truncatePlanWorks">
+	   truncate table ${company}_worklist
+	</update>
+</mapper>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="btnShopOrderShowListSkin" states="up,down,disabled"  currentState="up" xmlns:e="http://ns.egret.com/eui"  width="180" height="46">
+    <e:Rect width="100%" height="100%" fillAlpha="0.9" ellipseWidth="20" ellipseHeight="20" fillColor.disabled="0x878787" fillColor.down="0x877764" strokeColor="0xd6c8b8" fillColor="0xffffff"/>
+	<e:Label id="labelDisplay" verticalAlign="middle"
+	         textAlign="center"
+	         text="点击收起" width="137" style="l_brown_1"  bold="true"  fontFamily="Tahoma" size.down="22" size.up="22" verticalCenter="0" x="2" textColor="0x414232" size="22"/>
+    <e:Image y.up="0"
+	           source="arrow_showup" source.disabled="arrow_showup" source.down="arrow_showup" verticalCenter="0.5" verticalCenter.down="2" scaleY="0.4" scaleX="0.4" x="127"/>
+</e:Skin>

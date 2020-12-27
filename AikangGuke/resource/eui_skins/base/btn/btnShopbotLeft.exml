@@ -1,0 +1,13 @@
+<e:Skin class="btnShopbotLeft" states="up,down,disabled"  currentState="up" xmlns:e="http://ns.egret.com/eui" width="500" height="105">
+
+	<e:Group id="group_leftbot" height="100" x="0" width="100%" y="5">
+        <e:Rect height="100%" width="120" right="0" fillColor="0x111111" fillColor.disabled="0x111111"/>
+        <e:Rect id="rect_rightbot" width="100%" height="100%" ellipseWidth="120" ellipseHeight="120" fillColor.disabled="0x111111" left="0" fillColor="0x111111"/>        
+    </e:Group>
+	<e:Label id="labelDisplay" verticalAlign="middle" stroke="0.5" strokeColor="0x000000" textAlign="left"
+	         text="¥86 " width="284" style="l_brown_1" bold="true" fontFamily="SimHei" textColor.down="0x7a7a7a" textColor.disabled="0x919191" textColor="0xffffff" anchorOffsetX="0" x="175" y="15" size="40" height="50"/>
+	<e:Label id="labelshow" verticalAlign="middle" stroke="0.5" strokeColor="0x000000" textAlign="left"
+	         text="未结账" width="88" style="l_brown_1" bold="true" fontFamily="SimHei" textColor.down="0x7a7a7a" textColor.disabled="0x919191" anchorOffsetX="0" x="175" y="66" size="22" height="30" textColor="0x7c7a76"/>		 
+	<e:Image id="redPoint" source="serwm" y="0" x="50" source.disabled="serwmh"/>
+	<e:Rect width="30" height="30" ellipseWidth="30" ellipseHeight="30" fillColor="0xf21313" x="113" y="28" fillColor.disabled="0x111111" fillAlpha.disabled="1"/>
+</e:Skin>

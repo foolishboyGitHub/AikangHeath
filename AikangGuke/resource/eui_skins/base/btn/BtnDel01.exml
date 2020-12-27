@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BtnDel01" states="up,down,disabled"  currentState="up" xmlns:e="http://ns.egret.com/eui" width="50" height="50">
+
+	<e:Image x.disabled="0" x.up="0" y.disabled="0" y.up="0"
+	         horizontalCenter="0" verticalCenter="0"  width="100%" height="100%" verticalCenter.down="2" horizontalCenter.down="2"  source="btndel202003120" source.disabled="btndel202003121" source.down="btndel202003121"/>
+</e:Skin>

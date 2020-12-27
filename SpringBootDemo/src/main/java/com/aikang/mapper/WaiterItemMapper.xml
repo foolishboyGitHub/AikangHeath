@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.WaiterItemMapper">
+	<resultMap id="BaseResultMap" type="com.aikang.Bean.WaiterItem">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="rmid" property="rmid" jdbcType="INTEGER"/>
+        <result column="rmname" property="rmname" jdbcType="VARCHAR"/>
+        <result column="wtype" property="wtype" jdbcType="INTEGER"/>
+        <result column="dayid" property="dayid" jdbcType="INTEGER"/>
+        <result column="daynum" property="daynum" jdbcType="INTEGER"/>
+        <result column="sid" property="sid" jdbcType="INTEGER"/>
+        <result column="sname" property="sname" jdbcType="VARCHAR"/>
+        <result column="hid" property="hid" jdbcType="INTEGER"/>
+        <result column="hcode" property="hcode" jdbcType="VARCHAR"/>
+        <result column="hname" property="hname" jdbcType="VARCHAR"/>
+        <result column="movsdx" property="movsdx" jdbcType="INTEGER"/>
+        <result column="workstate" property="workstate" jdbcType="INTEGER"/>
+        <result column="changenum" property="changenum" jdbcType="INTEGER"/>
+        <result column="changelist" property="changelist" jdbcType="VARCHAR"/>
+        <result column="maketime" property="maketime" jdbcType="VARCHAR"/>
+        <result column="waittime" property="waittime" jdbcType="VARCHAR"/>
+        <result column="worktime" property="worktime" jdbcType="VARCHAR"/>
+        <result column="breakstart" property="breakstart" jdbcType="VARCHAR"/>
+        <result column="breaklong" property="breaklong" jdbcType="INTEGER"/>
+        <result column="finishtime" property="finishtime" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="kid" property="kid" jdbcType="BIGINT"/>
+        <result column="kname" property="kname" jdbcType="VARCHAR"/>
+		<result column="paystate" property="paystate" jdbcType="INTEGER"/>
+		<result column="paynum" property="paynum" jdbcType="INTEGER"/>
+		<result column="payid" property="payid" jdbcType="BIGINT"/>
+		<result column="checkcode" property="checkcode" jdbcType="VARCHAR"/>
+		<result column="clocknum" property="clocknum" jdbcType="DOUBLE"/>
+		<result column="itembill" property="itembill" jdbcType="DOUBLE"/>
+		<result column="pricetype" property="pricetype" jdbcType="VARCHAR"/>
+		<result column="clocknumyf" property="clocknumyf" jdbcType="DOUBLE"/>
+		<result column="itembillyf" property="itembillyf" jdbcType="DOUBLE"/>
+		<result column="clocknumyy" property="clocknumyy" jdbcType="DOUBLE"/>
+		<result column="pricetypeyf" property="pricetypeyf" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getAllWaiterItem" resultMap="BaseResultMap" statementType="PREPARED">
+        select wi.* from ${company}_waiteritem wi order by wi.dayid
+    </select>
+    <select id="getWaiterItemsByHid" resultMap="BaseResultMap" statementType="PREPARED">
+        select wi.id,wi.rmid,wi.rmname,wi.wtype,wi.dayid,wi.sid,wi.sname,wi.hid,wi.hcode,wi.hname,
+        wi.workstate,wi.worktime,wi.waittime,wi.breakstart,wi.breaklong,wi.finishtime
+        from ${company}_waiteritem wi 
+        where hid=#{hid}
+        order by wi.dayid
+    </select>
+    <select id="getCompanyWaiterItemById" resultMap="BaseResultMap" statementType="PREPARED">
+        select wi.* from ${company}_waiteritem wi
+        where id=#{id}
+    </select>
+    <select id="getCompanyWaiterItemByIds" resultMap="BaseResultMap" statementType="PREPARED">
+        select wi.* from ${company}_waiteritem wi 
+        where id in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+        	#{item}
+        </foreach>
+        order by wi.dayid
+    </select>
+    <select id="getCompanyWaiterItemByDayidAndHid" resultMap="BaseResultMap" statementType="PREPARED">
+        select wi.* from ${company}_waiteritem wi 
+        where dayid=#{dayid} and hid=#{hid}
+        order by wi.dayid
+    </select>
+    <insert id="insertWaiterItem" parameterType="com.aikang.Bean.WaiterItem" useGeneratedKeys="true" keyProperty="record.id" keyColumn="id" statementType="PREPARED">
+    insert into ${company}_waiteritem 
+    (
+    	rmid,
+    	rmname,
+    	wtype,
+    	dayid,
+    	daynum,
+    	sid, 
+    	sname, 
+    	hid, 
+    	hcode, 
+      	hname,
+      	movsdx, 
+      	workstate,
+      	changenum, 
+      	changelist,
+      	maketime, 
+      	waittime, 
+      	worktime, 
+      	breakstart, 
+      	breaklong, 
+      	finishtime, 
+      	remark, 
+      	kid, 
+      	kname, 
+      	paystate,
+      	paynum, 
+      	payid, 
+      	checkcode,
+      	clocknum,
+      	itembill,
+      	pricetype,
+      	clocknumyf,
+      	itembillyf,
+      	pricetypeyf,
+      	clocknumyy
+    )
+    values 
+    <foreach collection="record" item="WaiterItem" separator=","> 
+      (
+      #{WaiterItem.rmid,jdbcType=INTEGER},
+      #{WaiterItem.rmname,jdbcType=VARCHAR},
+      #{WaiterItem.wtype,jdbcType=INTEGER}, 
+      #{WaiterItem.dayid,jdbcType=INTEGER}, 
+      #{WaiterItem.daynum,jdbcType=INTEGER}, 
+      #{WaiterItem.sid,jdbcType=INTEGER}, 
+      #{WaiterItem.sname,jdbcType=VARCHAR}, 
+      #{WaiterItem.hid,jdbcType=INTEGER},
+      #{WaiterItem.hcode,jdbcType=VARCHAR}, 
+      #{WaiterItem.hname,jdbcType=VARCHAR}, 
+      #{WaiterItem.movsdx,jdbcType=INTEGER},
+      #{WaiterItem.workstate,jdbcType=INTEGER}, 
+      #{WaiterItem.changenum,jdbcType=INTEGER}, 
+      #{WaiterItem.changelist,jdbcType=VARCHAR},
+      #{WaiterItem.maketime,jdbcType=VARCHAR}, 
+      #{WaiterItem.waittime,jdbcType=VARCHAR}, 
+      #{WaiterItem.worktime,jdbcType=VARCHAR}, 
+      #{WaiterItem.breakstart,jdbcType=VARCHAR}, 
+      #{WaiterItem.breaklong,jdbcType=INTEGER}, 
+      #{WaiterItem.finishtime,jdbcType=VARCHAR}, 
+      #{WaiterItem.remark,jdbcType=VARCHAR},
+      #{WaiterItem.kid,jdbcType=BIGINT},
+      #{WaiterItem.kname,jdbcType=VARCHAR},
+      #{WaiterItem.paystate,jdbcType=INTEGER},
+      #{WaiterItem.paynum,jdbcType=INTEGER},
+      #{WaiterItem.payid,jdbcType=BIGINT},
+      #{WaiterItem.checkcode,jdbcType=VARCHAR},
+      #{WaiterItem.clocknum,jdbcType=DOUBLE},
+      #{WaiterItem.itembill,jdbcType=DOUBLE},
+      #{WaiterItem.pricetype,jdbcType=VARCHAR},
+      #{WaiterItem.clocknumyf,jdbcType=DOUBLE},
+      #{WaiterItem.itembillyf,jdbcType=DOUBLE},
+      #{WaiterItem.pricetypeyf,jdbcType=VARCHAR},
+      #{WaiterItem.clocknumyy,jdbcType=DOUBLE}
+      )
+     </foreach>
+  </insert>
+  <update id="updateCheckCodeByDayidAndHid" parameterType="com.aikang.Bean.WaiterItem" statementType="PREPARED">
+        update ${company}_waiteritem
+        set	checkcode = #{checkcode}
+        where dayid=#{dayid} and hid=#{hid}
+  </update>
+  <update id="updateWaiterStateListByIdSelective"  parameterType="java.util.List" statementType="PREPARED">
+      update ${company}_waiteritem
+      <trim prefix="set" suffixOverrides=",">
+        <trim prefix="workstate = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem">
+            <if test="WaiterItem.workstate != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.workstate}
+            </if>
+          </foreach>
+        </trim>
+      </trim>
+      where
+        <foreach collection="record" item="WaiterItem" separator="or">
+            id = #{WaiterItem.id}
+        </foreach>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aikang.Bean.WaiterItem" statementType="PREPARED">
+        update ${company}_waiteritem
+        <set>      
+            <if test="record.rmid != null">
+                rmid = #{record.rmid,jdbcType=INTEGER},
+            </if>
+            <if test="record.rmname != null">
+                rmname = #{record.rmname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.wtype != null">
+                wtype = #{record.wtype,jdbcType=INTEGER},
+            </if>
+            <if test="record.dayid != null">
+                dayid = #{record.dayid,jdbcType=INTEGER},
+            </if>
+            <if test="record.daynum != null">
+                daynum = #{record.daynum,jdbcType=INTEGER},
+            </if>
+            <if test="record.sid != null">
+                sid = #{record.sid,jdbcType=INTEGER},
+            </if>
+      		<if test="record.sname != null">
+                sname = #{record.sname,jdbcType=VARCHAR},
+            </if> 
+      		<if test="record.hid != null">
+                hid = #{record.hid,jdbcType=INTEGER},
+            </if>
+            <if test="record.hcode != null">
+                hcode = #{record.hcode,jdbcType=INTEGER},
+            </if> 
+      		<if test="record.hname != null">
+                hname = #{record.hname,jdbcType=VARCHAR}, 
+            </if>
+            <if test="record.movsdx != null">
+                movsdx = #{record.movsdx,jdbcType=INTEGER},
+            </if>
+      		<if test="record.workstate != null">
+                workstate = #{record.workstate,jdbcType=VARCHAR},
+            </if> 
+      		<if test="record.changenum != null">
+                changenum = #{record.changenum,jdbcType=INTEGER},
+            </if> 
+      		<if test="record.changelist != null">
+                changelist = #{record.changelist,jdbcType=VARCHAR}, 
+            </if>
+            <if test="record.maketime != null">
+                maketime = #{record.maketime,jdbcType=VARCHAR},
+            </if> 
+      		<if test="record.waittime != null">
+                waittime = #{record.waittime,jdbcType=VARCHAR},
+            </if> 
+      		<if test="record.worktime != null">
+                worktime = #{record.worktime,jdbcType=VARCHAR}, 
+            </if>
+      		<if test="record.breakstart != null">
+                breakstart = #{record.breakstart,jdbcType=VARCHAR}, 
+            </if>
+      		<if test="record.breaklong != null">
+                breaklong = #{record.breaklong,jdbcType=INTEGER}, 
+            </if>
+      		<if test="record.finishtime != null">
+                finishtime = #{record.finishtime,jdbcType=VARCHAR},
+            </if> 
+      		<if test="record.remark != null">
+                remark = #{record.remark,jdbcType=VARCHAR},
+            </if>
+      		<if test="record.kid != null">
+                kid = #{record.kid,jdbcType=BIGINT},
+            </if>
+      		<if test="record.kname != null">
+                kname = #{record.kname,jdbcType=VARCHAR},
+            </if>
+      		<if test="record.paystate != null">
+                paystate = #{record.paystate,jdbcType=INTEGER},
+            </if>
+      		<if test="record.paynum != null">
+                paynum = #{record.paynum,jdbcType=INTEGER},
+      		</if>
+      		<if test="record.payid != null">
+                payid = #{record.payid,jdbcType=BIGINT},
+      		</if>
+      		<if test="record.checkcode != null">
+                checkcode = #{record.checkcode,jdbcType=VARCHAR},
+      		</if>
+      		<if test="record.clocknum != null">
+                clocknum = #{record.clocknum,jdbcType=VARCHAR},
+      		</if>
+      		<if test="record.itembill != null">
+                itembill = #{record.itembill,jdbcType=VARCHAR},
+      		</if>
+      		<if test="record.pricetype != null">
+                pricetype = #{record.pricetype,jdbcType=VARCHAR},
+      		</if>
+      		<if test="record.clocknumyf != null">
+                clocknumyf = #{record.clocknumyf,jdbcType=DOUBLE},
+      		</if>
+      		<if test="record.itembillyf != null">
+                itembillyf = #{record.itembillyf,jdbcType=DOUBLE},
+      		</if>
+      		<if test="record.pricetypeyf != null">
+                pricetypeyf = #{record.pricetypeyf,jdbcType=VARCHAR},
+      		</if>
+      		<if test="record.clocknumyy != null">
+                clocknumyy = #{record.clocknumyy,jdbcType=DOUBLE},
+      		</if>
+        </set>
+        where id = #{record.id,jdbcType=INTEGER}
+    </update>
+  	<delete id="deleteWaiterItemByID">
+    	delete from ${company}_waiteritem where id=#{id}
+  	</delete>
+  	<delete id="deleteWaiterItemByIds">
+    	delete from ${company}_waiteritem
+    	 where id in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+        	#{item}
+        </foreach>
+  	</delete>
+</mapper>

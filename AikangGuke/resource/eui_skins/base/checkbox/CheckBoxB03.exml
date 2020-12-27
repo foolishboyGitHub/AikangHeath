@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="CheckBoxB03" states="up,down,upAndSelected,downAndSelected,disabledAndSelected" xmlns:e="http://ns.egret.com/eui" height="34" width="90">
+    <e:Group width="100%" height="100%"/>
+    <e:Rect width="100%" height="100%" strokeColor="0x191717" strokeWeight="2" fillColor="0x99938c"/>
+    <e:Image x="1" source="chekBox338" width="30" height="30" verticalCenter="0"/>
+    <e:Image x="1" y="2" width="30" height="28" verticalCenter="0" source="chekBox336" source.up="" source.down="" source.upAndSelected="chekBox336" source.downAndSelected="chekBox336"/>
+    <e:Label id="labelDisplay" textAlign="center" verticalAlign="middle" 
+            x="32"  size="22" stroke="0.2" strokeColor="0x000000" text="" width="54" anchorOffsetX="0" height="28" fontFamily="Tahoma" textColor="0x140f09" verticalCenter="0"/>
+</e:Skin>

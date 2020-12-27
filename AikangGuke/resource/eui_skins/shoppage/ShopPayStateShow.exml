@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ShopPayStateShow" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Rect width="100%" height="100%" fillColor="0xffffff" fillAlpha="1" ellipseWidth="40" ellipseHeight="40"/>
+    <e:Group id="group_paychannelweixin" width="660" height="180" horizontalCenter="0" y="250">
+        <e:Rect width="100%" height="100%" fillAlpha="0" strokeWeight="0" ellipseWidth="40" ellipseHeight="40" strokeColor="0x3f5940"/>
+        <e:Label  y="10" size="30" anchorOffsetX="0" width="601" stroke="0.2" strokeColor="0x000000" height="34" text="请在剩余时间内使用“微信”向店家扫码付款" fontFamily="SimHei" textAlign="left" textColor="0x353535" x="34"/>   
+        <e:Image  x="284" y="83" source="pay_weixin"/>    
+    </e:Group>
+    <e:Group id="group_paychannelzhifubao" width="660" height="180" horizontalCenter="0" y="250" visible="false">
+        <e:Rect width="100%" height="100%" fillAlpha="0" strokeWeight="0" ellipseWidth="40" ellipseHeight="40" strokeColor="0x3f5940"/>
+        <e:Label  y="10" size="30" anchorOffsetX="0" width="601" stroke="0.2" strokeColor="0x000000" height="34" text="请在剩余时间内使用“支付宝”向店家扫码付款" fontFamily="SimHei" textAlign="left" textColor="0x353535" x="34"/>   
+        <e:Image  x="284" y="83" source="pay_zhifubao"/>    
+    </e:Group>
+    <e:Group id="group_timeshow" width="660" height="600" horizontalCenter="0" y="432">
+        <e:Rect width="100%" height="100%" fillAlpha="0" strokeWeight="0" ellipseWidth="40" ellipseHeight="40" strokeColor="0x3f5940"/>   
+        <e:Label  y="27" size="60" anchorOffsetX="0" width="143" stroke="0.2" strokeColor="0x000000" text="付款" fontFamily="SimHei" textAlign="left" textColor="0x353535" x="44"/>
+        <e:Label id="lab_price"  y="31" size="60" anchorOffsetX="0" width="328" stroke="0.2" strokeColor="0x000000" text="1325.76" fontFamily="SimHei" textAlign="center" x="174" textColor="0xc69b17"/>
+        <e:Label  y="27" size="60" anchorOffsetX="0" width="138" stroke="0.2" strokeColor="0x000000" text="元" fontFamily="SimHei" textAlign="left" textColor="0x353535" x="475"/>
+
+        <e:Label  y="147" size="80" anchorOffsetX="0" width="188" stroke="0.2" strokeColor="0x000000" text="剩余" fontFamily="SimHei" textAlign="left" textColor="0x353535" x="40"/>
+        <e:Label id="lab_time"  y="137" size="100" anchorOffsetX="0" width="202" stroke="0.2" strokeColor="0x000000" text="60" fontFamily="SimHei" textAlign="center" x="233" textColor="0x68221f"/>
+        <e:Label  y="147" size="80" anchorOffsetX="0" width="138" stroke="0.2" strokeColor="0x000000" text="秒" fontFamily="SimHei" textAlign="left" textColor="0x353535" x="465"/> 
+        <e:Label  y="330" size="38" anchorOffsetX="0" width="604" stroke="0.2" strokeColor="0x000000" text="注意：请务必一次性付清指定金额，勿用累加方式，如果您已经付款完成，但任未显示付款成功，请与店家联系。" fontFamily="SimHei" textAlign="left" x="37" textColor="0x873e25"/>   
+    </e:Group>
+    <e:Group id="group_success" width="660" height="600" horizontalCenter="0" y="487" visible="false">
+        <e:Rect width="100%" height="100%" fillAlpha="0" strokeWeight="0" ellipseWidth="40" ellipseHeight="40" strokeColor="0x3f5940"/>   
+        <e:Label  y="146" size="60" anchorOffsetX="0" width="336" stroke="0.2" strokeColor="0x000000" text="付款成功" fontFamily="SimHei" textAlign="left" x="210" textColor="0x46750e"/>
+        <e:Button id="_btn_back_order" label="返回订单"  anchorOffsetX="0" x="196" y="328" skinName="BtnShopInfoListAdd" height="60" width="260"/>
+       
+    </e:Group>
+    <e:Label id="lab_payfail"  y="1014" size="60" anchorOffsetX="0" width="506" stroke="0.2" strokeColor="0x000000" text="付款失败" fontFamily="SimHei" textAlign="center" x="56" textColor="0xaf361d"/>
+    <e:Button id="_btn_back" label=""  anchorOffsetX="0" x="10" y="57" skinName="BtnBack03" width="117"/>
+</e:Skin>

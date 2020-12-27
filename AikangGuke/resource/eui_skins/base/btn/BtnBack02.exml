@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BtnBack02" states="up,down,disabled"  currentState="up" xmlns:e="http://ns.egret.com/eui" width="200" height="60">
+
+    <e:Rect width="100%" height="100%" strokeColor="0x282726" strokeWeight="1" fillColor.down="0x3F3B36" fillAlpha="0.5" ellipseWidth.up="2" ellipseHeight.up="2" strokeWeight.up="1" fillColor="0x84847b"/>
+	<e:Image x.disabled="5" x.up="5" y.up="0"
+	           x.down="6" verticalCenter="0" verticalCenter.down="2" horizontalCenter="-43" source="btnBack202003180" width="30" height="30" source.down="btnBack202003181" source.disabled="btnBack202003181"/>
+    <e:Label id="labelDisplay" verticalAlign="middle"
+	         textAlign="center"
+	         text="添加" size="28" verticalCenter.disabled="0" verticalCenter.up="0" width="80" style="l_brown_1" textColor.disabled="0xe5e3e3" textColor="0x000000" bold="true" size.up="28" textColor.up="0x000000" x.down="42" verticalCenter.down="2" verticalCenter="0" horizontalCenter="24"/>
+	<e:Image id="redPoint" source="ui_bm_reddot" horizontalCenter="66" verticalCenter="-23" visible="false"/>
+</e:Skin>

@@ -1,0 +1,10 @@
+<e:Skin class="btnShopbotRight" states="up,down,disabled"  currentState="up" xmlns:e="http://ns.egret.com/eui" width="160" height="100">
+
+	<e:Group id="group_rightbot" height="100%" x="0" width="100%">
+        <e:Rect height="100%" width="120" fillColor="0xd3ae0a" fillColor.disabled="0x111111"/>
+        <e:Rect id="rect_rightbot" width="160" height="100%" right="0" fillColor="0xd3ae0a" ellipseWidth="120" ellipseHeight="120" fillColor.disabled="0x111111"/>        
+    </e:Group>
+	<e:Label id="labelDisplay" verticalAlign="middle" stroke="0.5" strokeColor="0x000000" textAlign="center" horizontalCenter.down="2"
+	         verticalCenter.down="2" text="选好了" size="32" verticalCenter="0" width="100%" style="l_brown_1" horizontalCenter="0" textColor="0x0a0a0a" bold="true" fontFamily="Tahoma" textColor.down="0x7a7a7a" textColor.disabled="0x919191"/>
+	<e:Image id="redPoint" source="ui_bm_reddot" horizontalCenter="66" verticalCenter="-23" visible="false"/>
+</e:Skin>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BtnAddTime01" states="up,down,disabled"  currentState="up" xmlns:e="http://ns.egret.com/eui" width="80" height="40">
+    <e:Rect width="100%" height="100%" strokeWeight="3" strokeAlpha="0.8" ellipseWidth="10" ellipseHeight="10" strokeColor="0x7f7f7f" fillColor.down="0x332c2c" fillColor.disabled="0x261d1d" fillAlpha="0.8" fillAlpha.up="0.8" fillColor.up="0xa3a1a1" fillColor="0xa5a5a5"/>
+	<e:Label id="labelDisplay" verticalAlign="middle"
+	         textAlign="center" horizontalCenter.down="2"
+	         verticalCenter.down="2" text="+" size="40" verticalCenter="0" width="100%" style="l_brown_1" textColor.disabled="0xe5e3e3" horizontalCenter="0" bold="true" textColor="0x353232"/>
+	<e:Image id="redPoint" source="ui_bm_reddot" horizontalCenter="66" verticalCenter="-23" visible="false"/>
+</e:Skin>

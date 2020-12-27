@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ShopAskNumSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Group id="group_asknum" width="720" height="1280">
+        <e:Rect width="100%" height="100%" fillAlpha="1" fillColor="0xc1ab7c" strokeColor="0xd6c5a2" strokeWeight="10" ellipseWidth="2" ellipseHeight="2"/>
+
+        <e:Rect width="600" height="880" horizontalCenter="0" y="200" fillColor="0xbf902a" strokeWeight="10" ellipseWidth="20" ellipseHeight="20" strokeColor="0xd1b736"/>
+
+        <e:Rect width="400" height="60" y="245" horizontalCenter="0" fillColor="0xd1b736" strokeColor="0xaf9744" ellipseWidth="10" ellipseHeight="10" strokeWeight="6"/>
+
+       <e:Label  y="257" size="32" anchorOffsetX="0" width="345" stroke="0.2" strokeColor="0x000000" height="36" text="请问客官，您几位啊？" fontFamily="SimHei" textAlign="center" horizontalCenter="0" textColor="0x1e1503"/>
+       
+       <e:RadioButton id="_radio_num_0" groupName="G1" value="0" x="100" y="382.03" label="1位" anchorOffsetX="0" width="150" skinName="RadioShop01"/>
+       <e:RadioButton id="_radio_num_1" groupName="G1" value="1" x="288" y="382.03" label="2位" anchorOffsetX="0" width="150" skinName="RadioShop01"/>
+       <e:RadioButton id="_radio_num_2" groupName="G1" value="2" x="472" y="382.03" label="3位" anchorOffsetX="0" width="150" skinName="RadioShop01"/>
+       <e:RadioButton id="_radio_num_3" groupName="G1" value="3" x="100" y="495.71" label="4位" anchorOffsetX="0" width="150" skinName="RadioShop01"/>
+       <e:RadioButton id="_radio_num_4" groupName="G1" value="4" x="288" y="495.71" label="5位" anchorOffsetX="0" width="150" skinName="RadioShop01"/>
+       <e:RadioButton id="_radio_num_5" groupName="G1" value="5" x="472" y="495.71" label="6位" anchorOffsetX="0" width="150" skinName="RadioShop01"/>
+       <e:RadioButton id="_radio_num_6" groupName="G1" value="6" x="100" y="612.39" label="7位" anchorOffsetX="0" width="150" skinName="RadioShop01"/>
+       <e:RadioButton id="_radio_num_7" groupName="G1" value="7" x="288" y="612.39" label="8位" anchorOffsetX="0" width="150" skinName="RadioShop01"/>
+       <e:RadioButton id="_radio_num_8" groupName="G1" value="8" x="472" y="612.39" label="9位" anchorOffsetX="0" width="150" skinName="RadioShop01"/>
+
+       <e:Button id="_btn_more" y="732.88" label="更多"  width="200" height="60" x="97" skinName="BtnNShop01"/>
+
+    </e:Group>
+    <e:Group id="group_more" width="100%" height="100%" visible="false">
+        <e:Rect width="100%" height="100%" fillAlpha="0.95" fillColor="0x5b543f"/>
+        <e:Rect width="680" height="220" y="558" x="20" fillAlpha="1" strokeColor="0x7c6d42" strokeWeight="6" ellipseWidth="6" ellipseHeight="6" fillColor="0x9e822f"/>
+        <e:Label  text="我们一共:" size="36" width="244" style="l_brown_1"   bold="true" y="604" stroke="0.5" strokeColor="0x000000" textAlign="right" x="44" textColor="0x141103"/>
+            <e:Rect width="230" height="3" y="638" x="304" fillColor="0xdbba43"/>
+           <e:EditableText id="lab_gukenum" text="" width="208" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="38" scaleX="1" scaleY="1"  height="50" stroke="0.2" strokeColor="0x000000" fontFamily="Tahoma" y="585" x="318" textColor="0x1c1b05" bold="true"/>
+        <e:Label  text="位" size="36" width="60" style="l_brown_1"   bold="true" y="604" stroke="0.5" strokeColor="0x000000" textAlign="left" x="545" textColor="0x141103"/>
+        <e:Button id="_btn_sure" y="678" label="确定"  width="200" height="60" x="388" skinName="BtnNShop01"/>
+        <e:Button id="_btn_cancel" y="678" label="取消"  width="200" height="60" x="130" skinName="BtnNShop01"/>
+    </e:Group>
+
+    <e:Group id="group_time" width="100%" height="100%" visible="false">
+        <e:Rect width="100%" height="100%" fillAlpha="0.95" fillColor="0x5b543f"/>
+        <e:Rect width="680" height="246" y="301" x="20" fillAlpha="1" strokeColor="0x7c6d42" strokeWeight="6" ellipseWidth="6" ellipseHeight="6" fillColor="0x9e822f"/>
+        <e:Label  text="请问我们什么时候开始服务？" size="36" width="530" style="l_brown_1"   bold="true" y="340" stroke="0.5" strokeColor="0x000000" textAlign="right" x="69" textColor="0x141103"/>
+
+       <e:RadioButton id="_radio_time_now" groupName="G2" value="0" x="107" y="422.71" label="现在服务" anchorOffsetX="0" width="220" skinName="RadioShop01"/>
+       <e:RadioButton id="_radio_time_yuyue" groupName="G2" value="1" x="389" y="422.71" label="我要预约" anchorOffsetX="0" width="220" skinName="RadioShop01"/>
+    </e:Group>
+    <e:Group id="group_last" width="100%" height="100%" visible="false">
+        <e:Rect width="100%" height="100%" fillAlpha="0.95" fillColor="0x5b543f"/>
+        <e:Rect width="680" height="246" y="301" x="20" fillAlpha="1" strokeColor="0x7c6d42" strokeWeight="6" ellipseWidth="6" ellipseHeight="6" fillColor="0x9e822f"/>
+        <e:Label  text="检测到您上次正在挑选服务，是否继续？" size="26" width="530" style="l_brown_1"   bold="true" y="340" stroke="0.5" strokeColor="0x000000" textAlign="right" x="69" textColor="0x141103"/>
+
+       <e:RadioButton id="_radio_last_old" groupName="G3" value="0" x="107" y="422.71" label="继续挑选" anchorOffsetX="0" width="220" skinName="RadioShop01"/>
+       <e:RadioButton id="_radio_last_new" groupName="G3" value="1" x="389" y="422.71" label="重新开始" anchorOffsetX="0" width="220" skinName="RadioShop01"/>
+    </e:Group>
+</e:Skin>

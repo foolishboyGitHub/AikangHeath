@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="TabBar1skin" states="up,down,disabled"  currentState="up" width="400" height="300" xmlns:e="http://ns.egret.com/eui">
+    <e:Image x.disabled="0" x.up="0" y.disabled="0" y.up="0"
+	         horizontalCenter="0" verticalCenter="0"  width="100%" height="100%" verticalCenter.down="2" horizontalCenter.down="2"  source="ui_bt_03" source.disabled="ui_bt_04" scale9Grid="20,9,122,54"/>
+	<e:Label id="labelDisplay" verticalAlign="middle"
+	         textAlign="center" horizontalCenter.down="2"
+	         verticalCenter.down="2" text="确定" size="40" verticalCenter="0" width="100%" style="l_brown_1" textColor.disabled="0xe5e3e3" horizontalCenter="0" textColor="0x000000" bold="true"/>
+</e:Skin>

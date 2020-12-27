@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.ItemSalaryMapper">
+    <resultMap id="BaseResultMap" type="com.aikang.Bean.ServiceSalary">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="hid" property="hid" jdbcType="INTEGER"/>
+        <result column="sid" property="sid" jdbcType="INTEGER"/>
+        <result column="sdx" property="sdx" jdbcType="INTEGER"/>
+        <result column="defsalarylz" property="defsalarylz" jdbcType="DOUBLE"/>
+        <result column="defsalarydz" property="defsalarydz" jdbcType="DOUBLE"/>
+        <result column="defsalarydp" property="defsalarydp" jdbcType="DOUBLE"/>
+        <result column="defsalarysz" property="defsalarysz" jdbcType="DOUBLE"/>
+        <result column="dSalaryLz" property="dSalaryLz" jdbcType="DOUBLE"/>
+        <result column="dSalaryDz" property="dSalaryDz" jdbcType="DOUBLE"/>
+        <result column="dSalaryDp" property="dSalaryDp" jdbcType="DOUBLE"/>
+        <result column="dSalarySz" property="dSalarySz" jdbcType="DOUBLE"/>
+    </resultMap> 
+    
+    <select id="getItemSalaryByHid" resultMap="BaseResultMap" statementType="PREPARED">
+        select 
+        seri.id as sid, seri.name, seri.dSalaryLz,seri.dSalaryDz,seri.dSalaryDp,seri.dSalarySz,
+        serl.id,serl.hid,serl.defsalarylz,serl.defsalarydz,serl.defsalarydp,serl.defsalarysz,
+        sot.sdx
+        from ${company}_serviceitem seri left join ${company}_servicesalary serl on seri.`id`=serl.`sid` and serl.`hid`=#{hid}
+        left join ${company}_serviceitemsort sot on seri.`id`=sot.`sid`
+        
+        order by sot.sdx
+    </select>
+    <select id="getItemSalarysByWaitItems" resultMap="BaseResultMap" statementType="PREPARED">
+        select seri.* from ${company}_servicesalary seri 
+        where
+        <foreach collection="record" item="item" open="(" close=")" separator="or">
+        (
+        	hid = #{item.hid}
+        	and sid = #{item.sid}
+        )
+        </foreach>
+        order by seri.hid
+    </select>
+    <delete id="deleteSalaryByHid">
+    	delete from ${company}_servicesalary where hid=#{hid}
+  	</delete>
+  		
+  	<insert id="addSalaryByHid">
+	    insert into ${company}_servicesalary (hid,sid,defsalarylz,defsalarydz,defsalarydp,defsalarysz) values
+	    <foreach collection="record" item="ServiceSalary" separator=",">
+	      (
+	      #{hid},
+	      #{ServiceSalary.sid},
+	      #{ServiceSalary.defsalarylz},
+	      #{ServiceSalary.defsalarydz},
+	      #{ServiceSalary.defsalarydp},
+	      #{ServiceSalary.defsalarysz}
+	      )
+	    </foreach>
+	</insert>
+
+</mapper>

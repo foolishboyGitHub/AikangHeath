@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.ServiceItemMapper">
+	<resultMap id="BaseResultMap" type="com.aikang.Bean.ServiceItem">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="timelong" property="timelong" jdbcType="INTEGER"/>
+        <result column="priveType" property="priveType" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+        <result column="clocknum" property="clocknum" jdbcType="DOUBLE"/>
+        <result column="overtime" property="overtime" jdbcType="INTEGER"/>
+        <result column="dSalaryLz" property="dSalaryLz" jdbcType="DOUBLE"/>
+        <result column="dSalaryDz" property="dSalaryDz" jdbcType="DOUBLE"/>
+        <result column="dSalaryDp" property="dSalaryDp" jdbcType="DOUBLE"/>
+        <result column="dSalarySz" property="dSalarySz" jdbcType="DOUBLE"/>
+        <result column="needpoint" property="needpoint" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="mark" property="mark" jdbcType="VARCHAR"/>
+        <result column="enabled" property="enabled" jdbcType="INTEGER"/>
+        <result column="isdiscount" property="isdiscount" jdbcType="INTEGER"/>
+        <result column="timepermit" property="timepermit" jdbcType="INTEGER"/>
+        <result column="pointChange" property="pointChange" jdbcType="INTEGER"/>
+		<result column="sp1" property="sp1" jdbcType="VARCHAR"/>
+		<result column="sp2" property="sp2" jdbcType="VARCHAR"/>
+		<result column="sp3" property="sp2" jdbcType="VARCHAR"/>
+		<result column="sdx" property="sdx" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <resultMap id="PriceType" type="com.aikang.Bean.PriceType">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="sid" property="sid" jdbcType="INTEGER"/>
+        <result column="tpname" property="tpname" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+    </resultMap>
+    
+    <select id="getAllEnabledServiceItems" resultMap="BaseResultMap" statementType="PREPARED">
+        select seri.*,seridx.sdx from ${company}_serviceitem seri left join ${company}_serviceitemsort seridx on
+        seri.`id`=seridx.`sid` where seri.`enabled`= 1
+        <if test="keywords!=null">
+            and seri.name like concat('%',#{keywords},'%')
+        </if>
+        order by seridx.sdx
+    </select>
+    <select id="getAllServiceItems" resultMap="BaseResultMap" statementType="PREPARED">
+        select seri.*,seridx.sdx from ${company}_serviceitem seri left join ${company}_serviceitemsort seridx on
+        seri.`id`=seridx.`sid` 
+        <if test="keywords!=null">
+            where seri.name like concat('%',#{keywords},'%')
+        </if>
+        order by seridx.sdx
+    </select>
+    <select id="getAllPriceTypeItems" resultMap="PriceType" statementType="PREPARED">
+        select *
+        from ${company}_pricetype
+    </select>
+    <select id="selectPriceTypeBy_id" resultMap="PriceType" statementType="PREPARED">
+        select *
+        from ${company}_pricetype
+        where id =#{id}
+    </select> 
+    <select id="selectBy_id" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
+        select *
+        from ${company}_serviceitem
+        where id =#{id}
+    </select>  
+    <select id="selectBy_name" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
+        select id, price
+        from ${company}_serviceitem
+        where name = #{name}
+    </select>
+    <select id="selectBy_name_ec" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
+        select id, price
+        from ${company}_serviceitem
+        where name = #{name} and  id !=#{id}
+    </select>
+    <insert id="insertPriceType" parameterType="com.aikang.Bean.PriceType" statementType="PREPARED">
+		   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Integer">
+		       select LAST_INSERT_ID()
+		   </selectKey>
+	    insert into ${company}_pricetype (id, sid, sname, tpname, price)
+	    values (#{record.id,jdbcType=INTEGER}, 
+	      #{record.sid,jdbcType=INTEGER}, 
+	      #{record.sname,jdbcType=VARCHAR},
+	      #{record.tpname,jdbcType=VARCHAR}, 
+	      #{record.price,jdbcType=DOUBLE})
+	  </insert>
+    <insert id="insert" parameterType="com.aikang.Bean.ServiceItem" statementType="PREPARED">
+	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Integer">
+	       select LAST_INSERT_ID()
+	   </selectKey>
+    insert into ${company}_serviceitem (id, timelong, priveType, price, overtime, 
+      clocknum, dSalaryLz, dSalaryDz, dSalaryDp, dSalarySz, needpoint, name, mark, 
+      enabled, isdiscount, timepermit, pointChange, sp1, sp2, sp3)
+    values (#{record.id,jdbcType=INTEGER}, 
+      #{record.timelong,jdbcType=INTEGER}, 
+      #{record.priveType,jdbcType=INTEGER}, 
+      #{record.price,jdbcType=DOUBLE}, 
+      #{record.overtime,jdbcType=INTEGER},
+      #{record.clocknum,jdbcType=INTEGER}, 
+      #{record.dSalaryLz,jdbcType=DOUBLE}, 
+      #{record.dSalaryDz,jdbcType=DOUBLE}, 
+      #{record.dSalaryDp,jdbcType=DOUBLE}, 
+      #{record.dSalarySz,jdbcType=DOUBLE}, 
+      #{record.needpoint,jdbcType=INTEGER}, 
+      #{record.name,jdbcType=VARCHAR}, 
+      #{record.mark,jdbcType=VARCHAR}, 
+      #{record.enabled,jdbcType=INTEGER}, 
+      #{record.isdiscount,jdbcType=INTEGER}, 
+      #{record.timepermit,jdbcType=INTEGER},
+      #{record.pointChange,jdbcType=INTEGER},
+      #{record.sp1,jdbcType=VARCHAR},
+      #{record.sp2,jdbcType=VARCHAR},
+      #{record.sp3,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aikang.Bean.ServiceItem" statementType="PREPARED">
+        update ${company}_serviceitem
+        <set>
+            <if test="record.timelong != null">
+                timelong = #{record.timelong,jdbcType=INTEGER},
+            </if>
+            <if test="record.priveType != null">
+                priveType = #{record.priveType,jdbcType=INTEGER},
+            </if>
+      		<if test="record.price != null">
+                price = #{record.price,jdbcType=DOUBLE},
+            </if> 
+      		<if test="record.overtime != null">
+                overtime = #{record.overtime,jdbcType=INTEGER},
+            </if>
+            <if test="record.clocknum != null">
+                clocknum = #{record.clocknum,jdbcType=INTEGER},
+            </if> 
+      		<if test="record.dSalaryLz != null">
+                dSalaryLz = #{record.dSalaryLz,jdbcType=DOUBLE}, 
+            </if>
+      		<if test="record.dSalaryDz != null">
+                dSalaryDz = #{record.dSalaryDz,jdbcType=DOUBLE},
+            </if> 
+      		<if test="record.dSalaryDp != null">
+                dSalaryDp = #{record.dSalaryDp,jdbcType=DOUBLE},
+            </if> 
+      		<if test="record.dSalarySz != null">
+                dSalarySz = #{record.dSalarySz,jdbcType=DOUBLE}, 
+            </if>
+      		<if test="record.needpoint != null">
+                needpoint = #{record.needpoint,jdbcType=INTEGER},
+            </if> 
+      		<if test="record.name != null">
+                name = #{record.name,jdbcType=VARCHAR}, 
+            </if>
+      		<if test="record.mark != null">
+                mark = #{record.mark,jdbcType=VARCHAR}, 
+            </if>
+      		<if test="record.enabled != null">
+                enabled = #{record.enabled,jdbcType=INTEGER}, 
+            </if>
+      		<if test="record.isdiscount != null">
+                isdiscount = #{record.isdiscount,jdbcType=INTEGER},
+            </if> 
+      		<if test="record.timepermit != null">
+                timepermit = #{record.timepermit,jdbcType=INTEGER},
+            </if>
+      		<if test="record.pointChange != null">
+                pointChange = #{record.pointChange,jdbcType=INTEGER},
+            </if>
+      		<if test="record.sp1 != null">
+                sp1 = #{record.sp1,jdbcType=VARCHAR},
+            </if>
+      		<if test="record.sp2 != null">
+                sp2 = #{record.sp2,jdbcType=VARCHAR},
+            </if>
+      		<if test="record.sp3 != null">
+                sp3 = #{record.sp3,jdbcType=VARCHAR},
+      		</if>
+        </set>
+        where id = #{record.id,jdbcType=INTEGER}
+    </update>
+   <update id="updateByPrimaryKey" parameterType="com.aikang.Bean.ServiceItem" statementType="PREPARED">
+   	update ${company}_serviceitem
+         set timelong = #{record.timelong,jdbcType=INTEGER},
+   		  priveType = #{record.priveType,jdbcType=INTEGER},   		
+          price = #{record.price,jdbcType=DOUBLE},           
+          overtime = #{record.overtime,jdbcType=INTEGER},
+          clocknum = #{record.clocknum,jdbcType=INTEGER},
+          dSalaryLz = #{record.dSalaryLz,jdbcType=DOUBLE},          
+          dSalaryDz = #{record.dSalaryDz,jdbcType=DOUBLE},          
+          dSalaryDp = #{record.dSalaryDp,jdbcType=DOUBLE},            
+          dSalarySz = #{record.dSalarySz,jdbcType=DOUBLE},             
+          needpoint = #{record.needpoint,jdbcType=INTEGER},            
+          name = #{record.name,jdbcType=VARCHAR},             
+          mark = #{record.mark,jdbcType=VARCHAR},           
+          enabled = #{record.enabled,jdbcType=INTEGER},           
+          isdiscount = #{record.isdiscount,jdbcType=INTEGER},
+          timepermit = #{record.timepermit,jdbcType=INTEGER},           
+          pointChange = #{record.pointChange,jdbcType=INTEGER},          
+          sp1 = #{record.sp1,jdbcType=VARCHAR},           
+          sp2 = #{record.sp2,jdbcType=VARCHAR},           
+          sp3 = #{record.sp3,jdbcType=VARCHAR}  
+        where id = #{record.id,jdbcType=INTEGER}
+   </update>
+  <update id="updateEnableByPrimaryKey" parameterType="com.aikang.Bean.ServiceItem" statementType="PREPARED">
+    update ${company}_serviceitem
+     set enabled = #{record.enabled,jdbcType=BIT}
+    where id = #{record.id,jdbcType=INTEGER}
+  </update>
+  <insert id="addServiceItemIdxByList">
+    insert into ${company}_serviceitemsort (sid,sdx) values
+    <foreach collection="record" item="CSItemIdx" separator=",">
+      (#{CSItemIdx.sid},#{CSItemIdx.sdx})
+    </foreach>
+  </insert>
+  <update id="truncateServiceItemIdxTable">
+    truncate table ${company}_serviceitemsort
+</update>
+	<delete id="deletePriceTypeByid">
+    	delete from ${company}_pricetype where id=#{id}
+  	</delete>
+</mapper>

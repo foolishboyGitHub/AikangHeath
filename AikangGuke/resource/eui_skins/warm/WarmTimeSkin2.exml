@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="WarmTimeSkin2" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*" xmlns:w="http://ns.egret.com/wing" states="normal,sure,reward,checkBox">
+<e:Group id="animGroup" width="720" height="1280" touchChildren="true" touchEnabled="false"  x="0" y="0">
+		<e:Rect width="100%" height="100%" fillColor="0xf7f4f4" fillAlpha="0.5" x="-1"/>
+         <e:Group id="group_time" width="720" height="270" y="494">
+            <e:Rect width="100%" height="100%" x="0" strokeColor="0x757272" fillColor="0xffffff" y="0"/>
+            <e:Label  y="20" size="22" anchorOffsetX="0" width="170" stroke="0.2" strokeColor="0x000000" height="32" text="时间钟次" fontFamily="SimHei" textAlign="left" x="16" textColor="0x565454"/>
+            <e:Label id="lab_haveset_settime"  y="26" size="18" anchorOffsetX="0" width="316" stroke="0.2" strokeColor="0x000000" height="26" text="只能在所选服务对象的第一项里设定" fontFamily="SimHei" textAlign="right" x="386" textColor="0x704d4d"/>
+            <e:Group x="80" y="70">
+                <e:Rect width="100%" height="100%" fillColor="0xcccccc" ellipseWidth="10" ellipseHeight="10" fillAlpha="0.6"/>
+                <e:Label  y="2" size="22" anchorOffsetX="0" width="170" stroke="0.2" strokeColor="0x000000" height="32" text="开始时间" fontFamily="SimHei" textAlign="center" horizontalCenter="0" verticalAlign="middle" textColor="0x444444"/>
+                <e:Group x="0" y="40" width="90" height="140">
+                    <e:Rect width="100%" height="100%" fillColor="0xd1d1d1"/>
+                    <e:Button id="_btn_time_MA" y="0" label="+"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01"/>    
+                    <e:Label id="lab_time_mou"  size="32" anchorOffsetX="0" width="70" stroke="0.2" strokeColor="0x000000" height="32" text="9月" fontFamily="SimHei" textAlign="center" textColor="0x352f2f" horizontalCenter="0" verticalCenter="0"/>
+                    <e:Button id="_btn_time_MD" label="-"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01" bottom="0"/>    
+                </e:Group>
+                <e:Group x="100" y="40" width="90" height="140">
+                    <e:Rect width="100%" height="100%" fillColor="0xd1d1d1"/>
+                    <e:Button id="_btn_time_DA" y="0" label="+"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01"/>    
+                    <e:Label id="lab_time_day"  size="32" anchorOffsetX="0" width="70" stroke="0.2" strokeColor="0x000000" height="32" text="21日" fontFamily="SimHei" textAlign="center" textColor="0x352f2f" horizontalCenter="0" verticalCenter="0"/>
+                    <e:Button id="_btn_time_DD" label="-"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01" bottom="0"/>    
+                </e:Group>
+                <e:Group x="200" y="40" width="90" height="140">
+                    <e:Rect width="100%" height="100%" fillColor="0xd1d1d1"/>
+                    <e:Button id="_btn_time_HA" y="0" label="+"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01"/>    
+                    <e:Label id="lab_time_hou"  size="32" anchorOffsetX="0" width="70" stroke="0.2" strokeColor="0x000000" height="32" text="14点" fontFamily="SimHei" textAlign="center" textColor="0x352f2f" horizontalCenter="0" verticalCenter="0"/>
+                    <e:Button id="_btn_time_HD" label="-"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01" bottom="0"/>    
+                </e:Group>
+                <e:Group x="300" y="40" width="90" height="140">
+                    <e:Rect width="100%" height="100%" fillColor="0xd1d1d1"/>
+                    <e:Button id="_btn_time_FA" y="0" label="+"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01"/>    
+                    <e:Label id="lab_time_min"  size="32" anchorOffsetX="0" width="70" stroke="0.2" strokeColor="0x000000" height="32" text="45分" fontFamily="SimHei" textAlign="center" textColor="0x352f2f" horizontalCenter="0" verticalCenter="0"/>
+                    <e:Button id="_btn_time_FD" label="-"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01" bottom="0"/>    
+                </e:Group>
+            </e:Group>
+            <e:Label id="lab_wntm" text="预约时间冲突" width="151" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="22" scaleX="1" scaleY="1" style="l_brown_1"  height="30" stroke="0.01" strokeColor="0x000000" fontFamily="Tahoma" y="20" x="229" textColor="0xd12323"/>
+            
+     
+        </e:Group>
+		
+</e:Group>
+</e:Skin>

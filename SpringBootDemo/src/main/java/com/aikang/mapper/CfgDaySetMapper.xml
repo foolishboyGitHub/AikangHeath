@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.CfgDaySetMapper">
+    <resultMap id="BaseResultMap" type="com.aikang.Bean.CfgDaySet">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="dayidlast" property="dayidlast" jdbcType="INTEGER"/>
+        <result column="daynumlast" property="daynumlast" jdbcType="INTEGER"/>
+        <result column="dayidlasttime" property="dayidlasttime" jdbcType="VARCHAR"/>
+        <result column="newDayTime" property="newDayTime" jdbcType="VARCHAR"/>
+        <result column="roundsetlasttime" property="roundsetlasttime" jdbcType="VARCHAR"/>
+        <result column="roundsdx" property="roundsdx" jdbcType="INTEGER"/>
+    </resultMap> 
+    
+    <select id="getDaySetConfig" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from ${company}_cfgdayset
+    </select>
+      
+  	
+  	<insert id="insertDaySetConfig" parameterType="com.aikang.Bean.CfgDaySet" statementType="PREPARED">
+	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Integer">
+	       select LAST_INSERT_ID()
+	   </selectKey>
+    insert into ${company}_cfgdayset 
+    (
+	    id, 
+	    dayidlast, 
+	    daynumlast,
+	    dayidlasttime,
+	    newDayTime,
+	    roundsetlasttime,
+	    roundsdx
+    )
+    values (#{record.id,jdbcType=INTEGER}, 
+      #{record.dayidlast,jdbcType=INTEGER}, 
+      #{record.daynumlast,jdbcType=INTEGER}, 
+      #{record.dayidlasttime,jdbcType=VARCHAR},
+      #{record.newDayTime,jdbcType=VARCHAR},
+      #{record.roundsetlasttime,jdbcType=VARCHAR}
+      #{record.roundsdx,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateDaySetByIdSelective" parameterType="com.aikang.Bean.CfgDaySet" >
+	    update ${company}_cfgdayset
+	    <set >
+	      <if test="record.dayidlast != null" >
+	        dayidlast = #{record.dayidlast,jdbcType=INTEGER},
+	      </if>
+	      <if test="record.daynumlast != null" >
+	        daynumlast = #{record.daynumlast,jdbcType=INTEGER},
+	      </if>
+	      <if test="record.dayidlasttime != null" >
+	        dayidlasttime = #{record.dayidlasttime,jdbcType=VARCHAR},
+	      </if>
+	      <if test="record.newDayTime != null" >
+	        newDayTime = #{record.newDayTime,jdbcType=VARCHAR},
+	      </if>
+	      <if test="record.roundsetlasttime != null" >
+	        roundsetlasttime = #{record.roundsetlasttime,jdbcType=VARCHAR},
+	      </if>
+	      <if test="record.roundsdx != null" >
+	        roundsdx = #{record.roundsdx,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	    where id = #{record.id,jdbcType=INTEGER}
+  </update>
+  <update id="truncateDaySetConfig">
+	   truncate table ${company}_cfgdayset
+	</update>
+</mapper>

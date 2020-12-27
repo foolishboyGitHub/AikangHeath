@@ -1,0 +1,27 @@
+{
+  "170824a2425": {
+    "guideLines": [
+      {
+        "type": "h",
+        "pos": -18
+      },
+      {
+        "type": "h",
+        "pos": -18
+      }
+    ],
+    "bindingDataTestObj": []
+  },
+  "global": {
+    "globalAutoLayerMarkEnable": true,
+    "globalBindingDataTestObj": [],
+    "globalRulerEnable": true,
+    "globalAdsorbEnable": false
+  },
+  "1708a5ce770": {
+    "guideLinesEnabled": true
+  },
+  "170bf910f94": {
+    "guideLinesEnabled": false
+  }
+}

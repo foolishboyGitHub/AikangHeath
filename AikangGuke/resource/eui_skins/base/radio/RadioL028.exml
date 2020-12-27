@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RadioL028" states="up,down,upAndSelected,downAndSelected,disabledAndSelected" currentState="up" xmlns:e="http://ns.egret.com/eui" height="60" width="200" height.upAndSelected="60">
+    <e:Rect width="100%" height="100%" verticalCenter="0" fillColor="0xefefed" fillColor.down="0xb2ac87" strokeColor.down="0xc13636" strokeWeight.down="2" strokeWeight.upAndSelected="2" ellipseWidth.down="6" ellipseWidth.upAndSelected="6" ellipseHeight.upAndSelected="6" ellipseHeight.down="6" fillAlpha.upAndSelected="0.6" strokeWeight.up="1" ellipseWidth.up="6" ellipseHeight.up="6" ellipseWidth="6" ellipseHeight="6" strokeWeight="1" strokeColor="0x999999" strokeColor.up="0xafafaf" strokeAlpha.up="0.6" strokeAlpha="0.6" fillColor.upAndSelected="0xddcf8d" strokeColor.upAndSelected="0xc92100"/>
+    <e:Label id="labelDisplay" textAlign="center" verticalAlign.disabledAndSelected="bottom" verticalAlign.downAndSelected="middle" verticalAlign.down="middle" verticalAlign.up="middle" 
+             size="28" stroke="0.5" strokeColor="0x000000" text="" width="150" anchorOffsetX="0" height="40" verticalCenter="0" fontFamily="Tahoma" textColor="0x3f3d3b" horizontalCenter="0" textColor.down="0x7c4c3b" textAlign.upAndSelected="center" verticalAlign="middle" textColor.upAndSelected="0xb72101"/>
+</e:Skin>

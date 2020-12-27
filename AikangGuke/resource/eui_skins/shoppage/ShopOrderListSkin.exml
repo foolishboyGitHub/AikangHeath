@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ShopOrderListSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Rect width="100%" height="100%" strokeAlpha="0" strokeWeight="0" fillColor="0xf9f9f9"/>
+    <e:Button id="_btn_back" y="5" label="《——"  width="120" height="50" x="16" skinName="BtnN11Skin"/>    
+    <e:Group width="100%" height="100%" y="60">
+        <e:Group width="720" height="200" y="0">
+            <e:Rect width="100%" height="100%" x="0" strokeColor="0x757272" fillColor="0xffffff" y="0"/>
+            <e:Image id="pic_itempic" anchorOffsetX="0" width="164" anchorOffsetY="0" height="116" verticalCenter="0" x="18" source=""/>
+            <e:Label id="lab_itemname"  y="43" size="26" anchorOffsetX="0" width="483" stroke="0.2" strokeColor="0x000000" height="26" text="中式穴位推拿或沐足二选一" fontFamily="SimHei" textAlign="left" textColor="0x000000" x="196"/>
+            <e:Label id="lab_itemtime"  y="85" size="22" anchorOffsetX="0" width="280" stroke="0.2" strokeColor="0x000000" height="26" text="75分钟|养生" fontFamily="SimHei" textAlign="left" x="196" textColor="0x161616"/>
+            <e:Label id="lab_itemprice"  y="124" size="36" anchorOffsetX="0" width="280" stroke="0.2" strokeColor="0x000000" height="28" text="¥86 " fontFamily="SimHei" textAlign="left" x="196" textColor="0xd82020"/>
+        </e:Group>
+
+        
+        <e:Group id="group_add" width="720" height="180" y="938">
+            <e:Rect width="100%" height="100%" x="0" strokeColor="0x757272" fillColor="0xffffff" y="0"/>
+            <e:Button id="_btn_order" y="44" label="添加"  width="360" height="90" anchorOffsetX="0" horizontalCenter="0" skinName="BtnN10Skin"/>
+        </e:Group>
+        
+    </e:Group>
+</e:Skin>

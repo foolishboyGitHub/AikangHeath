@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="login" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Group width="600" height="1020" anchorOffsetX="0" touchChildren="true" touchThrough="true" horizontalCenter="0" verticalCenter="0">
+        
+        <e:Image source="ui_fb_bm_bg" width="100%" height="100%" x="0" y="0" scale9Grid="107,63,68,384"/>
+        <e:Group anchorOffsetX="0" width="456" anchorOffsetY="0" height="285" y="333" horizontalCenter="0">
+            
+             <e:Label  y="33" size="32" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="36" x="18" text="公司名:" fontFamily="SimHei" textAlign="right" textColor="0x30332b"/>
+            <e:Rect width="268" height="44" strokeColor="0x050101" x="143" y="26" fillColor="0x82786e"/>
+            <e:EditableText id="_input_company"  y="30" size="32" anchorOffsetX="0" width="220" stroke="0.2" strokeColor="0x000000" height="36" x="149" text="" fontFamily="SimHei" textAlign="left" backgroundColor="0xd1c8c8" borderColor="0xb0d62a" textColor="0xffffff" verticalAlign="middle"/>
+            <e:Label  y="106" size="32" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="36" x="18" text="用户名:" fontFamily="SimHei" textAlign="right" textColor="0x30332b"/>
+            <e:Rect width="268" height="44" strokeColor="0x050101" x="143" y="99" fillColor="0x82786e"/>
+            <e:Rect width="268" height="44" strokeColor="0x050101" x="143" y="178" fillColor="0x82786e"/>
+            <e:EditableText id="_input_username"  y="103" size="32" anchorOffsetX="0" width="220" stroke="0.2" strokeColor="0x000000" height="36" x="149" text="" fontFamily="SimHei" textAlign="left" backgroundColor="0xd1c8c8" borderColor="0xb0d62a" textColor="0xffffff" verticalAlign="middle"/>
+            <e:Label y="183" size="32" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="36" x="15" text="密 码:" fontFamily="SimHei" textAlign="right" textColor="0x30332b"/>
+            <e:EditableText id="_input_password" y="182" size="32" anchorOffsetX="0" width="220" stroke="0.2" strokeColor="0x000000" height="36" x="149" text="" fontFamily="SimHei" textAlign="left" backgroundColor="0xD1C8C8" borderColor="0xB0D62A" textColor="0xffffff" verticalAlign="middle"/>
+            
+        </e:Group>
+        <e:Button id="_loginBtn" skinName="BtnN7Skin" y="657" label="登录" horizontalCenter="0" width="400"/>
+        <e:Button id="btn_navito" skinName="BtnN7Skin" y="857" label="跳转" horizontalCenter="0" width="400"/>
+        <e:Label id="revmsg"  y="57" size="32" anchorOffsetX="0" width="499" stroke="0.2" strokeColor="0x000000" height="243" text="" fontFamily="SimHei" textAlign="center" textColor="0xe51919" anchorOffsetY="0" verticalAlign="middle" horizontalCenter="0.5"/>
+    </e:Group>
+</e:Skin>

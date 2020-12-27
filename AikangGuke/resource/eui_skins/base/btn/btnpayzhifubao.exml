@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="btnpayzhifubao" states="up,down,disabled"  currentState="up" xmlns:e="http://ns.egret.com/eui" width="500" height="100" width.down="520">
+
+    <e:Rect width="100%" height="100%" strokeColor="0x282726" strokeWeight.disabled="2" fillColor.down="0x3F3B36" fillAlpha.up="0" ellipseWidth.up="2" ellipseHeight.up="2" fillColor="0x84847b" strokeAlpha="0" fillAlpha="0" strokeWeight.down="1" strokeAlpha.up="0" strokeWeight="2"/>
+    <e:Label id="labelDisplay" verticalAlign="middle"
+	         textAlign="center"
+	         text="支付宝支付" size.disabled="60" size.down="60" verticalCenter.disabled="0" verticalCenter.up="0" width="360" style="l_brown_1" textColor.disabled="0xe5e3e3" textColor="0x000000" bold="true" textColor.up="0x000000" verticalCenter.down="2" verticalCenter="0" fontFamily="Tahoma" x.disabled="108" x.up="108" size="50" x="90"/>
+	<e:Image id="paytype" source="pay_zhifubao" x.disabled="0" x.up="0" verticalCenter="0"/>
+</e:Skin>

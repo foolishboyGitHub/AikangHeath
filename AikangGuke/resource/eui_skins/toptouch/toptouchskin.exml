@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="toptouchskin" width="720" height="1380" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Group id="touchGroup" width="720" height="1380">
+        <e:Rect width="100%" height="100%" fillAlpha="1" fillColor="0xaab577"/>
+       <e:Label  y="33" size="32" anchorOffsetX="0" width="176" stroke="0.2" strokeColor="0x000000" height="36" text="语音助手" fontFamily="SimHei" textAlign="center" textColor="0x83bc21" horizontalCenter="0"/>
+       <e:Label  y="1329" size="32" anchorOffsetX="0" width="137" stroke="0.2" strokeColor="0x000000" height="36" text="语音助手" fontFamily="SimHei" textAlign="center" textColor="0x83bc21" x="574"/>
+    </e:Group>
+</e:Skin>

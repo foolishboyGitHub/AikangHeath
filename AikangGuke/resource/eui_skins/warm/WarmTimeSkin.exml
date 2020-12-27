@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="WarmTimeSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*" xmlns:w="http://ns.egret.com/wing" states="normal,sure,reward,checkBox">
+<e:Group id="animGroup" width="720" height="1280" touchChildren="true" touchEnabled="false"  x="0" y="0">
+		<e:Rect width="100%" height="100%" fillColor="0xf7f4f4"/>
+        <e:Label text="设定服务时间" width="273" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="40" scaleX="1" scaleY="1" style="l_brown_1"  height="40" stroke="0.01" strokeColor="0x000000" fontFamily="Tahoma" y="40" textColor="0x3d3c3a" x="208"/>
+        <e:Button id="closeBtn"    scaleX="1" scaleY="1" skinName="BtnN11Skin" label="《——" x="31" y="37"/>
+        <e:Group id="group" width="680" height="600" touchChildren="true" touchEnabled="false" y="160" scaleX="1" scaleY="1" horizontalCenter="0">
+            
+            <e:Button id="btn_querrywork" label="查看预约"  scaleX="1" scaleY="1"  horizontalCenter="6" y="30" width="200" height="50" skinName="BtnN11Skin"/>
+            <e:Button id="sureBtn" label="设定"  scaleX="1" scaleY="1"  horizontalCenter="6" y="463" width="200" height="60" skinName="BtnN9Skin"/>
+			
+			<e:Label text="开始时间:" width="168" textAlign="right" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="40" scaleX="1" scaleY="1" style="l_brown_1"  height="40" stroke="0.01" strokeColor="0x000000" fontFamily="Tahoma" y="112" x="117" textColor="0x3d3c3a"/>
+            <e:Label id="lab_time" text="12日 14:30" width="220" textAlign="left" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="40" scaleX="1" scaleY="1" style="l_brown_1"  height="40" stroke="0.2" strokeColor="0x000000" fontFamily="Tahoma" y="112" x="293" textColor="0x6d6464"/>
+
+            <e:Label id="lab_wntm" text="时间冲突" width="132" textAlign="right" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="32" scaleX="1" scaleY="1" style="l_brown_1"  height="40" stroke="0.01" strokeColor="0x000000" fontFamily="Tahoma" y="112" x="521" textColor="0xd12323"/>
+            
+            <e:Label text="小时" width="80" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="30" scaleX="1" scaleY="1" style="l_brown_1"  height="36" stroke="0.2" strokeColor="0x000000" fontFamily="Tahoma" y="179" x="148" textColor="0x0a0808"/>
+            <e:Button id="btn_del_hour"  scaleX="1" scaleY="1"  horizontalCenter="-34" y="171" skinName="BtnDel01"/>
+            <e:Label id="lab_hour" text="14" width="80" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="40" scaleX="1" scaleY="1" style="l_brown_1"  horizontalCenter="61" height="40" stroke="0.2" strokeColor="0x000000" fontFamily="Tahoma" y="176" textColor="0x474b4c"/>
+            <e:Button id="btn_add_hour"  scaleX="1" scaleY="1"  horizontalCenter="157" y="171" skinName="BtnAdd01"/>
+
+            <e:Label text="分钟" width="80" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="30" scaleX="1" scaleY="1" style="l_brown_1"  height="36" stroke="0.2" strokeColor="0x000000" fontFamily="Tahoma" y="246" x="148" textColor="0x0a0808"/>
+            <e:Button id="btn_del_sec"  scaleX="1" scaleY="1"  horizontalCenter="-34" y="238" skinName="BtnDel01"/>
+            <e:Label id="lab_sec" text="30" width="80" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="40" scaleX="1" scaleY="1" style="l_brown_1"  horizontalCenter="61" height="40" stroke="0.2" strokeColor="0x000000" fontFamily="Tahoma" y="243" textColor="0x474b4c"/>
+            <e:Button id="btn_add_sec"  scaleX="1" scaleY="1"  horizontalCenter="157" y="238" skinName="BtnAdd01"/>
+
+            <e:Label text="预定钟数:" width="168" textAlign="right" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="40" scaleX="1" scaleY="1" style="l_brown_1"  height="40" stroke="0.01" strokeColor="0x000000" fontFamily="Tahoma" y="316" x="117" textColor="0x3d3c3a"/>
+            <e:Label id="lab_wnnum" text="时间冲突" width="132" textAlign="right" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="32" scaleX="1" scaleY="1" style="l_brown_1"  height="40" stroke="0.01" strokeColor="0x000000" fontFamily="Tahoma" y="320" x="521" textColor="0xd12323"/>
+            <e:Label id="lab_num" text="1.5" width="130" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="40" scaleX="1" scaleY="1" style="l_brown_1"  height="40" stroke="0.2" strokeColor="0x000000" fontFamily="Tahoma" y="316" x="335" textColor="0x6d6464"/>
+            <e:Label text="钟数" width="80" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="30" scaleX="1" scaleY="1" style="l_brown_1"  height="36" stroke="0.2" strokeColor="0x000000" fontFamily="Tahoma" y="380" x="148" textColor="0x0a0808"/>
+            <e:Button id="btn_del_num"  scaleX="1" scaleY="1"  horizontalCenter="-34" y="372" skinName="BtnDel01"/>
+            <e:Label id="lab_numset" text="1.5" width="80" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="40" scaleX="1" scaleY="1" style="l_brown_1"  horizontalCenter="61" height="40" stroke="0.2" strokeColor="0x000000" fontFamily="Tahoma" y="377" textColor="0x474b4c"/>
+            <e:Button id="btn_add_num"  scaleX="1" scaleY="1"  horizontalCenter="157" y="372" skinName="BtnAdd01"/>
+		</e:Group>
+</e:Group>
+</e:Skin>

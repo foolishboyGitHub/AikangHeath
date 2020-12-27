@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.RoundsConfigMapper">
+    <resultMap id="BaseResultMap" type="com.aikang.Bean.RoundsConfig">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="paizhong_type" property="paizhong_type" jdbcType="INTEGER"/>
+        <result column="dongpai_type" property="dongpai_type" jdbcType="INTEGER"/>
+        <result column="zhipai_type" property="zhipai_type" jdbcType="INTEGER"/>
+        <result column="dianzhong_budongpai" property="dianzhong_budongpai" jdbcType="INTEGER"/>
+        <result column="yuezhong_buguopai" property="yuezhong_buguopai" jdbcType="INTEGER"/>
+        <result column="fujia_shoudong" property="fujia_shoudong" jdbcType="INTEGER"/>
+        <result column="yuezhong_tiqian" property="yuezhong_tiqian" jdbcType="INTEGER"/>
+        <result column="yuezhong_buzhipai" property="yuezhong_buzhipai" jdbcType="INTEGER"/>
+        <result column="jiaozhong_dengdai" property="jiaozhong_dengdai" jdbcType="INTEGER"/>
+        <result column="jieshu_type" property="jieshu_type" jdbcType="INTEGER"/>
+    </resultMap> 
+    
+    <select id="getRoundsConfig" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from ${company}_roundsconfig
+    </select>
+      
+  	
+  	<insert id="insertRoundsConfig" parameterType="com.aikang.Bean.RoundsConfig" statementType="PREPARED">
+	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Integer">
+	       select LAST_INSERT_ID()
+	   </selectKey>
+    insert into ${company}_roundsconfig 
+    (
+	    id, 
+	    paizhong_type, 
+	    dongpai_type, 
+	    zhipai_type, 
+	    dianzhong_budongpai,
+	    yuezhong_buguopai,
+	    fujia_shoudong,
+	    yuezhong_tiqian,
+	    yuezhong_buzhipai,
+	    jiaozhong_dengdai,
+	    jieshu_type
+    )
+    values (#{record.id,jdbcType=INTEGER}, 
+      #{record.paizhong_type,jdbcType=INTEGER}, 
+      #{record.dongpai_type,jdbcType=INTEGER}, 
+      #{record.zhipai_type,jdbcType=INTEGER}, 
+      #{record.dianzhong_budongpai,jdbcType=INTEGER}, 
+      #{record.yuezhong_buguopai,jdbcType=INTEGER}, 
+      #{record.fujia_shoudong,jdbcType=INTEGER}, 
+      #{record.yuezhong_tiqian,jdbcType=INTEGER}, 
+      #{record.yuezhong_buzhipai,jdbcType=INTEGER}, 
+      #{record.jiaozhong_dengdai,jdbcType=INTEGER}, 
+      #{record.jieshu_type,jdbcType=INTEGER}
+      )
+  </insert>
+  
+  <update id="truncateRoundsConfig">
+	   truncate table ${company}_roundsconfig
+	</update>
+</mapper>

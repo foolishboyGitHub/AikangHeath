@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BtnRecive01" states="up,down,disabled"  currentState="up" xmlns:e="http://ns.egret.com/eui" width="320" height="80">
+
+    <e:Rect width="100%" height="100%" fillColor.down="0x3F3B36" fillAlpha="0.9" ellipseWidth.up="2" ellipseHeight.up="2" strokeWeight.up="3" fillColor="0xedbe0b" strokeColor="0xedbe0b"/>
+	<e:Label id="labelDisplay" verticalAlign="middle"
+	         textAlign="center" horizontalCenter.down="2"
+	         verticalCenter.down="2" text="收到" size.disabled="50" size.down="50" verticalCenter="0" width="100%" style="l_brown_1" textColor.disabled="0xe5e3e3" horizontalCenter="0" bold="true" textColor="0x000000" textColor.up="0x000000" size.up="50" size="50"/>
+	<e:Image id="redPoint" source="ui_bm_reddot" horizontalCenter="66" verticalCenter="-23" visible="false"/>
+</e:Skin>

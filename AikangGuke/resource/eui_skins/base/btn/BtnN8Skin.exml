@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BtnN8Skin" states="up,down,disabled"  currentState="up" xmlns:e="http://ns.egret.com/eui" width="120" height="50">
+
+    <e:Rect width="100%" height="100%" strokeColor="0x282726" strokeWeight="0.5" fillAlpha="0.9" ellipseWidth.up="2" ellipseHeight.up="2" strokeWeight.up="3" fillColor.down="0x302e24" fillColor.disabled="0x3d3c39" fillColor.up="0x5b5a49" fillColor="0x5b5a49"/>
+	<e:Label id="labelDisplay" verticalAlign="middle"
+	         textAlign="center" horizontalCenter.down="2"
+	         verticalCenter.down="2" text="确定" size="32" verticalCenter="0" width="100%" style="l_brown_1" horizontalCenter="0" bold="true" size.up="36" textColor.down="0xdbab8e" size.down="30" fontFamily="Tahoma" textColor="0xefe4dc" textColor.up="0xf4e7de" textColor.disabled="0xf4e7de"/>
+	<e:Image id="redPoint" source="ui_bm_reddot" horizontalCenter="66" verticalCenter="-23" visible="false"/>
+</e:Skin>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.RoomMapper">
+    <resultMap id="BaseResultMap" type="com.aikang.Bean.Room">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="num" property="num" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="enabled" property="enabled" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="mark" property="mark" jdbcType="VARCHAR"/>
+    </resultMap> 
+    
+    <select id="getRoomByID" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from ${company}_room  where id=#{rid};
+    </select>
+    
+    <select id="getRoomByName" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from ${company}_room  where name=#{rname};
+    </select>
+    <select id="getRoomByName_ec" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
+        select * from ${company}_room  where name=#{rname} and  id !=#{id}
+    </select>
+    
+    <select id="getAllEnableRoom" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from ${company}_room  where enabled = 1;
+    </select>
+    <select id="getAllRoom" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from ${company}_room;
+    </select>
+    
+    <delete id="deleteRoomByID">
+    	delete from ${company}_room where id=#{rid}
+  	</delete>
+  		
+  	<insert id="addRoom">
+	    insert into ${company}_room (num,type,price,name,mark) values    
+	      (
+	      #{record.num},
+	      #{record.type},
+	      #{record.price},
+	      #{record.name},
+	      #{record.mark}
+	      )
+	   
+	</insert>
+	<update id="updateRoomByIDSelective" parameterType="com.aikang.Bean.Room" statementType="PREPARED">
+        update ${company}_Room
+        <set>
+            <if test="record.num != null">
+                num = #{record.num,jdbcType=INTEGER},
+            </if>
+            <if test="record.type != null">
+                type = #{record.type,jdbcType=INTEGER},
+            </if>
+      		<if test="record.name != null">
+                name = #{record.name,jdbcType=VARCHAR},
+            </if> 
+      		<if test="record.mark != null">
+                mark = #{record.mark,jdbcType=VARCHAR},
+            </if>
+            <if test="record.price != null">
+                price = #{record.price,jdbcType=DOUBLE},
+            </if> 
+        </set>
+        where id = #{record.id,jdbcType=INTEGER}
+    </update>
+  <update id="updateRoomEnableByID" parameterType="com.aikang.Bean.Room" statementType="PREPARED">
+    update ${company}_Room
+     set enabled = #{record.enabled,jdbcType=INTEGER}
+    where id = #{record.id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="CheckBoxB02" states="up,down,upAndSelected,downAndSelected,disabledAndSelected"  width="40" height="40" currentState="down" xmlns:e="http://ns.egret.com/eui">
+     <e:Image x="0" source="chekBox338" width="30" height="30" verticalCenter="0"/>
+    <e:Image x="0" y="2" width="30" height="28" verticalCenter="0" source="chekBox336" source.up="" source.down="" source.upAndSelected="chekBox336" source.downAndSelected="chekBox336"/>
+</e:Skin>

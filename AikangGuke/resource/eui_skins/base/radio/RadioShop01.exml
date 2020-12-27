@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RadioShop01" states="up,down,upAndSelected,downAndSelected,disabledAndSelected" currentState="down" xmlns:e="http://ns.egret.com/eui" height="60" width="200">
+    <e:Rect width.up="100%" height.up="100%" fillColor.up="0xefbb7c" strokeWeight.up="4" ellipseWidth.up="3" ellipseHeight.up="3" width="100%" height="100%" fillColor="0xefbb7c" strokeColor.up="0xe0a718" strokeColor="0xe0a718" strokeWeight="4" ellipseWidth="3" ellipseHeight="3" fillColor.disabledAndSelected="0x5b5854"/>
+    <e:Rect width="30" height="30" verticalCenter="0" ellipseWidth="30" ellipseHeight="30" fillColor.up="0xa0892e" x.up="10" fillColor="0xa0892e" x="10" fillColor.down="0x0f0c02" fillColor.upAndSelected="0x110e04" fillColor.downAndSelected="0x0f0c03" fillColor.disabledAndSelected="0x4c4b45"/>
+    <e:Label id="labelDisplay" textAlign="left" verticalAlign="middle" 
+            x="60"  size="32" stroke="0.5" strokeColor="0x000000" text="" width="150" anchorOffsetX="0" height="40" verticalCenter="0" fontFamily="Tahoma" textColor="0x3f3d3b" verticalCenter.up="0" x.up="60" size.up="32"/>
+</e:Skin>

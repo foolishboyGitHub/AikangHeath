@@ -1,0 +1,43 @@
+{
+  "engineVersion": "5.2.32",
+  "compilerVersion": "5.2.32",
+  "template": {},
+  "target": {
+    "current": "web"
+  },
+  "modules": [
+    {
+      "name": "egret"
+    },
+    {
+      "name": "eui"
+    },
+    {
+      "name": "assetsmanager"
+    },
+    {
+      "name": "tween"
+    },
+    {
+      "name": "promise"
+    },
+    {
+      "name": "egretmgobe",
+      "path": "./libs/egretmgobe"
+    },
+    {
+      "name": "game"
+    }
+  ],
+  "targets": {
+    "android": {
+      "appname": "goudan",
+      "packagename": "com.aijinkang"
+    }
+  },
+  "eui": {
+    "exmlRoot": [
+      "resource/eui_skins"
+    ]
+  }
+}

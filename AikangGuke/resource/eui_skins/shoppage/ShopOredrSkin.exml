@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ShopOredrSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="botMov">
+			<tween:TweenItem target="{rect_bot}">
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{458.5}" y="{833.23}" alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="50">
+					<tween:props>
+						<e:Object alpha="{1}" x="{390}" y="{800}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="100">
+					<tween:props>
+						<e:Object x="{232.21}" y="{918}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="50">
+					<tween:props>
+						<e:Object x="{140}" y="{1070.31}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="50"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+    <e:Rect width="100%" height="100%" strokeAlpha="0" strokeWeight="0" fillColor="0x514f4f" fillAlpha="0.6"/>
+        
+    <e:Group width="100%" height="939" y="88">
+        <e:Rect width="100%" height="100%" fillColor="0xf9f7f7" ellipseWidth="20" ellipseHeight="20" y="-1"/>
+        <e:Group width="720" height="50" y="0">
+            <e:Label id="lab_itemname"  y="18.48" size="32" anchorOffsetX="0" width="483" stroke="0.2" strokeColor="0x000000" height="36" text="中式穴位推拿或沐足二选一" fontFamily="SimHei" textAlign="center" textColor="0x000000" horizontalCenter="0"/>
+            
+        </e:Group>
+			<e:Group width="720" height="100" y="60">
+				<e:Rect width="100%" height="100%" x="0" strokeColor="0x757272" fillColor="0xffffff" y="0"/>
+				<e:Label y="39" size="22" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="32" text="服务对象" fontFamily="SimHei" textAlign="left" x="16" textColor="0x565454"/>
+				<e:RadioButton id="_radio_wo" groupName="G3" value="0" x="150" y="20" label="服务自己" anchorOffsetX="0" width="200" skinName="RadioL028" height="60"/>
+				<e:RadioButton id="_radio_tb" groupName="G3" value="1" x="402" y="20" label="服务同伴" anchorOffsetX="0" width="200" skinName="RadioL028" height="60"/>
+			</e:Group>
+
+        <e:Group width="720" height="325" y="165">
+            <e:Label  y="20" size="22" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="26" text="选择技师" fontFamily="SimHei" textAlign="left" x="16" textColor="0x565454"/>
+            <e:Label id="lab_haveset_selhid"  y="21.44" size="18" anchorOffsetX="0" width="316" stroke="0.2" strokeColor="0x000000" height="26" text="只能在所选服务对象的第一项里设定" fontFamily="SimHei" textAlign="right" textColor="0x704d4d" x="386"/>
+            <e:RadioButton id="_radio_lun" groupName="G1" value="0" x="18" y="65.4" label="店家安排" anchorOffsetX="0" width="200" skinName="RadioL028" height="60"/>
+            <e:RadioButton id="_radio_nan" groupName="G1" value="1" x="248" y="65.4" label="要男技师" anchorOffsetX="0" width="200" skinName="RadioL028" height="60"/>
+            <e:RadioButton id="_radio_nv" groupName="G1" value="2" x="478.5" y="65.4" label="要女技师" anchorOffsetX="0" width="200" skinName="RadioL028" height="60"/>
+            <e:RadioButton id="_radio_dian" groupName="G1" value="3" x="16" y="148.28" label="我要点钟" width="200" skinName="RadioL028" height="60"/>
+            <e:Button id="_btn_worksel" y="148.28" label="选择技师"  width="200" height="60" x="248.5" skinName="BtnN9Skin"/>
+            <e:Button id="_btn_querytime" y="148.28" label="查看预约"  width="200" height="60" x="481" skinName="BtnN9Skin"/>
+
+            <e:Rect y="230" width="100%" height="90" x="0" fillAlpha="0.3" fillColor="0xd8d7cb"/>
+            <e:Label  y="262.12" size="22" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="26" text="技师等级" fontFamily="SimHei" textAlign="left" x="16" textColor="0x565454"/>
+            <e:RadioButton id="_radio_lev_no" groupName="G50" value="0" x="150" y="243.12" label="没有要求" anchorOffsetX="0" width="200" skinName="RadioL028" height="60"/>
+            <e:RadioButton id="_radio_lev_sel" groupName="G50" value="0" x="402" y="243.12" label="选择等级" anchorOffsetX="0" width="200" skinName="RadioL028" height="60"/>
+        </e:Group>
+        <e:Group id="group_time" width="720" height="270" y="494">
+            <e:Rect width="100%" height="100%" x="0" strokeColor="0x757272" fillColor="0xffffff" y="0"/>
+            <e:Label  y="20" size="22" anchorOffsetX="0" width="170" stroke="0.2" strokeColor="0x000000" height="32" text="时间钟次" fontFamily="SimHei" textAlign="left" x="16" textColor="0x565454"/>
+            <e:Label id="lab_haveset_settime"  y="26" size="18" anchorOffsetX="0" width="316" stroke="0.2" strokeColor="0x000000" height="26" text="只能在所选服务对象的第一项里设定" fontFamily="SimHei" textAlign="right" x="386" textColor="0x704d4d"/>
+            <e:Group x="80" y="70">
+                <e:Rect width="100%" height="100%" fillColor="0xcccccc" ellipseWidth="10" ellipseHeight="10" fillAlpha="0.6"/>
+                <e:Label  y="2" size="22" anchorOffsetX="0" width="170" stroke="0.2" strokeColor="0x000000" height="32" text="开始时间" fontFamily="SimHei" textAlign="center" horizontalCenter="0" verticalAlign="middle" textColor="0x444444"/>
+                <e:Group x="0" y="40" width="90" height="140">
+                    <e:Rect width="100%" height="100%" fillColor="0xd1d1d1"/>
+                    <e:Button id="_btn_time_MA" y="0" label="+"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01"/>    
+                    <e:Label id="lab_time_mou"  size="32" anchorOffsetX="0" width="70" stroke="0.2" strokeColor="0x000000" height="32" text="9月" fontFamily="SimHei" textAlign="center" textColor="0x352f2f" horizontalCenter="0" verticalCenter="0"/>
+                    <e:Button id="_btn_time_MD" label="-"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01" bottom="0"/>    
+                </e:Group>
+                <e:Group x="100" y="40" width="90" height="140">
+                    <e:Rect width="100%" height="100%" fillColor="0xd1d1d1"/>
+                    <e:Button id="_btn_time_DA" y="0" label="+"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01"/>    
+                    <e:Label id="lab_time_day"  size="32" anchorOffsetX="0" width="70" stroke="0.2" strokeColor="0x000000" height="32" text="21日" fontFamily="SimHei" textAlign="center" textColor="0x352f2f" horizontalCenter="0" verticalCenter="0"/>
+                    <e:Button id="_btn_time_DD" label="-"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01" bottom="0"/>    
+                </e:Group>
+                <e:Group x="200" y="40" width="90" height="140">
+                    <e:Rect width="100%" height="100%" fillColor="0xd1d1d1"/>
+                    <e:Button id="_btn_time_HA" y="0" label="+"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01"/>    
+                    <e:Label id="lab_time_hou"  size="32" anchorOffsetX="0" width="70" stroke="0.2" strokeColor="0x000000" height="32" text="14点" fontFamily="SimHei" textAlign="center" textColor="0x352f2f" horizontalCenter="0" verticalCenter="0"/>
+                    <e:Button id="_btn_time_HD" label="-"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01" bottom="0"/>    
+                </e:Group>
+                <e:Group x="300" y="40" width="90" height="140">
+                    <e:Rect width="100%" height="100%" fillColor="0xd1d1d1"/>
+                    <e:Button id="_btn_time_FA" y="0" label="+"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01"/>    
+                    <e:Label id="lab_time_min"  size="32" anchorOffsetX="0" width="70" stroke="0.2" strokeColor="0x000000" height="32" text="45分" fontFamily="SimHei" textAlign="center" textColor="0x352f2f" horizontalCenter="0" verticalCenter="0"/>
+                    <e:Button id="_btn_time_FD" label="-"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01" bottom="0"/>    
+                </e:Group>
+            </e:Group>
+            <e:Group x="520" y="70" width="130">
+                <e:Rect width="100%" height="100%" fillColor="0xcccccc" ellipseWidth="10" ellipseHeight="10" fillAlpha="0.6"/>
+                <e:Label  y="2" size="22" anchorOffsetX="0" width="100" stroke="0.2" strokeColor="0x000000" height="32" text="数量" fontFamily="SimHei" textAlign="center" horizontalCenter="0" verticalAlign="middle" textColor="0x444444"/>
+                <e:Group x="0" y="40" width="130" height="140">
+                    <e:Rect width="100%" height="100%" fillColor="0xd1d1d1"/>
+                    <e:Button id="_btn_time_NA" y="0" label="+"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01"/>    
+                    <e:Label id="lab_time_num"  size="32" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="32" text="2.5" fontFamily="SimHei" textAlign="center" textColor="0x352f2f" horizontalCenter="0" verticalCenter="0"/>
+                    <e:Button id="_btn_time_ND" label="-"  width="100%" height="45" anchorOffsetX="0" x="0" skinName="BtnAddTime01" bottom="0"/>    
+                </e:Group>
+                
+            </e:Group>
+            <e:Label id="lab_wntm" text="预约时间冲突" width="151" textAlign="center" verticalAlign="middle" lineSpacing="5" anchorOffsetY="0" anchorOffsetX="0" size="22" scaleX="1" scaleY="1" style="l_brown_1"  height="30" stroke="0.01" strokeColor="0x000000" fontFamily="Tahoma" y="20" x="229" textColor="0xd12323"/>
+            
+     
+        </e:Group>
+        
+        <e:Group id="group_add" width="720" height="170" y="767">
+            <e:Rect width="100%" height="100%" x="0" strokeColor="0x757272" fillColor="0xffffff" y="0"/>
+			<e:Label id="lab_sel_scrip" y="20" size="22" anchorOffsetX="0" width="665" stroke="0.2" strokeColor="0x000000" height="32" text="已选规格" fontFamily="SimHei" textAlign="left" x="16" textColor="0x565454"/>
+            <e:Label y="91.11" size="32" anchorOffsetX="0" width="95" stroke="0.2" strokeColor="0x000000" height="40" text="总计" fontFamily="SimHei" textAlign="right" x="14.49" textColor="0x000000"/>
+            <e:Label id="lab_itemprice"  y="60.03" size="56" anchorOffsetX="0" width="222.81" stroke="0.2" strokeColor="0x000000" height="80" text="¥86 " fontFamily="SimHei" textAlign="left" x="120.8" textColor="0xcc0a0a" verticalAlign="middle"/>
+            <e:Button id="_btn_order" y="74.59" label="添加"  width="296.36" height="60" anchorOffsetX="0" horizontalCenter="179" skinName="BtnN10Skin"/>
+        </e:Group>
+        <e:Button id="_btn_back" y="945.92" label="x"  skinName="BtnCloseX" horizontalCenter="0"/>
+			<e:Rect id="rect_bot" width="20" height="20" ellipseWidth="20" ellipseHeight="20" fillColor="0xe01111" x="525" y="913.23"/>
+    </e:Group>
+</e:Skin>
