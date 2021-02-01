@@ -1,5 +1,6 @@
 package com.aikang.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class PerUrlService {
     
     @Cacheable
     public List<PerUrl> getAllMenusWithRole() {
+    	if(Util.getConpnany_Name() == ""){
+    		return new ArrayList<PerUrl>();
+    	}
         return perurlMapper.getAllMenusWithRole(Util.getConpnany_Name());
     }
     
@@ -45,8 +49,8 @@ public class PerUrlService {
         return perurlMapper.getAllMenus2();
     }
     
-    public List<PerUrl> getAllMenusByUId(Integer hrid) {
-        return perurlMapper.getMenusByHrId3(hrid, Util.getConpnany_Name());
+    public List<PerUrl> getAllMenusByUId(Long hrid, String company) {
+        return perurlMapper.getMenusByHrId3(hrid, company);
     }
     
     public List<Integer> getMidsByRid(Integer rid) {

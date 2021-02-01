@@ -1,6 +1,7 @@
 package com.aikang.controller.RoomManager;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,6 +49,20 @@ public class RoomManager {
 	@RequestMapping("/Add/AddNew")
     @ResponseBody
     public String addNewRoom(@RequestBody Room room, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		
+		Map<String, Object> map = roomService.getAllCompanyRoomNum(Util.getConpnany_Name());
+		
+		if(map == null || map.get("total") == null){
+			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "公司房间信息库异常 ，请与服务商联系!");
+    		String s = Util.setResponseToClientString(request, response, err);
+    		return s;
+		}
+		Integer total = Integer.parseInt(map.get("total").toString());
+		if(total > 200){
+			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "公司会房间总数不能超过200个!");
+    		String s = Util.setResponseToClientString(request, response, err);
+    		return s;
+		}
 		
 		List<Room> rms = roomService.getRoomByName(room.getName());
 		if(rms!=null && rms.size()>0){

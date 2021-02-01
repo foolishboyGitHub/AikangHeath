@@ -6,9 +6,6 @@ var sproto;
     var sprotoRequest = (function () {
         function sprotoRequest() {
         }
-        // private static _HttHostDress:string = "https://192.168.125.10:8086";
-        // private static _HttHostDress:string = "http://139.159.135.51:8086";
-        // private static _HttHostDress:string = "https://www.aijinkang.com:8086";
         // private static _HttHostDress:string = "http://192.168.125.10:8086";
         sprotoRequest.Init = function () {
         };
@@ -65,7 +62,21 @@ var sproto;
         sprotoRequest.onPostProgress = function (event) {
             console.log("sproto    post progress : " + Math.floor(100 * event.bytesLoaded / event.bytesTotal) + "%");
         };
-        sprotoRequest._HttHostDress = "http://127.0.0.1:8086";
+        sprotoRequest.loadURLImgOnThisDress = function (filename, callback, thisobj) {
+            var imgsrc = sproto.sprotoRequest._HttHostDress + "/img/load/" + filename;
+            var loader = new egret.URLLoader();
+            loader.dataFormat = egret.URLLoaderDataFormat.TEXTURE;
+            //添加加载完成侦听
+            loader.addEventListener(egret.Event.COMPLETE, callback, thisobj);
+            //添加加载失败侦听
+            var request = new egret.URLRequest(imgsrc);
+            //开始加载
+            loader.load(request);
+        };
+        //  private static _HttHostDress:string = "http://127.0.0.1:8086";
+        //  private static _HttHostDress:string = "https://192.168.125.10:8086";
+        // private static _HttHostDress:string = "http://139.159.135.51:8086";
+        sprotoRequest._HttHostDress = "https://www.aijinkang.com:8086";
         return sprotoRequest;
     }());
     sproto.sprotoRequest = sprotoRequest;

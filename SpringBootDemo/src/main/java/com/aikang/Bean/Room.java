@@ -2,7 +2,9 @@ package com.aikang.Bean;
 
 public class Room {
 
-	private Integer id;
+	private Long id;
+	
+	private String  company; //公司
 	
 	private String  name;
 	
@@ -16,11 +18,11 @@ public class Room {
 	
 	private String mark;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -70,5 +72,13 @@ public class Room {
 
 	public void setEnabled(Integer enabled) {
 		this.enabled = enabled;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 }

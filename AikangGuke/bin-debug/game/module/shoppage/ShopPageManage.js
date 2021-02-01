@@ -32,6 +32,16 @@ var ShopPageManage = (function (_super) {
         sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_GetHistoryShopInfo, _this.SendMessageEvent, _this);
         sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_RequestMoneyChannel, _this.SendMessageEvent, _this);
         sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_AskMoneyChannel, _this.SendMessageEvent, _this);
+        sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_GetMyHuiYuanInfo, _this.SendMessageEvent, _this);
+        sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_BindTeleVerifySendCode, _this.SendMessageEvent, _this);
+        sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_BindTeleVerifyBindByCode, _this.SendMessageEvent, _this);
+        sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_RequestHuiYuanPayInfo, _this.SendMessageEvent, _this);
+        sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_SelMyHuiYuanAndToPay, _this.SendMessageEvent, _this);
+        sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_SureToSelMyHuiYuanAndToPay, _this.SendMessageEvent, _this);
+        sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_GetHistoryShopInfoDetail, _this.SendMessageEvent, _this);
+        sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_FreshOrderList, _this.SendMessageEvent, _this);
+        sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_GetHistoryGoInfo, _this.SendMessageEvent, _this);
+        sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_SerachCompanyGoInfo, _this.SendMessageEvent, _this);
         return _this;
     }
     ShopPageManage.ins = function () {

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.MoneyChannelMapper">
+    <resultMap id="BaseResultMap" type="com.aikang.Bean.MoneyChannel">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="channelname" property="channelname" jdbcType="VARCHAR"/>
+		<result column="blocktime" property="blocktime" jdbcType="VARCHAR"/>
+		<result column="isblock" property="isblock" jdbcType="INTEGER"/>
+		<result column="blockkid" property="blockkid" jdbcType="BIGINT"/>
+		<result column="blocktype" property="blocktype" jdbcType="INTEGER"/>
+		<result column="blockbillnumber" property="blockbillnumber" jdbcType="VARCHAR"/>
+		<result column="blockbillprice" property="blockbillprice" jdbcType="DOUBLE"/>		
+    </resultMap> 
+    
+
+   
+    <select id="getCompanyAllMoneyChannel" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from moneychannel
+        where company=#{company}
+    </select>
+    
+    <select id="getCompanyMoneyChannelByChannelName" resultMap="BaseResultMap" statementType="PREPARED">
+        select
+        id, 
+        IFNULL(company, "") as company,
+        IFNULL(channelname, "") as channelname,
+        IFNULL(blocktime, "") as blocktime,
+        IFNULL(isblock, 0) as isblock,
+        IFNULL(blockkid, 0) as blockkid,
+        IFNULL(blocktype, 0) as blocktype, 
+        IFNULL(blockbillnumber, "") as blockbillnumber, 
+        IFNULL(blockbillprice, 0) as blockbillprice 
+        from moneychannel
+        where company=#{company} and channelname=#{channelname} and blockbillprice=#{price}
+    </select>
+     
+  		
+  	<insert id="addMoneyChannel">
+	    insert into moneychannel 
+	    (
+	    company,channelname,blocktime,isblock,blockkid,blocktype,blockbillnumber,blockbillprice
+	    ) 
+	    values    
+	    (
+	      #{record.company},
+	      #{record.channelname},
+	      #{record.blocktime},
+	      #{record.isblock},
+	      #{record.blockkid},
+	      #{record.blocktype},
+	      #{record.blockbillnumber},
+	      #{record.blockbillprice}
+	    )
+	   
+	</insert>
+	<update id="updateMoneyChannelByIDSelective" parameterType="com.aikang.Bean.MoneyChannel" statementType="PREPARED">
+        update moneychannel
+        <set>
+            <if test="record.company != null">
+                company = #{record.company,jdbcType=VARCHAR},
+            </if>
+            <if test="record.channelname != null">
+                channelname = #{record.channelname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.blocktime != null">
+                blocktime = #{record.blocktime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.isblock != null">
+                isblock = #{record.isblock,jdbcType=INTEGER},
+            </if>
+      		<if test="record.blockkid != null">
+                blockkid = #{record.blockkid,jdbcType=BIGINT},
+            </if> 
+            <if test="record.blocktype != null">
+                blocktype = #{record.blocktype,jdbcType=INTEGER},
+            </if>
+      		<if test="record.blockbillnumber != null">
+                blockbillnumber = #{record.blockbillnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="record.blockbillprice != null">
+                blockbillprice = #{record.blockbillprice,jdbcType=DOUBLE},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+    <delete id="deleteMoneyChannelByID">
+    	delete from moneychannel where id=#{id}
+  	</delete>
+  	
+  	
+  	<resultMap id="MoneyChannelRecordMap" type="com.aikang.Bean.GukePayChannelRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="channelname" property="channelname" jdbcType="VARCHAR"/>
+		<result column="blocktime" property="blocktime" jdbcType="VARCHAR"/>
+		<result column="isblock" property="isblock" jdbcType="INTEGER"/>
+		<result column="blockkid" property="blockkid" jdbcType="BIGINT"/>
+		<result column="blocktype" property="blocktype" jdbcType="INTEGER"/>
+		<result column="blockbillnumber" property="blockbillnumber" jdbcType="VARCHAR"/>
+		<result column="blockbillprice" property="blockbillprice" jdbcType="DOUBLE"/>
+		<result column="paymoney" property="paymoney" jdbcType="DOUBLE"/>
+		<result column="paynotifytime" property="paynotifytime" jdbcType="VARCHAR"/>
+		<result column="payrecivetime" property="payrecivetime" jdbcType="VARCHAR"/>
+		<result column="notifytile" property="notifytile" jdbcType="VARCHAR"/>
+		<result column="notifycontent" property="notifycontent" jdbcType="VARCHAR"/>		
+    </resultMap>
+    <select id="getCompanyAllMoneyChannelRecord" resultMap="MoneyChannelRecordMap" statementType="PREPARED">
+        select * from moneychannelrecord
+        where company=#{company}
+    </select>
+    
+    <select id="getCompanyMoneyChannelRecordByChannelName" resultMap="MoneyChannelRecordMap" statementType="PREPARED">
+        select
+        id, 
+        IFNULL(company, "") as company,
+        IFNULL(channelname, "") as channelname,
+        IFNULL(blocktime, "") as blocktime,
+        IFNULL(isblock, 0) as isblock,
+        IFNULL(blockkid, 0) as blockkid,
+        IFNULL(blocktype, 0) as blocktype, 
+        IFNULL(blockbillnumber, "") as blockbillnumber, 
+        IFNULL(blockbillprice, 0) as blockbillprice,
+        IFNULL(paymoney, 0) as paymoney,
+        IFNULL(paynotifytime, "") as paynotifytime,
+        IFNULL(payrecivetime, "") as payrecivetime,
+        IFNULL(notifytile, "") as notifytile,
+        IFNULL(notifycontent, "") as notifycontent 
+        from moneychannelrecord
+        where company=#{company} and channelname=#{channelname} and blockbillprice=#{price}
+    </select>
+    <insert id="addMoneyChannelRecord">
+	    insert into moneychannelrecord 
+	    (
+	    company,channelname,blocktime,isblock,blockkid,blocktype,blockbillnumber,blockbillprice,
+	    paymoney,paynotifytime,payrecivetime,notifytile,notifycontent
+	    ) 
+	    values    
+	    (
+	      #{record.company},
+	      #{record.channelname},
+	      #{record.blocktime},
+	      #{record.isblock},
+	      #{record.blockkid},
+	      #{record.blocktype},
+	      #{record.blockbillnumber},
+	      #{record.blockbillprice},
+	      #{record.paymoney},
+	      #{record.paynotifytime},
+	      #{record.payrecivetime},
+	      #{record.notifytile},
+	      #{record.notifycontent}
+	    )
+	   
+	</insert>
+	<delete id="deleteMoneyChannelRecordByID">
+    	delete from moneychannelrecord where id=#{id}
+  	</delete>
+</mapper>

@@ -1,5 +1,6 @@
 class ShopPageManage   extends BaseSystem {
 	
+	public data_CompanyInfo:any;
 	public data_ShopInfoItem:any;
 	public data_ShopWorkerList:any;
 	public data_ThisWorkerItemList:any;
@@ -9,7 +10,11 @@ class ShopPageManage   extends BaseSystem {
 	public ShopGuke_TimeType:number = 0;
 	public data_ShopMakeList:any;
 	public data_ShopHistoryList:any;
+	public data_ShopHistoryListDetail:any;
 	public data_MoneyChannelInfo:any;
+	public data_MyHuiYuanInfo:any;
+	public data_ShopHistoryGoInfoList:any;
+	public data_SerachShopGoInfoList:any;
 	public _selGukeIdx = 0;
 
 	public _addstate = 0;
@@ -32,6 +37,17 @@ class ShopPageManage   extends BaseSystem {
 		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_GetHistoryShopInfo, this.SendMessageEvent, this);
 		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_RequestMoneyChannel, this.SendMessageEvent, this);
 		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_AskMoneyChannel, this.SendMessageEvent, this);
+		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_GetMyHuiYuanInfo, this.SendMessageEvent, this);
+		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_BindTeleVerifySendCode, this.SendMessageEvent, this);
+		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_BindTeleVerifyBindByCode, this.SendMessageEvent, this);
+		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_RequestHuiYuanPayInfo, this.SendMessageEvent, this);
+		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_SelMyHuiYuanAndToPay, this.SendMessageEvent, this);
+		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_SureToSelMyHuiYuanAndToPay, this.SendMessageEvent, this);
+		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_GetHistoryShopInfoDetail, this.SendMessageEvent, this);
+		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_FreshOrderList, this.SendMessageEvent, this);
+		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_GetHistoryGoInfo, this.SendMessageEvent, this);
+		sproto.sprotoMsgReceiver.AddHandler(FuncUrlUtil.ShopInfo_SerachCompanyGoInfo, this.SendMessageEvent, this);
+		
 		
 	}
 	public static ins(): ShopPageManage {

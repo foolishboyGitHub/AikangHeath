@@ -4,13 +4,14 @@
     
     <e:Scroller id="scrollMy_s" skinName="scrollHasNoBar" x="0" y="0" height="1080" width="720" anchorOffsetY="0">
         <e:Group>
-            <e:Button id="_btn_gohistory" y="10" label="&lt;- 历史订单"  anchorOffsetX="0" skinName="btnShopHistoryOrder" x="10"/>
             <e:Group width="100%" y="60" height="300">
                 <e:Rect width="100%" height="100%" fillColor="0xf4f3f2" ellipseWidth="40" ellipseHeight="40"/>
-                <e:Image id="pic_companypic" anchorOffsetX="0" width="300" anchorOffsetY="0" height="200" y="20" right="20" source=""/>
-                <e:Label id="lab_companyname"  y="30" size="32" anchorOffsetX="0" width="360" stroke="0.2" strokeColor="0x000000" height="34" text="爱康推拿（江南西店）" fontFamily="SimHei" textAlign="left" textColor="0x000000" x="20"/>
-                <e:Label id="lab_companydress"  y="104" size="22" anchorOffsetX="0" width="345" stroke="0.2" strokeColor="0x000000" height="58" text="地址：江南大道中173号桥鸿大厦3楼(地铁2号江南西站线E出口)" fontFamily="Arial" textAlign="left" x="20" anchorOffsetY="0" textColor="0x383535"/>
-                <e:Label id="lab_companyphone"  y="176" size="22" anchorOffsetX="0" width="365" stroke="0.2" strokeColor="0x000000" height="24" text="电话：02031950745/18027339919" fontFamily="Arial" textAlign="left" x="20" anchorOffsetY="0" textColor="0x383535"/>
+                <e:Group id="group_companypic"  width="300" height="240" x="395" y="18">
+                </e:Group>>
+                <e:Label id="lab_companyname"  y="20" size="32" anchorOffsetX="0" width="360" stroke="0.2" strokeColor="0x000000" height="34" text="爱康推拿（江南西店）" fontFamily="SimHei" textAlign="left" textColor="0x000000" x="20"/>
+                <e:Label id="lab_companydress"  y="92" size="22" anchorOffsetX="0" width="350" stroke="0.2" strokeColor="0x000000" text="地址：江南大道中173号桥鸿大厦3楼(地铁2号江南西站线E出口)" fontFamily="Arial" textAlign="left" x="20" anchorOffsetY="0" textColor="0x383535"/>
+                <e:Label id="lab_companyphone"  y="193" size="22" anchorOffsetX="0" width="366" stroke="0.2" strokeColor="0x000000" height="24" text="电话：02031950745/18027339919" fontFamily="Arial" textAlign="left" x="20" anchorOffsetY="0" textColor="0x383535"/>
+                <e:Label id="lab_companymobil"  y="230" size="22" anchorOffsetX="0" width="366" stroke="0.2" strokeColor="0x000000" height="24" text="手机：02031950745/18027339919" fontFamily="Arial" textAlign="left" x="20" anchorOffsetY="0" textColor="0x383535"/>
             </e:Group>
             <e:List id="listItem_s" itemRendererSkinName="ShopPangeItem" anchorOffsetY="0" width="712" y="360">
                 <e:ArrayCollection>

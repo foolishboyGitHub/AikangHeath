@@ -2,21 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.aikang.mapper.UserMapper">
     <resultMap id="BaseResultMap" type="com.aikang.Bean.User">
-        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
         <result column="memid" property="memid" jdbcType="VARCHAR"/>
         <result column="socialnumber" property="socialnumber" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="servicecode" property="servicecode" jdbcType="VARCHAR"/>
         <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="level" property="level" jdbcType="INTEGER"/>
         <result column="phone" property="phone" jdbcType="CHAR"/>
         <result column="telephone" property="telephone" jdbcType="VARCHAR"/>
         <result column="address" property="address" jdbcType="VARCHAR"/>
         <result column="enabled" property="enabled" jdbcType="BIT"/>
         <result column="username" property="username" jdbcType="VARCHAR"/>
         <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="passwordtest" property="passwordtest" jdbcType="VARCHAR"/>
         <result column="userface" property="userface" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
-        <result column="cloudid" property="cloudid" jdbcType="INTEGER"/>
+        <result column="cloudid" property="cloudid" jdbcType="BIGINT"/>
+        <result column="companytest" property="companytest" jdbcType="VARCHAR"/>
+        <result column="wndtype" property="wndtype" jdbcType="VARCHAR"/>
+        <result column="wxsessioncode" property="wxsessioncode" jdbcType="VARCHAR"/>
+        <result column="wxopenid" property="wxopenid" jdbcType="VARCHAR"/>
+        <result column="wxsessiontempkey" property="wxsessiontempkey" jdbcType="VARCHAR"/>
+        <result column="isteled" property="isteled" jdbcType="INTEGER"/>
     </resultMap> 
     <resultMap id="HrWithRoles" type="com.aikang.Bean.User" extends="BaseResultMap">
         <collection property="roles" ofType="com.aikang.Bean.Role">
@@ -32,88 +41,309 @@
         show TABLES like #{tablename}
       </select>
     <select id="getAllHrsExceptCurrentHr" resultMap="BaseResultMap" statementType="PREPARED">
-        select * from ${company}_hr where id !=#{id};
+        select * from aikang_hr where id !=#{id} and company=#{company};
     </select>
     <select id="getAllHrs" resultMap="HrWithRoles" statementType="PREPARED">
-        select hr.id, hr.memid, hr.socialnumber, hr.sex, hr.servicecode, hr.name, hr.phone, hr.telephone, hr.address, hr.enabled, hr.username, hr.userface,
-        hr.remark,r.`id` as rid,r.`name` as rname,r.`nameZh` as rnameZh from ${company}_hr hr left join ${company}_hr_role hrr on
-        hr.`id`=hrr.`hrid` left join role r on hrr.`rid`=r.`id` where hr.`id`!=#{hrid}
+        select 
+        hr.id, hr.memid, hr.socialnumber, hr.sex, hr.level,
+        hr.servicecode, hr.name, hr.phone, hr.telephone, 
+        hr.address, hr.enabled, hr.username, hr.userface,
+        hr.remark,
+        r.`id` as rid,
+        r.`name` as rname,
+        r.`nameZh` as rnameZh 
+        from aikang_hr hr 
+        left join aikang_hr_role hrr 
+        on 
+        hr.`id`=hrr.`hrid` 
+        left join role r 
+        on hrr.`rid`=r.`id` 
+        where hr.`id`!=#{hrid} and hr.company=#{company}
+        <if test="keywords!=null">
+            and hr.name like concat('%',#{keywords},'%')
+        </if>
+        order by hr.id
+    </select>
+    <select id="getAllSimpHrs" resultMap="BaseResultMap" statementType="PREPARED">
+        select 
+        hr.id, hr.memid, hr.socialnumber, hr.sex, hr.name, hr.username
+        from aikang_hr hr 
+        where hr.company=#{company}
         <if test="keywords!=null">
             and hr.name like concat('%',#{keywords},'%')
         </if>
         order by hr.id
     </select>
     <select id="getHrRolesById" resultType="com.aikang.Bean.Role" statementType="PREPARED">
-    select r.* from role r,${company}_hr_role hrr where hrr.`rid`=r.`id` and hrr.`hrid`=#{id}
+    select r.* from role r,aikang_hr_role hrr 
+    where hrr.`rid`=r.`id` and hrr.`hrid`=#{id}
+    and company=#{company}
   </select>
     <select id="loadUserByUsername" resultMap="BaseResultMap" statementType="PREPARED">
-    select * from ${company}_hr where username=#{username}
+    select * from aikang_hr 
+    where username=#{username}
+    and company=#{company}
   </select>
   <select id="loadAdminUser" resultMap="BaseResultMap" statementType="PREPARED">
-    select * from ${company}_admintab where username=#{username}
+    select * from aikang_admintab 
+    where username=#{username}
+    and company=#{company}
   </select>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" statementType="PREPARED">
         select
         <include refid="Base_Column_List"/>
-        from ${company}_hr
-        where id = #{id,jdbcType=INTEGER}
+        from aikang_hr
+        where id = #{id} and company=#{company}
     </select>
     <select id="selectBy_username" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
         select
         <include refid="Base_Column_List"/>
-        from ${company}_hr
-        where username = #{username}
+        from aikang_hr
+        where username = #{username} and company=#{company}
     </select>
     <select id="selectBy_memid" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
         select
         <include refid="Base_Column_List"/>
-        from ${company}_hr
-        where memid = #{memid}
+        from aikang_hr
+        where memid = #{memid} and company=#{company}
     </select>
     <select id="selectBy_servicecode" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
         select
         <include refid="Base_Column_List"/>
-        from ${company}_hr
-        where servicecode = #{servicecode}
+        from aikang_hr
+        where servicecode = #{servicecode} and company=#{company}
     </select>
     <select id="selectBy_phone" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
         select
         <include refid="Base_Column_List"/>
-        from ${company}_hr
-        where phone = #{phone}
+        from aikang_hr
+        where phone = #{phone} and company=#{company}
     </select>
     <select id="selectBy_servicecode_ec" resultMap="BaseResultMap" statementType="PREPARED">
         select
         <include refid="Base_Column_List"/>
-        from ${company}_hr
-        where servicecode = #{servicecode} and  id !=#{id}
+        from aikang_hr
+        where servicecode = #{servicecode} and  id !=#{id} and company=#{company}
     </select>
     <select id="selectBy_phone_ec" resultMap="BaseResultMap" statementType="PREPARED">
         select
         <include refid="Base_Column_List"/>
-        from ${company}_hr
-        where phone = #{phone} and  id !=#{id}
+        from aikang_hr
+        where phone = #{phone} and  id !=#{id} and company=#{company}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" statementType="PREPARED">
-    delete from ${company}_hr
-    where id = #{id,jdbcType=INTEGER}
+    delete from aikang_hr
+    where id = #{id} and company=#{company}
   </delete>
     <insert id="insert" parameterType="com.aikang.Bean.User" statementType="PREPARED">
-	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Integer">
+	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Long">
 	       select LAST_INSERT_ID()
 	   </selectKey>
-    insert into ${company}_hr (id, memid, socialnumber, name, sex, servicecode, phone, 
-      telephone, address, enabled, 
-      username, password, userface, 
-      remark, cloudid)
-    values (#{record.id,jdbcType=INTEGER}, #{record.memid,jdbcType=VARCHAR}, #{record.socialnumber,jdbcType=VARCHAR}, 
-      #{record.name,jdbcType=VARCHAR}, #{record.sex,jdbcType=VARCHAR}, #{record.servicecode,jdbcType=VARCHAR}, #{record.phone,jdbcType=CHAR}, 
-      #{record.telephone,jdbcType=VARCHAR}, #{record.address,jdbcType=VARCHAR}, #{record.enabled,jdbcType=BIT}, 
-      #{record.username,jdbcType=VARCHAR}, #{record.password,jdbcType=VARCHAR}, #{record.userface,jdbcType=VARCHAR}, 
-      #{record.remark,jdbcType=VARCHAR}, #{record.cloudid,jdbcType=INTEGER})
+    insert into aikang_hr 
+    (
+      company,
+      memid, 
+      socialnumber, 
+      name, 
+      sex,
+      level, 
+      servicecode, 
+      phone, 
+      telephone, 
+      address, 
+      enabled, 
+      username, 
+      password, 
+      userface, 
+      remark, 
+      cloudid
+      )
+    values (
+	  IFNULL(#{company,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.memid,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.socialnumber,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.name,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.sex,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.level,jdbcType=INTEGER}, 0), 
+      IFNULL(#{record.servicecode,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.phone,jdbcType=CHAR}, ""),  
+      IFNULL(#{record.telephone,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.address,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.enabled,jdbcType=BIT}, 0),
+      IFNULL(#{record.username,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.password,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.userface,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.remark,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.cloudid,jdbcType=BIGINT}, 0) 
+      )
   </insert>
-    <insert id="insertSelective" parameterType="com.aikang.Bean.User" statementType="PREPARED">
-        insert into ${company}_hr
+    <update id="updateByPrimaryKeySelective" parameterType="com.aikang.Bean.User" statementType="PREPARED">
+        update aikang_hr
+        <set>
+            <if test="record.name != null">
+                name = #{record.name,jdbcType=VARCHAR},
+            </if>
+            <if test="record.socialnumber != null">
+                socialnumber = #{record.socialnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="record.sex != null">
+                sex = #{record.sex,jdbcType=VARCHAR},
+            </if>
+            <if test="record.level != null">
+                level = #{record.level,jdbcType=INTEGER},
+            </if>
+            <if test="record.servicecode != null">
+                servicecode = #{record.servicecode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.phone != null">
+                phone = #{record.phone,jdbcType=CHAR},
+            </if>
+            <if test="record.telephone != null">
+                telephone = #{record.telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="record.address != null">
+                address = #{record.address,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userface != null">
+                userface = #{record.userface,jdbcType=VARCHAR},
+            </if>
+            <if test="record.remark != null">
+                remark = #{record.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="record.password != null">
+                password = #{record.password,jdbcType=VARCHAR},
+            </if>
+            <if test="record.passwordtest != null">
+                passwordtest = #{record.passwordtest,jdbcType=VARCHAR},
+            </if>
+            <if test="record.companytest != null">
+                companytest = #{record.companytest,jdbcType=VARCHAR},
+            </if>
+            <if test="record.wndtype != null">
+                wndtype = #{record.wndtype,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{record.id} and company=#{company}
+    </update>
+    <update id="updateAdminByPrimaryKeySelective" parameterType="com.aikang.Bean.User" statementType="PREPARED">
+        update aikang_admintab
+        <set>
+            <if test="record.name != null">
+                name = #{record.name,jdbcType=VARCHAR},
+            </if>
+            <if test="record.socialnumber != null">
+                socialnumber = #{record.socialnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="record.sex != null">
+                sex = #{record.sex,jdbcType=VARCHAR},
+            </if>
+            <if test="record.servicecode != null">
+                servicecode = #{record.servicecode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.phone != null">
+                phone = #{record.phone,jdbcType=CHAR},
+            </if>
+            <if test="record.telephone != null">
+                telephone = #{record.telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="record.address != null">
+                address = #{record.address,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userface != null">
+                userface = #{record.userface,jdbcType=VARCHAR},
+            </if>
+            <if test="record.remark != null">
+                remark = #{record.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="record.password != null">
+                password = #{record.password,jdbcType=VARCHAR},
+            </if>
+            <if test="record.passwordtest != null">
+                passwordtest = #{record.passwordtest,jdbcType=VARCHAR},
+            </if>
+            <if test="record.companytest != null">
+                companytest = #{record.companytest,jdbcType=VARCHAR},
+            </if>
+            <if test="record.wndtype != null">
+                wndtype = #{record.wndtype,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{record.id} and company=#{company}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.aikang.Bean.User" statementType="PREPARED">
+    update aikang_hr
+    set name = #{record.name,jdbcType=VARCHAR},
+	    socialnumber = #{record.socialnumber,jdbcType=CHAR},
+	    sex = #{record.sex,jdbcType=CHAR},
+	    servicecode = #{record.servicecode,jdbcType=CHAR},
+      phone = #{record.phone,jdbcType=CHAR},
+      telephone = #{record.telephone,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      userface = #{record.userface,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    where id = #{record.id} and company=#{company}
+  </update>
+  <update id="updateEnableByPrimaryKey" parameterType="com.aikang.Bean.User" statementType="PREPARED">
+    update aikang_hr
+     set enabled = #{record.enabled,jdbcType=BIT}
+    where id = #{record.id} and company=#{company}
+  </update>
+  
+  
+  
+  <insert id="winsertuser" parameterType="com.aikang.Bean.User" statementType="PREPARED">
+	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Long">
+	       select LAST_INSERT_ID()
+	   </selectKey>
+    insert into guke (
+      id, 
+      memid, 
+      socialnumber, 
+      name, 
+      sex, 
+      servicecode, 
+      phone, 
+      telephone, 
+      address, 
+      enabled, 
+      username, 
+      password,
+      passwordtest,
+      companytest,
+      wndtype, 
+      userface, 
+      remark, 
+      cloudid, 
+      wxsessioncode, 
+      wxopenid, 
+      wxsessiontempkey,
+      isteled)
+    values 
+    (#{record.id,jdbcType=INTEGER}, 
+     #{record.memid,jdbcType=VARCHAR}, 
+     #{record.socialnumber,jdbcType=VARCHAR}, 
+      #{record.name,jdbcType=VARCHAR}, 
+      #{record.sex,jdbcType=VARCHAR}, 
+      #{record.servicecode,jdbcType=VARCHAR}, 
+      #{record.phone,jdbcType=CHAR}, 
+      #{record.telephone,jdbcType=VARCHAR}, 
+      #{record.address,jdbcType=VARCHAR}, 
+      #{record.enabled,jdbcType=BIT}, 
+      #{record.username,jdbcType=VARCHAR}, 
+      #{record.password,jdbcType=VARCHAR}, 
+      #{record.passwordtest,jdbcType=VARCHAR},
+      #{record.companytest,jdbcType=VARCHAR},
+      #{record.wndtype,jdbcType=VARCHAR},
+      #{record.userface,jdbcType=VARCHAR}, 
+      #{record.remark,jdbcType=VARCHAR}, 
+      #{record.cloudid,jdbcType=BIGINT}, 
+      #{record.wxsessioncode,jdbcType=VARCHAR},
+      #{record.wxopenid,jdbcType=VARCHAR},
+      #{record.wxsessiontempkey,jdbcType=VARCHAR},
+      #{record.isteled,jdbcType=INTEGER})
+  </insert>
+    <insert id="winsertSelective" parameterType="com.aikang.Bean.User" statementType="PREPARED">
+        insert into guke
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="record.id != null">
                 id,
@@ -144,6 +374,18 @@
             </if>
             <if test="record.remark != null">
                 remark,
+            </if>
+            <if test="record.wxsessioncode != null">
+                wxsessioncode,
+            </if>
+            <if test="record.wxopenid != null">
+                wxopenid,
+            </if>
+            <if test="record.wxsessiontempkey != null">
+                wxsessiontempkey,
+            </if>
+            <if test="record.wxsessiontempkey != null">
+                isteled,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -177,10 +419,47 @@
             <if test="record.remark != null">
                 #{record.remark,jdbcType=VARCHAR},
             </if>
+            <if test="record.wxsessioncode != null">
+                #{record.wxsessioncode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.wxopenid != null">
+                #{record.wxopenid,jdbcType=VARCHAR},
+            </if>
+            <if test="record.wxsessiontempkey != null">
+                #{record.wxsessiontempkey,jdbcType=VARCHAR},
+            </if>
+            <if test="record.wxsessiontempkey != null">
+                #{record.isteled,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.aikang.Bean.User" statementType="PREPARED">
-        update ${company}_hr
+    
+    <select id="wselectBy_username" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
+        select * from guke where username = #{username}
+    </select>
+    
+	<select id="wselectBy_phone" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
+        select * from guke where phone = #{phone}
+    </select>
+    
+    <select id="wloadUserByWXOpenid" resultMap="BaseResultMap" statementType="PREPARED">
+	   select * from guke where wxopenid=#{wxopenid}
+	</select>
+	
+	<select id="wloadUserByID" resultMap="BaseResultMap" statementType="PREPARED">
+	   select * from guke where id=#{id}
+	</select>
+	
+	<select id="wselectBy_sessioncode" resultMap="BaseResultMap" statementType="PREPARED">
+	   select * from guke where wxsessioncode=#{sessioncode}
+	</select>
+
+    <select id="wloadUserByUsername" resultMap="BaseResultMap" statementType="PREPARED">
+	   select * from guke where username=#{username}
+	</select>
+	
+    <update id="wupdateByPrimaryKeySelective" parameterType="com.aikang.Bean.User" statementType="PREPARED">
+        update guke
         <set>
             <if test="record.name != null">
                 name = #{record.name,jdbcType=VARCHAR},
@@ -209,25 +488,101 @@
             <if test="record.remark != null">
                 remark = #{record.remark,jdbcType=VARCHAR},
             </if>
+            <if test="record.password != null">
+                password = #{record.password,jdbcType=VARCHAR},
+            </if>
+            <if test="record.passwordtest != null">
+                passwordtest = #{record.passwordtest,jdbcType=VARCHAR},
+            </if>
+            <if test="record.companytest != null">
+                companytest = #{record.companytest,jdbcType=VARCHAR},
+            </if>
+            <if test="record.wndtype != null">
+                wndtype = #{record.wndtype,jdbcType=VARCHAR},
+            </if>
+            <if test="record.wxsessioncode != null">
+                wxsessioncode = #{record.wxsessioncode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.wxsessiontempkey != null">
+                wxsessiontempkey = #{record.wxsessiontempkey,jdbcType=VARCHAR},
+            </if>
+            <if test="record.isteled != null">
+                isteled = #{record.isteled,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{record.id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.aikang.Bean.User" statementType="PREPARED">
-    update ${company}_hr
-    set name = #{record.name,jdbcType=VARCHAR},
-	    socialnumber = #{record.socialnumber,jdbcType=CHAR},
-	    sex = #{record.sex,jdbcType=CHAR},
-	    servicecode = #{record.servicecode,jdbcType=CHAR},
-      phone = #{record.phone,jdbcType=CHAR},
-      telephone = #{record.telephone,jdbcType=VARCHAR},
-      address = #{record.address,jdbcType=VARCHAR},
-      userface = #{record.userface,jdbcType=VARCHAR},
-      remark = #{record.remark,jdbcType=VARCHAR}
-    where id = #{record.id,jdbcType=INTEGER}
-  </update>
-  <update id="updateEnableByPrimaryKey" parameterType="com.aikang.Bean.User" statementType="PREPARED">
-    update ${company}_hr
-     set enabled = #{record.enabled,jdbcType=BIT}
-    where id = #{record.id,jdbcType=INTEGER}
-  </update>
+    
+    
+    
+    
+    <resultMap id="TeleVerfyResault" type="com.aikang.Bean.TeleVerify" >
+	    <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="uid" property="uid" jdbcType="BIGINT" />
+	    <result column="type" property="type" jdbcType="VARCHAR" />
+	    <result column="telenumber" property="telenumber" jdbcType="VARCHAR" />
+	    <result column="code" property="code" jdbcType="VARCHAR" />
+	    <result column="sendtime" property="sendtime" jdbcType="VARCHAR" />
+	 </resultMap>
+	 
+	 <select id="getTeleVerfyByID" resultMap="TeleVerfyResault" statementType="PREPARED">
+        select *
+        from guketelecode 
+        where id=#{id}
+     </select>
+     <select id="getTeleVerfyByUidAndTelenumberAndType" resultMap="TeleVerfyResault" statementType="PREPARED">
+        select *
+        from guketelecode 
+        where uid=#{uid} and telenumber=#{telenumber} and type=#{type}
+     </select>
+     
+     <select id="getTeleVerfyByTelenumberAndType" resultMap="TeleVerfyResault" statementType="PREPARED">
+        select *
+        from guketelecode 
+        where telenumber=#{telenumber} and type=#{type}
+     </select>
+
+	 <insert id="insertTeleCode" parameterType="com.aikang.Bean.TeleVerify" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+		insert into guketelecode
+	    (
+	    	uid,
+	    	type,
+	    	telenumber,
+	    	code,
+	    	sendtime
+	    )   
+		values 
+	      (
+	      IFNULL(#{record.uid,jdbcType=BIGINT}, 0),
+	      IFNULL(#{record.type,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.telenumber,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.code,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.sendtime,jdbcType=VARCHAR}, 0)
+	      )
+	</insert>
+	
+	<update id="updateTeleCodeByPrimaryKeySelective" parameterType="com.aikang.Bean.TeleVerify" statementType="PREPARED">
+        update guketelecode
+        <set>
+            <if test="record.uid != null">
+                uid = #{record.uid,jdbcType=BIGINT},           
+            </if> 
+        	<if test="record.type != null">
+                type = #{record.type,jdbcType=VARCHAR},
+            </if>
+            <if test="record.telenumber != null">
+                telenumber = #{record.telenumber,jdbcType=VARCHAR},
+            </if>
+            <if test="record.code != null">
+                code = #{record.code,jdbcType=VARCHAR},
+            </if> 
+            <if test="record.sendtime != null">
+                sendtime = #{record.sendtime,jdbcType=VARCHAR},
+            </if> 
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+    
+    
+    
 </mapper>

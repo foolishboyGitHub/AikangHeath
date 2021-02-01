@@ -2,11 +2,13 @@ package com.aikang.Bean;
 
 public class ServiceSalary {
 
-	private Integer id;
+	private Long id;
 	
-	private Integer hid;
+	private String company;
 	
-	private Integer sid;
+	private Long hid;
+	
+	private Long sid;
 	
 	private Integer sdx;
 	
@@ -29,27 +31,27 @@ public class ServiceSalary {
 	private double  defsalarysz;
 	
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Integer getHid() {
+	public Long getHid() {
 		return hid;
 	}
 
-	public void setHid(Integer hid) {
+	public void setHid(Long hid) {
 		this.hid = hid;
 	}
 
-	public Integer getSid() {
+	public Long getSid() {
 		return sid;
 	}
 
-	public void setSid(Integer sid) {
+	public void setSid(Long sid) {
 		this.sid = sid;
 	}
 
@@ -131,5 +133,13 @@ public class ServiceSalary {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 }

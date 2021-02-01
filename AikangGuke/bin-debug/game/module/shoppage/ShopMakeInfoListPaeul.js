@@ -37,6 +37,11 @@ var ShopMakeInfoListPaeul = (function (_super) {
             case FuncUrlUtil.ShopInfo_DelShopItem:
                 ShopPageManage.ins().data_ShopMakeList = json.obj;
                 this.setShopInfoList();
+                EventCenter.Instance.dispatchEvent(new DataTransEvent(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, null));
+                var knarray = json.obj;
+                if (knarray.length <= 0) {
+                    this._on_hide();
+                }
                 break;
         }
     };
@@ -158,6 +163,10 @@ var listShopMakeInfoItem = (function (_super) {
         var mCollection = new eui.ArrayCollection(mArr);
         this.listShopGukeIdx.dataProvider = mCollection;
         this.listShopGukeIdx.itemRenderer = listGukeIdxItem;
+        this.setRectSize();
+    };
+    listShopMakeInfoItem.prototype.setRectSize = function () {
+        var knarray = this.data.d;
         this.rect_back3.visible = false;
         if (knarray.length <= 0) {
             this.height = 160;
@@ -168,7 +177,7 @@ var listShopMakeInfoItem = (function (_super) {
             this.height = 66 + knarray.length * 150 + this.group_addNew.height + 20;
         }
         this.group_addNew.y = this.listShopGukeIdx.y + this.listShopGukeIdx.height + 20;
-        if (ShopPageManage.ins()._selGukeIdx == data.idx) {
+        if (ShopPageManage.ins()._selGukeIdx == this.data.idx) {
             this._radio_sevidx.selected = true;
             this.rect_back1.strokeColor = 0xE8B610;
             this.rect_back1.strokeWeight = 5;
@@ -185,7 +194,8 @@ var listShopMakeInfoItem = (function (_super) {
         this.rect_back2.height = this.rect_back1.height - 60;
     };
     listShopMakeInfoItem.prototype.doSomeChange = function () {
-        this.setData();
+        // this.setData();
+        this.setRectSize();
         for (var i = 0; i < this.listShopGukeIdx.$indexToRenderer.length; i++) {
             if (!this.listShopGukeIdx.$indexToRenderer[i])
                 continue;
@@ -270,6 +280,18 @@ var listGukeIdxItem = (function (_super) {
         if (data.idx >= data.allnum - 1) {
             this._btn_del.visible = true; //按顺序删除
         }
+        var strpic = this.data.d.headpic;
+        var strl = strpic.split(".");
+        var minpic = strl[0] + "_min." + strl[1];
+        sproto.sprotoRequest.loadURLImgOnThisDress(strpic, function (event) {
+            var loader = event.target;
+            //获取加载到的纹理对象
+            var texture = loader.data;
+            var bitmap = new egret.Bitmap(texture);
+            bitmap.width = this.group_img.width;
+            bitmap.height = this.group_img.height;
+            this.group_img.addChild(bitmap);
+        }, this);
     };
     listGukeIdxItem.prototype.doSomeChange = function () {
     };

@@ -33,6 +33,7 @@ public class WaiterStateUtil {
 	public static int SST_ZT_MAX = 699;
 	
 	
-	//服务
+	//服务 结束
 	public static int SST_FW_FINISH = 2000;
+	public static int SST_FW_FINISH_XT = 2001;
 }

@@ -98,7 +98,7 @@ public class MemberManager {
 	@RequestMapping("/Update/GetUser")
     @ResponseBody
     public String getuAllUser(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-		List<User> users = userservice.getAllUser("");
+		List<User> users = userservice.getAllUser(null);
 		RespBean ok = RespBean.ok("/Member/Update/GetUser", users);
 	    String s = Util.setResponseToClientString(request, response, ok);
 	    return s;
@@ -124,7 +124,7 @@ public class MemberManager {
 	@RequestMapping("/SetVisiable/GetUser")
     @ResponseBody
     public String getsAllUser(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-		List<User> users = userservice.getAllUser("");
+		List<User> users = userservice.getAllUser(null);
 		RespBean ok = RespBean.ok("/Member/SetVisiable/GetUser", users);
 	    String s = Util.setResponseToClientString(request, response, ok);
 	    return s;
@@ -134,7 +134,7 @@ public class MemberManager {
 	@RequestMapping("/Query/GetUser")
     @ResponseBody
     public String getAllUser(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-		List<User> users = userservice.getAllUser("");
+		List<User> users = userservice.getAllUser(null);
 		RespBean ok = RespBean.ok("/Member/Query/GetUser", users);
 	    String s = Util.setResponseToClientString(request, response, ok);
 	    return s;

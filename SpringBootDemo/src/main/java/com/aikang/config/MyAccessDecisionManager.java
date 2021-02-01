@@ -13,6 +13,7 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
@@ -36,10 +37,6 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class MyAccessDecisionManager implements AccessDecisionManager {
 
-	@Autowired
-	private HttpServletRequest request;
-	@Autowired
-	private HttpServletResponse response;
 	
 	AntPathMatcher antPathMatcher = new AntPathMatcher();
 	
@@ -56,13 +53,18 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
      **/
 	@Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
-        
+		HttpServletRequest request = ((FilterInvocation) object).getRequest();
+		HttpServletResponse response = ((FilterInvocation) object).getResponse();
+//		StringBuffer requrl = request.getRequestURL();
+//		String requri = request.getRequestURI();
+//		String reqsp = request.getServletPath();
+		
 		//这个一定要在 resp.getWriter()之前设置 否则中文乱码
 		response.setHeader("Content-type",  "text/html;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		
+		Util.setResponseHeader(request, response);
 		//判断是否游客  游客不允许访问任何功能
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication(); 
+		Authentication auth = authentication; 
     	if ((auth instanceof AnonymousAuthenticationToken)) { 
     		 PrintWriter out;
 				try {
@@ -76,7 +78,19 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				throw new BadCredentialsException("you need Login!");
+				
+		    	
+		        if (request.getMethod().equals("OPTIONS")) {
+		            response.addHeader("Access-Control-Allow-Origin", "*");
+					response.setHeader("Access-Control-Allow-Methods", "GET, PUT, OPTIONS, DELETE, POST");
+					response.setHeader("Access-Control-Expose-Headers", "*");
+					response.setStatus(HttpServletResponse.SC_OK);
+					authentication.setAuthenticated(false);
+					
+		            return;
+		        }
+				throw new AccessDeniedException("you need Login!!");
+//				throw new BadCredentialsException("you need Login!");
     	}
     	
     	//如果是系统管理员 直接放行
@@ -110,6 +124,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 		for (ConfigAttribute configAttribute : configAttributes) {
             String needRole = configAttribute.getAttribute();
             
+            //游客进入
             if ("ROLE_USER".equals(needRole)) {
               
                 PrintWriter out;
@@ -126,6 +141,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 				}
 				throw new AccessDeniedException("没有权限 别乱逛， 请登录!");
             }
+            //在上一步的 MyFilterInvocationSecurityMetadataSource 没有找到这个权限集合， 也就是这个URL没法访问喽
             if ("ROLE_NOTHISURLROLE".equals(needRole)) {
                 
                 PrintWriter out;
@@ -142,15 +158,18 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 				}
 				throw new AccessDeniedException("no this url role!");
             }
+            
+            //匹配放行
             // authentication = User 这里需要 User类里面重载 getAuthorities方法  并且在里面 得到用户 权限角色名称列表
             for (GrantedAuthority authority : authorities) {
             	String ur = authority.getAuthority();
                 if (ur.equals(needRole)) {
+                	//放行
                     return;
                 }
             }
         }
-
+		//没有被放行  那么你没有访问这个的权限  
         PrintWriter out;
 		try {
 			out = response.getWriter();
@@ -164,6 +183,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 			e.printStackTrace();
 		}
         throw new AccessDeniedException("at last! we can't find you any one role in this url!");
+   		
     }
 
     @Override

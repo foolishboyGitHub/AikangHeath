@@ -80,8 +80,8 @@ class ShopPayStateShowPanel   extends BaseEuiView {
 			this.lab_payfail.visible = true;
 		}
 		 
-		 //10秒钟询问一下服务器是否付款成功
-		if(tm >=0 && new Date().getTime() - this._lasttimeAskServer > 10*1000)
+		 //6秒钟询问一下服务器是否付款成功
+		if(tm >=0 && new Date().getTime() - this._lasttimeAskServer > 6*1000)
 		{
 			this._lasttimeAskServer = new Date().getTime();
 
@@ -117,6 +117,7 @@ class ShopPayStateShowPanel   extends BaseEuiView {
 
 			 case this._btn_back_order:
 			 	EventCenter.Instance.dispatchEvent(new DataTransEvent(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, null));
+				EventCenter.Instance.dispatchEvent(new DataTransEvent(DataTransEvent.Event_ShopPay_Close_Sel_MoneyChanel_panel, null));	
 				this.CloseSelf();
 			 break;
 			 case this._btn_back:

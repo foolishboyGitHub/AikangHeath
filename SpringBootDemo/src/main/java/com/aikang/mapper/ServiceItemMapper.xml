@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.aikang.mapper.ServiceItemMapper">
 	<resultMap id="BaseResultMap" type="com.aikang.Bean.ServiceItem">
-        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
         <result column="timelong" property="timelong" jdbcType="INTEGER"/>
         <result column="priveType" property="priveType" jdbcType="INTEGER"/>
         <result column="price" property="price" jdbcType="DOUBLE"/>
@@ -14,11 +15,14 @@
         <result column="dSalarySz" property="dSalarySz" jdbcType="DOUBLE"/>
         <result column="needpoint" property="needpoint" jdbcType="INTEGER"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="headpic" property="headpic" jdbcType="VARCHAR"/>
         <result column="mark" property="mark" jdbcType="VARCHAR"/>
         <result column="enabled" property="enabled" jdbcType="INTEGER"/>
         <result column="isdiscount" property="isdiscount" jdbcType="INTEGER"/>
         <result column="timepermit" property="timepermit" jdbcType="INTEGER"/>
         <result column="pointChange" property="pointChange" jdbcType="INTEGER"/>
+        <result column="isspecialwork" property="isspecialwork" jdbcType="INTEGER"/>
+        <result column="noshowinshop" property="noshowinshop" jdbcType="INTEGER"/>
 		<result column="sp1" property="sp1" jdbcType="VARCHAR"/>
 		<result column="sp2" property="sp2" jdbcType="VARCHAR"/>
 		<result column="sp3" property="sp2" jdbcType="VARCHAR"/>
@@ -26,71 +30,95 @@
     </resultMap>
     
     <resultMap id="PriceType" type="com.aikang.Bean.PriceType">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="sid" property="sid" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="sid" property="sid" jdbcType="BIGINT"/>
         <result column="tpname" property="tpname" jdbcType="VARCHAR"/>
         <result column="price" property="price" jdbcType="DOUBLE"/>
     </resultMap>
     
+    <select id="getAllCompanyServiceItemNum" resultType="java.util.HashMap">
+        select 
+        COUNT(*) AS total
+        from aikang_serviceitem 
+        where company=#{company}
+     </select>
     <select id="getAllEnabledServiceItems" resultMap="BaseResultMap" statementType="PREPARED">
-        select seri.*,seridx.sdx from ${company}_serviceitem seri left join ${company}_serviceitemsort seridx on
-        seri.`id`=seridx.`sid` where seri.`enabled`= 1
+        select seri.*,seridx.sdx 
+        from aikang_serviceitem seri left join aikang_serviceitemsort seridx on
+        seri.`id`=seridx.`sid` where seri.`enabled`= 1 and seri.company=#{company}
+        <if test="keywords!=null">
+            and seri.name like concat('%',#{keywords},'%')
+        </if> 
+        order by seridx.sdx
+    </select>
+    <select id="getEnabledAllGukeShopServiceItems" resultMap="BaseResultMap" statementType="PREPARED">
+        select seri.*,seridx.sdx 
+        from aikang_serviceitem seri 
+        left join aikang_serviceitemsort seridx on
+        seri.`id`=seridx.`sid` 
+        where seri.`enabled`= 1 and seri.noshowinshop = 0 and seri.company=#{company}
+        <if test="keywords!=null">
+            and seri.name like concat('%',#{keywords},'%')
+        </if> 
+        order by seridx.sdx
+    </select>
+    <select id="getAllServiceItems" resultMap="BaseResultMap" statementType="PREPARED">
+        select seri.*,seridx.sdx 
+        from aikang_serviceitem seri left join aikang_serviceitemsort seridx on
+        seri.`id`=seridx.`sid` 
+        where seri.company=#{company}
         <if test="keywords!=null">
             and seri.name like concat('%',#{keywords},'%')
         </if>
         order by seridx.sdx
     </select>
-    <select id="getAllServiceItems" resultMap="BaseResultMap" statementType="PREPARED">
-        select seri.*,seridx.sdx from ${company}_serviceitem seri left join ${company}_serviceitemsort seridx on
-        seri.`id`=seridx.`sid` 
-        <if test="keywords!=null">
-            where seri.name like concat('%',#{keywords},'%')
-        </if>
-        order by seridx.sdx
-    </select>
     <select id="getAllPriceTypeItems" resultMap="PriceType" statementType="PREPARED">
         select *
-        from ${company}_pricetype
+        from aikang_pricetype
+        where company=#{company}
     </select>
     <select id="selectPriceTypeBy_id" resultMap="PriceType" statementType="PREPARED">
         select *
-        from ${company}_pricetype
-        where id =#{id}
+        from aikang_pricetype
+        where id =#{id} and company=#{company}
     </select> 
-    <select id="selectBy_id" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
+    <select id="selectBy_id" resultMap="BaseResultMap"  statementType="PREPARED">
         select *
-        from ${company}_serviceitem
-        where id =#{id}
+        from aikang_serviceitem
+        where id =#{id} and company=#{company}
     </select>  
-    <select id="selectBy_name" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
+    <select id="selectBy_name" resultMap="BaseResultMap"  statementType="PREPARED">
         select id, price
-        from ${company}_serviceitem
-        where name = #{name}
+        from aikang_serviceitem
+        where name = #{name} and company=#{company}
     </select>
-    <select id="selectBy_name_ec" resultMap="BaseResultMap" parameterType="java.lang.String" statementType="PREPARED">
+    <select id="selectBy_name_ec" resultMap="BaseResultMap"  statementType="PREPARED">
         select id, price
-        from ${company}_serviceitem
-        where name = #{name} and  id !=#{id}
+        from aikang_serviceitem
+        where name = #{name} and  id !=#{id} and company=#{company}
     </select>
     <insert id="insertPriceType" parameterType="com.aikang.Bean.PriceType" statementType="PREPARED">
-		   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Integer">
+		   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Long">
 		       select LAST_INSERT_ID()
 		   </selectKey>
-	    insert into ${company}_pricetype (id, sid, sname, tpname, price)
-	    values (#{record.id,jdbcType=INTEGER}, 
-	      #{record.sid,jdbcType=INTEGER}, 
+	    insert into aikang_pricetype (id, company, sid, sname, tpname, price)
+	    values (#{record.id,jdbcType=BIGINT}, 
+	      #{company},
+	      #{record.sid,jdbcType=BIGINT}, 
 	      #{record.sname,jdbcType=VARCHAR},
 	      #{record.tpname,jdbcType=VARCHAR}, 
 	      #{record.price,jdbcType=DOUBLE})
 	  </insert>
     <insert id="insert" parameterType="com.aikang.Bean.ServiceItem" statementType="PREPARED">
-	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Integer">
+	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Long">
 	       select LAST_INSERT_ID()
 	   </selectKey>
-    insert into ${company}_serviceitem (id, timelong, priveType, price, overtime, 
-      clocknum, dSalaryLz, dSalaryDz, dSalaryDp, dSalarySz, needpoint, name, mark, 
-      enabled, isdiscount, timepermit, pointChange, sp1, sp2, sp3)
-    values (#{record.id,jdbcType=INTEGER}, 
+    insert into aikang_serviceitem (id, company, timelong, priveType, price, overtime, 
+      clocknum, dSalaryLz, dSalaryDz, dSalaryDp, dSalarySz, needpoint, name, headpic, mark, 
+      enabled, isdiscount, timepermit, pointChange, isspecialwork, noshowinshop, sp1, sp2, sp3)
+    values (#{record.id,jdbcType=INTEGER},
+      #{company}, 
       #{record.timelong,jdbcType=INTEGER}, 
       #{record.priveType,jdbcType=INTEGER}, 
       #{record.price,jdbcType=DOUBLE}, 
@@ -102,17 +130,20 @@
       #{record.dSalarySz,jdbcType=DOUBLE}, 
       #{record.needpoint,jdbcType=INTEGER}, 
       #{record.name,jdbcType=VARCHAR}, 
+      #{record.headpic,jdbcType=VARCHAR}, 
       #{record.mark,jdbcType=VARCHAR}, 
       #{record.enabled,jdbcType=INTEGER}, 
       #{record.isdiscount,jdbcType=INTEGER}, 
       #{record.timepermit,jdbcType=INTEGER},
       #{record.pointChange,jdbcType=INTEGER},
+      #{record.isspecialwork,jdbcType=INTEGER},
+      #{record.noshowinshop,jdbcType=INTEGER},
       #{record.sp1,jdbcType=VARCHAR},
       #{record.sp2,jdbcType=VARCHAR},
       #{record.sp3,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.aikang.Bean.ServiceItem" statementType="PREPARED">
-        update ${company}_serviceitem
+        update aikang_serviceitem
         <set>
             <if test="record.timelong != null">
                 timelong = #{record.timelong,jdbcType=INTEGER},
@@ -147,6 +178,9 @@
       		<if test="record.name != null">
                 name = #{record.name,jdbcType=VARCHAR}, 
             </if>
+            <if test="record.headpic != null">
+                headpic = #{record.headpic,jdbcType=VARCHAR}, 
+            </if>
       		<if test="record.mark != null">
                 mark = #{record.mark,jdbcType=VARCHAR}, 
             </if>
@@ -162,6 +196,12 @@
       		<if test="record.pointChange != null">
                 pointChange = #{record.pointChange,jdbcType=INTEGER},
             </if>
+            <if test="record.isspecialwork != null">
+                isspecialwork = #{record.isspecialwork,jdbcType=INTEGER},
+            </if>
+            <if test="record.noshowinshop != null">
+                noshowinshop = #{record.noshowinshop,jdbcType=INTEGER},
+            </if>
       		<if test="record.sp1 != null">
                 sp1 = #{record.sp1,jdbcType=VARCHAR},
             </if>
@@ -172,10 +212,10 @@
                 sp3 = #{record.sp3,jdbcType=VARCHAR},
       		</if>
         </set>
-        where id = #{record.id,jdbcType=INTEGER}
+        where id = #{record.id} and company=#{company}
     </update>
    <update id="updateByPrimaryKey" parameterType="com.aikang.Bean.ServiceItem" statementType="PREPARED">
-   	update ${company}_serviceitem
+   	update aikang_serviceitem
          set timelong = #{record.timelong,jdbcType=INTEGER},
    		  priveType = #{record.priveType,jdbcType=INTEGER},   		
           price = #{record.price,jdbcType=DOUBLE},           
@@ -186,7 +226,8 @@
           dSalaryDp = #{record.dSalaryDp,jdbcType=DOUBLE},            
           dSalarySz = #{record.dSalarySz,jdbcType=DOUBLE},             
           needpoint = #{record.needpoint,jdbcType=INTEGER},            
-          name = #{record.name,jdbcType=VARCHAR},             
+          name = #{record.name,jdbcType=VARCHAR},   
+          headpic = #{record.headpic,jdbcType=VARCHAR},          
           mark = #{record.mark,jdbcType=VARCHAR},           
           enabled = #{record.enabled,jdbcType=INTEGER},           
           isdiscount = #{record.isdiscount,jdbcType=INTEGER},
@@ -195,23 +236,23 @@
           sp1 = #{record.sp1,jdbcType=VARCHAR},           
           sp2 = #{record.sp2,jdbcType=VARCHAR},           
           sp3 = #{record.sp3,jdbcType=VARCHAR}  
-        where id = #{record.id,jdbcType=INTEGER}
+        where id = #{record.id} and company=#{company}
    </update>
   <update id="updateEnableByPrimaryKey" parameterType="com.aikang.Bean.ServiceItem" statementType="PREPARED">
-    update ${company}_serviceitem
+    update aikang_serviceitem
      set enabled = #{record.enabled,jdbcType=BIT}
-    where id = #{record.id,jdbcType=INTEGER}
+    where id = #{record.id} and company=#{company}
   </update>
   <insert id="addServiceItemIdxByList">
-    insert into ${company}_serviceitemsort (sid,sdx) values
+    insert into aikang_serviceitemsort (company,sid,sdx) values
     <foreach collection="record" item="CSItemIdx" separator=",">
-      (#{CSItemIdx.sid},#{CSItemIdx.sdx})
+      (#{company},#{CSItemIdx.sid},#{CSItemIdx.sdx})
     </foreach>
   </insert>
-  <update id="truncateServiceItemIdxTable">
-    truncate table ${company}_serviceitemsort
-</update>
+	<delete id="truncateServiceItemIdxTable">
+    	delete from aikang_serviceitemsort where company=#{company}
+  	</delete>
 	<delete id="deletePriceTypeByid">
-    	delete from ${company}_pricetype where id=#{id}
+    	delete from aikang_pricetype where id=#{id}
   	</delete>
 </mapper>

@@ -30,16 +30,26 @@ var ShopOrderInfoListPanel = (function (_super) {
         this._AddClick(this._btn_backtoshop, this._OnClick);
     };
     ShopOrderInfoListPanel.prototype.OnOpen = function () {
+        var data = ShopPageManage.ins().data_CompanyInfo;
+        this.lab_companyname.text = "店名: " + decodeURI(data.cname);
         EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_DelAddItem, this.onServerEventData, this);
         EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_ShowState_O_SelGuke, this.onShowSelGuke, this);
         EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_MakeShop__O_AddNew, this.onAddNewShop, this);
+        EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_FreshOrderList, this.onServerEventData, this);
         this.scrollMy.addEventListener(egret.Event.CHANGE, this.onScrollerChange, this);
+        this.timer = new egret.Timer(60 * 1000);
+        this.timer.addEventListener(egret.TimerEvent.TIMER, this.timerFunc, this);
+        this.timer.start();
     };
     ShopOrderInfoListPanel.prototype.OnClose = function () {
         this.scrollMy.removeEventListener(egret.Event.CHANGE, this.onScrollerChange, this);
         EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopInfo_ShowState_O_SelGuke, this.onShowSelGuke, this);
         EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopInfo_MakeShop__O_AddNew, this.onAddNewShop, this);
+        EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_FreshOrderList, this.onServerEventData, this);
         EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_DelAddItem, this.onServerEventData, this);
+        this.timer.stop();
+        this.timer.removeEventListener(egret.TimerEvent.TIMER, this.timerFunc, this);
+        this.timer = null;
     };
     ;
     ShopOrderInfoListPanel.prototype.onServerEventData = function (e) {
@@ -49,7 +59,22 @@ var ShopOrderInfoListPanel = (function (_super) {
                 ShopPageManage.ins().data_ShopMakeList = json.obj;
                 EventCenter.Instance.dispatchEvent(new DataTransEvent(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, null));
                 break;
+            case FuncUrlUtil.ShopInfo_FreshOrderList:
+                ShopPageManage.ins().data_ShopMakeList = json.obj;
+                EventCenter.Instance.dispatchEvent(new DataTransEvent(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, null));
+                break;
         }
+    };
+    ShopOrderInfoListPanel.prototype.timerFunc = function () {
+        this.sendFreshOrderlist();
+    };
+    ShopOrderInfoListPanel.prototype.sendFreshOrderlist = function () {
+        var comanyname = GameGlobal.CurrentCompany;
+        var item = {
+            cname: comanyname
+        };
+        var rurl = FuncUrlUtil.ShopInfo_FreshOrderList;
+        sproto.sprotoRequest.sendPostRequestJson(JSON.stringify(item), rurl);
     };
     ShopOrderInfoListPanel.prototype.setShopInfoList = function () {
         var gukenum = 0;
@@ -62,6 +87,12 @@ var ShopOrderInfoListPanel = (function (_super) {
         var knarray = data;
         for (var i = 0; i < knarray.length; i++) {
             var kenvo = knarray[i];
+            if (i == 0) {
+                this.lab_billnumber.text = "订单号: " + kenvo.billnumber;
+                var checkcode = kenvo.checkcode;
+                this.lab_codestart.text = "" + checkcode.substr(0, 4);
+                this.lab_codesfinish.text = "" + checkcode.substr(4, 4);
+            }
             if (kenvo.gukenum > gukenum) {
                 gukenum = kenvo.gukenum;
             }
@@ -71,7 +102,7 @@ var ShopOrderInfoListPanel = (function (_super) {
         }
         var mArr = [];
         var showallnum = 0;
-        for (var i = 0; i < gukenum + 1; i++) {
+        for (var i = 0; i < gukenum; i++) {
             var wArr = [];
             for (var s = 0; s < knarray.length; s++) {
                 var kenvo = knarray[s];
@@ -183,64 +214,37 @@ var listShopOrderInfoItem = (function (_super) {
         this._radio_sevidx.label = "" + data.title;
         var mArr = [];
         var knarray = data.d;
+        var start = 0;
+        var finis = 0;
         for (var i = 0; i < knarray.length; i++) {
             var kenvo = knarray[i];
-            if (kenvo.d.sid > 0)
-                mArr.push({ idx: i, d: kenvo.d, allnum: knarray.length });
-            if (kenvo.d.hid > 0) {
-                this.lab_waitestate.text = "技师正在赶来...";
-                this.lab_waitestate.textColor = 0x9AD635;
-            }
-            else {
-                this.lab_waitestate.textColor = 0xD83457;
-                if (kenvo.d.waitestate == 1) {
-                    this.lab_waitestate.text = "技师全忙！ 请稍等。";
-                }
-                if (kenvo.d.waitestate == 2) {
-                    this.lab_waitestate.text = "所选等级技师全忙！ ，请稍等。";
-                }
-                if (kenvo.d.waitestate == 3) {
-                    this.lab_waitestate.text = "所选等级男技师全忙！ ，请稍等。";
-                }
-                if (kenvo.d.waitestate == 4) {
-                    this.lab_waitestate.text = "所选等级女技师全忙！ ，请稍等。";
-                }
-                if (kenvo.d.waitestate == 5) {
-                    this.lab_waitestate.text = "未到服务开始时间！ ，请稍等。";
-                }
-            }
+            mArr.push({ idx: i, d: kenvo.d, allnum: knarray.length });
             if (kenvo.d.workstate == 2) {
                 this._btn_addnew.visible = true;
             }
+            if (kenvo.d.waitestate >= WaiterStateUtil.SST_SZ_MIN && kenvo.d.waitestate < WaiterStateUtil.SST_FW_FINISH) {
+                start = 1;
+            }
+            if (kenvo.d.waitestate >= WaiterStateUtil.SST_FW_FINISH) {
+                finis++;
+            }
+        }
+        if (start < 0 && finis <= 0) {
+            this.lab_waitestate.text = "等待服务中。。。";
+            this.lab_waitestate.textColor = WaiterStateUtil.getStateNameColor(WaiterStateUtil.SST_YY_WAIT);
+        }
+        else if (start > 0) {
+            this.lab_waitestate.text = "服务进行中。。。";
+            this.lab_waitestate.textColor = WaiterStateUtil.getStateNameColor(WaiterStateUtil.SST_SZ_MIN);
+        }
+        else if (start <= 0 && finis == knarray.length) {
+            this.lab_waitestate.text = "服务已完成";
+            this.lab_waitestate.textColor = WaiterStateUtil.getStateNameColor(WaiterStateUtil.SST_FW_FINISH);
         }
         var mCollection = new eui.ArrayCollection(mArr);
         this.listShopGukeIdx.dataProvider = mCollection;
         this.listShopGukeIdx.itemRenderer = listGukeOrderIdxItem;
-        this.rect_back3.visible = false;
-        if (knarray.length <= 0) {
-            this.height = 160;
-            this.rect_back3.visible = true;
-            this.rect_back3.height = 10;
-        }
-        else {
-            this.height = 66 + knarray.length * 150 + this.group_addNew.height + 20;
-        }
-        this.group_addNew.y = this.listShopGukeIdx.y + this.listShopGukeIdx.height + 20;
-        if (ShopPageManage.ins()._selGukeIdx == data.idx) {
-            this._radio_sevidx.selected = true;
-            this.rect_back1.strokeColor = 0x4B8789;
-            this.rect_back1.strokeWeight = 5;
-            this.rect_back2.strokeColor = 0x4B8789;
-            this.rect_back2.strokeWeight = 5;
-        }
-        else {
-            this._radio_sevidx.selected = false;
-            this.rect_back1.strokeColor = 0x4B8789;
-            this.rect_back1.strokeWeight = 0;
-            this.rect_back2.strokeColor = 0xFFFFFF;
-            this.rect_back2.strokeWeight = 0;
-        }
-        this.rect_back2.height = this.rect_back1.height - 60;
+        this.setRectSize();
     };
     listShopOrderInfoItem.prototype.setView = function () {
         var data = this.data;
@@ -255,7 +259,7 @@ var listShopOrderInfoItem = (function (_super) {
             else {
                 this.lab_waitestate.textColor = 0xD83457;
                 if (kenvo.d.waitestate == 1) {
-                    this.lab_waitestate.text = "技师全忙！ 请稍等。";
+                    this.lab_waitestate.text = "全忙！ 请稍等。";
                 }
                 if (kenvo.d.waitestate == 2) {
                     this.lab_waitestate.text = "所选等级技师全忙！ ，请稍等。";
@@ -297,8 +301,37 @@ var listShopOrderInfoItem = (function (_super) {
         }
         this.rect_back2.height = this.rect_back1.height - 60;
     };
+    listShopOrderInfoItem.prototype.setRectSize = function () {
+        this.rect_back3.visible = false;
+        var knarray = this.data.d;
+        if (knarray.length <= 0) {
+            this.height = 160;
+            this.rect_back3.visible = true;
+            this.rect_back3.height = 10;
+        }
+        else {
+            this.height = 66 + knarray.length * 150 + this.group_addNew.height + 20;
+        }
+        this.group_addNew.y = this.listShopGukeIdx.y + this.listShopGukeIdx.height + 20;
+        if (ShopPageManage.ins()._selGukeIdx == this.data.idx) {
+            this._radio_sevidx.selected = true;
+            this.rect_back1.strokeColor = 0x4B8789;
+            this.rect_back1.strokeWeight = 5;
+            this.rect_back2.strokeColor = 0x4B8789;
+            this.rect_back2.strokeWeight = 5;
+        }
+        else {
+            this._radio_sevidx.selected = false;
+            this.rect_back1.strokeColor = 0x4B8789;
+            this.rect_back1.strokeWeight = 0;
+            this.rect_back2.strokeColor = 0xFFFFFF;
+            this.rect_back2.strokeWeight = 0;
+        }
+        this.rect_back2.height = this.rect_back1.height - 60;
+    };
     listShopOrderInfoItem.prototype.doSomeChange = function () {
-        this.setData();
+        // this.setData();
+        this.setRectSize();
         for (var i = 0; i < this.listShopGukeIdx.$indexToRenderer.length; i++) {
             if (!this.listShopGukeIdx.$indexToRenderer[i])
                 continue;
@@ -375,7 +408,7 @@ var listGukeOrderIdxItem = (function (_super) {
             strwlev = ""; //点钟的话 就不要等级要求了
         }
         this.lab_itemtime.text = sitem.timelong + "分钟 " + strwtype + " " + strwlev;
-        this.lab_itemprice.text = "" + sitem.price * data.d.clocknumyy;
+        this.lab_itemprice.text = "" + data.d.itembillyf;
         var wdate = new Date(data.d.waittime);
         this.lab_waitetime.text = this.formatTime_lab(wdate);
         this.lab_num.text = data.d.clocknumyy + "个";
@@ -387,6 +420,15 @@ var listGukeOrderIdxItem = (function (_super) {
                 this._btn_del.enabled = true;
             }
         }
+        sproto.sprotoRequest.loadURLImgOnThisDress(this.data.d.headpic, function (event) {
+            var loader = event.target;
+            //获取加载到的纹理对象
+            var texture = loader.data;
+            var bitmap = new egret.Bitmap(texture);
+            bitmap.width = this.group_img.width;
+            bitmap.height = this.group_img.height;
+            this.group_img.addChild(bitmap);
+        }, this);
     };
     listGukeOrderIdxItem.prototype.doSomeChange = function () {
     };

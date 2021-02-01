@@ -2,15 +2,15 @@ package com.aikang.Bean;
 
 public class CSHidSalarys {
 
-	private Integer hid;
+	private Long hid;
 	
 	private ServiceSalary[] salarys;
 
-	public Integer getHid() {
+	public Long getHid() {
 		return hid;
 	}
 
-	public void setHid(Integer hid) {
+	public void setHid(Long hid) {
 		this.hid = hid;
 	}
 

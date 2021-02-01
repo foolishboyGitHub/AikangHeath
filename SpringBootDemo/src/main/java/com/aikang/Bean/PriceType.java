@@ -2,21 +2,22 @@ package com.aikang.Bean;
 
 public class PriceType {
 
-	private Integer id;
-	private Integer sid;   //服务项目
+	private Long id;
+	private String company;
+	private Long sid;   //服务项目
 	private String sname;  //项目名称
 	private String tpname;  //类型名称
 	private double price;   //服务人员ID
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-	public Integer getSid() {
+	public Long getSid() {
 		return sid;
 	}
-	public void setSid(Integer sid) {
+	public void setSid(Long sid) {
 		this.sid = sid;
 	}
 	public String getTpname() {
@@ -36,5 +37,11 @@ public class PriceType {
 	}
 	public void setSname(String sname) {
 		this.sname = sname;
+	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
 	}
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ShopPayHuiYuanSelListSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Rect width="100%" height="100%" fillAlpha="1" fillColor="0xcccccc"/>
+    <e:Group width="100%" height="110" y="0">
+        <e:Rect width="710" height="110" y="0" strokeWeight="6" ellipseWidth="10" ellipseHeight="10" x="5" strokeColor="0x9e9c96" fillColor="0x4e4c51"/>
+        <e:Label  y="39" size="32" anchorOffsetX="0" width="360" stroke="0.2" strokeColor="0x000000" text="爱康推拿" fontFamily="SimHei" textAlign="center" x="150" verticalAlign="middle" textColor="0xc9c7c1"/>
+    </e:Group>
+    <e:Group width="100%" height="110" y="110">
+        <e:Rect width="710" height="110" y="0" strokeWeight="6" ellipseWidth="10" ellipseHeight="10" x="5" strokeColor="0x9e9c96" fillColor="0x351a35"/>
+        <e:Label  y="39" size="32" anchorOffsetX="0" width="400" stroke="0.2" strokeColor="0x000000" text="选择一个会员卡项进行支付" fontFamily="SimHei" textAlign="left" verticalAlign="middle" textColor="0xc9c7c1" x="31"/>
+        <e:Button id="_btn_addnew" y="22" label="+"  width="200" height="60" x="499" skinName="BtnNShop02"/>
+    </e:Group>
+    <e:Label  y="245" size="32" anchorOffsetX="0" width="598" stroke="0.2" strokeColor="0x000000" text="您在本店还没有会员卡，点击&quot;+&quot;办理" fontFamily="SimHei" textAlign="center" x="62" verticalAlign="middle" textColor="0x333027"/>
+    <e:Scroller id="scrollMy_h" bounces="false" skinName="scrollHasNoBar" x="5" y="218" width="710" anchorOffsetY="0" height="1120">
+        <e:List id="listItem_h" itemRendererSkinName="ShopHuiYuanListItem">
+            <e:ArrayCollection>
+                <e:Array>
+
+                </e:Array>
+            </e:ArrayCollection>
+                    <e:layout>
+                        <e:VerticalLayout gap="6"/>
+                    </e:layout>
+            </e:List>
+    </e:Scroller>
+    <e:Button id="_btn_back" label=""  anchorOffsetX="0" x="10" y="27" skinName="BtnBack03" width="117"/>
+</e:Skin>

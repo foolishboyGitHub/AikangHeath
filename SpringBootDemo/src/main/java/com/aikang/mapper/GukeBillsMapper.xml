@@ -1,0 +1,878 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.GukeBillsMapper">
+	<resultMap id="GukeShopings" type="com.aikang.Bean.GukeShopings">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="ordertype" property="ordertype" jdbcType="INTEGER"/>
+        <result column="gukenum" property="gukenum" jdbcType="INTEGER"/>
+        <result column="gukeidx" property="gukeidx" jdbcType="INTEGER"/>
+        <result column="billnumber" property="billnumber" jdbcType="VARCHAR"/>
+        <result column="serinumber" property="serinumber" jdbcType="VARCHAR"/>
+        <result column="daynumber" property="daynumber" jdbcType="INTEGER"/>
+        <result column="wtype" property="wtype" jdbcType="INTEGER"/>
+        <result column="wsex" property="wsex" jdbcType="INTEGER"/>
+        <result column="wlev" property="wlev" jdbcType="INTEGER"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="rmid" property="rmid" jdbcType="BIGINT"/>
+        <result column="rmname" property="rmname" jdbcType="VARCHAR"/>
+        <result column="sid" property="sid" jdbcType="BIGINT"/>
+        <result column="sname" property="sname" jdbcType="VARCHAR"/>
+        <result column="clocknumyy" property="clocknumyy" jdbcType="DOUBLE"/>
+        <result column="itembillyf" property="itembillyf" jdbcType="DOUBLE"/>
+        <result column="itembillys" property="itembillys" jdbcType="DOUBLE"/>
+        <result column="itembillzk" property="itembillzk" jdbcType="DOUBLE"/>
+        <result column="itembilljm" property="itembilljm" jdbcType="DOUBLE"/>
+        <result column="itembilldk" property="itembilldk" jdbcType="DOUBLE"/>
+        <result column="hid" property="hid" jdbcType="BIGINT"/>
+        <result column="hcode" property="hcode" jdbcType="VARCHAR"/>
+        <result column="hname" property="hname" jdbcType="VARCHAR"/>
+        <result column="workstate" property="workstate" jdbcType="INTEGER"/>
+        <result column="waitestate" property="waitestate" jdbcType="INTEGER"/>
+        
+        <result column="maketime" property="maketime" jdbcType="VARCHAR"/>
+        <result column="waittime" property="waittime" jdbcType="VARCHAR"/>
+        <result column="worktime" property="worktime" jdbcType="VARCHAR"/>
+       
+        <result column="finishtime" property="finishtime" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="kid" property="kid" jdbcType="BIGINT"/>
+        <result column="kname" property="kname" jdbcType="VARCHAR"/>
+		<result column="paystate" property="paystate" jdbcType="INTEGER"/>
+		<result column="paynum" property="paynum" jdbcType="DOUBLE"/>
+		<result column="payid" property="payid" jdbcType="BIGINT"/>
+		<result column="checkcode" property="checkcode" jdbcType="VARCHAR"/>
+		
+		<result column="memid" property="memid" jdbcType="BIGINT"/>
+		<result column="memname" property="memname" jdbcType="VARCHAR"/>
+		<result column="memcode" property="memcode" jdbcType="VARCHAR"/>
+		<result column="hyrmoney" property="hyrmoney" jdbcType="DOUBLE"/>	
+		<result column="checktime" property="checktime" jdbcType="VARCHAR"/>
+		<result column="headpic" property="headpic" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <select id="getShopDataByGukeID" resultMap="GukeShopings" statementType="PREPARED">
+        select 
+        gs.id,
+        gs.ordertype,
+        gs.gukenum,
+        gs.gukeidx,
+        gs.billnumber,
+        gs.wtype,
+        gs.wsex,
+        gs.wlev,
+        gs.rmname,
+        gs.sid,
+        gs.sname,
+        gs.clocknumyy,
+        gs.itembillyf,
+        gs.itembillys,
+        gs.itembillzk,
+        gs.itembilljm,
+        gs.itembilldk,
+        gs.hid,
+        gs.hcode,
+        gs.hname,
+        gs.maketime,
+        gs.waittime,
+        gs.finishtime,
+        gs.remark,
+        gs.kid,
+        gs.kname,
+        gs.paystate,
+        gs.paynum,
+        gs.checkcode,
+        gs.memid,
+        gs.memname,
+        gs.hyrmoney,
+        gs.workstate,
+        IFNULL(wi.`workstate`,0) as waitestate,
+        sm.headpic as headpic
+        from gukeshop gs
+        left join aikang_serviceitem sm on gs.`sid`=sm.`id`
+        left join aikang_waiteritem wi on wi.`serinumber`=gs.`serinumber` and wi.`company`=gs.`company`
+        where gs.kid=#{GukeID} and gs.company=#{company} and gs.workstate<![CDATA[ >= ]]>#{workstate1}  and gs.workstate<![CDATA[ <= ]]>#{workstate2}
+    </select>
+    <select id="getShopDataByGukeIDSortByBillNumber" resultMap="GukeShopings" statementType="PREPARED">
+        select *
+        from gukeshop 
+        where kid=#{GukeID} and company=#{company} and workstate<![CDATA[ >= ]]>#{workstate1}  and workstate<![CDATA[ <= ]]>#{workstate2}
+        order by billnumber,gukeidx
+    </select>
+    <select id="getCompanyShopDataSortByBillNumber" resultMap="GukeShopings" statementType="PREPARED">
+        select 
+        gs.*,
+        IFNULL(wi.`workstate`,0) as waitestate
+        from gukeshop gs
+        left join aikang_waiteritem wi on wi.`serinumber`=gs.`serinumber` and wi.`company`=gs.`company`
+        where gs.company=#{company} and gs.workstate<![CDATA[ >= ]]>#{workstate1}  and gs.workstate<![CDATA[ <= ]]>#{workstate2}
+        order by gs.billnumber,gs.gukeidx
+    </select>
+    <select id="getShopDataByGukeIDGroup" resultType="java.util.HashMap" statementType="PREPARED">
+        select 
+        any_value(id) as id,
+        any_value(ordertype) as ordertype,
+		any_value(gukenum) as gukenum,
+		any_value(gukeidx) as gukeidx,
+		any_value(daynumber) as daynumber,
+		any_value(billnumber) as billnumber,
+		any_value(serinumber) as serinumber,
+		any_value(wtype) as wtype,
+		any_value(company) as company,
+		any_value(wlev) as wlev,
+		any_value(rmid) as rmid,
+		any_value(wsex) as wsex,
+		any_value(rmname) as rmname,
+		any_value(sid) as sid,
+		any_value(sname) as sname,
+		any_value(clocknumyy) as clocknumyy,
+		any_value(itembillyf) as itembillyf,
+		any_value(itembillys) as itembillys,
+    	any_value(itembillzk) as itembillzk,
+    	any_value(itembilljm) as itembilljm,
+    	any_value(itembilldk) as itembilldk,
+		any_value(hid) as hid,
+		any_value(hcode) as hcode,
+		any_value(hname) as hname,
+		any_value(workstate) as workstate,
+		any_value(waitestate) as waitestate,
+		any_value(maketime) as maketime,
+		any_value(waittime) as waittime,
+		any_value(worktime) as worktime,
+		
+		any_value(finishtime) as finishtime,
+		any_value(remark) as remark,
+		any_value(kid) as kid,
+		any_value(kname) as kname,
+		any_value(paystate) as paystate,
+		any_value(paynum) as paynum,
+		any_value(payid) as payid,
+		any_value(checkcode) as checkcode,
+		any_value(memid) as memid,
+		any_value(memname) as memname,
+		any_value(memcode) as memcode,
+		any_value(checktime) as checktime
+        from gukeshop 
+        where kid=#{GukeID} and company=#{company} and workstate<![CDATA[ >= ]]>#{workstate1}  and workstate<![CDATA[ <= ]]>#{workstate2}
+        GROUP BY billnumber,gukeidx
+    </select>
+    <select id="getShopDataByID" resultMap="GukeShopings" statementType="PREPARED">
+        select *
+        from gukeshop 
+        where id=#{id}
+    </select>
+    <select id="getShopDataByBillNumberAndCompany" resultMap="GukeShopings" statementType="PREPARED">
+        select *
+        from gukeshop 
+        where billnumber=#{billnumber} and company=#{company}
+    </select>
+    <select id="getShopDataByBillNumber" resultMap="GukeShopings" statementType="PREPARED">
+        select *
+        from gukeshop 
+        where billnumber=#{billnumber}
+    </select>
+    <select id="getShopDataBySerinumberAndCompany" resultMap="GukeShopings" statementType="PREPARED">
+        select *
+        from gukeshop 
+        where serinumber=#{serinumber} and company=#{company}
+    </select>
+    <insert id="insertShopData" parameterType="com.aikang.Bean.GukeShopings" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+	insert into gukeshop 
+    (
+    	ordertype,
+    	gukenum,
+    	gukeidx,
+    	billnumber,
+    	serinumber,
+    	daynumber,
+    	wtype,
+    	wsex,
+    	wlev,
+    	company,
+    	rmid,
+    	rmname,
+    	sid, 
+    	sname,
+    	clocknumyy,
+    	itembillyf,
+    	itembillys,
+    	itembillzk,
+    	itembilljm,
+    	itembilldk, 
+    	hid, 
+    	hcode, 
+      	hname,
+      	workstate,
+      	waitestate, 
+      	maketime,
+      	waittime, 
+      	worktime, 
+      	finishtime, 
+      	remark, 
+      	kid, 
+      	kname, 
+      	paystate,
+      	paynum, 
+      	payid, 
+      	checkcode,
+		memid,
+		memname,
+		memcode,
+		hyrmoney,
+		checktime
+    )   
+	values 
+      (
+      IFNULL(#{record.ordertype,jdbcType=INTEGER}, 0),
+      IFNULL(#{record.gukenum,jdbcType=INTEGER}, 0),
+      IFNULL(#{record.gukeidx,jdbcType=INTEGER}, 0),
+      IFNULL(#{record.billnumber,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.serinumber,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.daynumber,jdbcType=INTEGER}, 0),
+      IFNULL(#{record.wtype,jdbcType=INTEGER}, 0),
+      IFNULL(#{record.wsex,jdbcType=INTEGER}, 0),
+      IFNULL(#{record.wlev,jdbcType=INTEGER}, 0), 
+      IFNULL(#{record.company,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.rmid,jdbcType=BIGINT}, 0),
+      IFNULL(#{record.rmname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.sid,jdbcType=BIGINT}, 0), 
+      IFNULL(#{record.sname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.clocknumyy,jdbcType=DOUBLE}, 0),
+      IFNULL(#{record.itembillyf,jdbcType=DOUBLE}, 0),
+      IFNULL(#{record.itembillys,jdbcType=DOUBLE}, 0),
+      IFNULL(#{record.itembillzk,jdbcType=DOUBLE}, 1.0),
+      IFNULL(#{record.itembilljm,jdbcType=DOUBLE}, 0),
+      IFNULL(#{record.itembilldk,jdbcType=DOUBLE}, 0), 
+      IFNULL(#{record.hid,jdbcType=BIGINT}, 0),
+      IFNULL(#{record.hcode,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.hname,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.workstate,jdbcType=INTEGER}, 0),
+      IFNULL(#{record.waitestate,jdbcType=INTEGER}, 0),
+      IFNULL(#{record.maketime,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.waittime,jdbcType=VARCHAR}, ""),  
+      IFNULL(#{record.worktime,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.finishtime,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.remark,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.kid,jdbcType=BIGINT}, 0),
+      IFNULL(#{record.kname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.paystate,jdbcType=INTEGER}, 0),
+      IFNULL(#{record.paynum,jdbcType=DOUBLE}, 0),
+      IFNULL(#{record.payid,jdbcType=BIGINT}, 0),
+      IFNULL(#{record.checkcode,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.memid,jdbcType=BIGINT}, 0),
+      IFNULL(#{record.memname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.memcode,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.hyrmoney,jdbcType=DOUBLE}, 0),
+      IFNULL(#{record.checktime,jdbcType=VARCHAR}, "")
+      )
+	</insert>
+	
+	<insert id="insertShopDataList" parameterType="com.aikang.Bean.GukeShopings" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+	insert into gukeshop 
+    (
+    	ordertype,
+    	gukenum,
+    	gukeidx,
+    	billnumber,
+    	serinumber,
+    	daynumber,
+    	wtype,
+    	wsex,
+    	wlev,
+    	company,
+    	rmid,
+    	rmname,
+    	sid, 
+    	sname,
+    	clocknumyy,
+    	itembillyf,
+    	itembillys,
+    	itembillzk,
+    	itembilljm,
+    	itembilldk, 
+    	hid, 
+    	hcode, 
+      	hname, 
+      	workstate,
+      	waitestate,
+      	maketime,
+      	waittime, 
+      	worktime, 
+      	finishtime, 
+      	remark, 
+      	kid, 
+      	kname, 
+      	paystate,
+      	paynum, 
+      	payid, 
+      	checkcode,
+		memid,
+		memname,
+		memcode,
+		hyrmoney,
+		checktime
+    )   
+	values 
+	<foreach collection="record" item="GukeShopings" separator=","> 
+      (
+      IFNULL(#{GukeShopings.ordertype,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.gukenum,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.gukeidx,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.billnumber,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.serinumber,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.daynumber,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.wtype,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.wsex,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.wlev,jdbcType=INTEGER}, 0), 
+      IFNULL(#{GukeShopings.company,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.rmid,jdbcType=BIGINT}, 0),
+      IFNULL(#{GukeShopings.rmname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.sid,jdbcType=BIGINT}, 0), 
+      IFNULL(#{GukeShopings.sname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.clocknumyy,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.itembillyf,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.itembillys,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.itembillzk,jdbcType=DOUBLE}, 1.0),
+      IFNULL(#{GukeShopings.itembilljm,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.itembilldk,jdbcType=DOUBLE}, 0), 
+      IFNULL(#{GukeShopings.hid,jdbcType=BIGINT}, 0),
+      IFNULL(#{GukeShopings.hcode,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{GukeShopings.hname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.workstate,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.waitestate,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.maketime,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.waittime,jdbcType=VARCHAR}, ""),  
+      IFNULL(#{GukeShopings.worktime,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{GukeShopings.finishtime,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{GukeShopings.remark,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.kid,jdbcType=BIGINT}, 0),
+      IFNULL(#{GukeShopings.kname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.paystate,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.paynum,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.payid,jdbcType=BIGINT}, 0),
+      IFNULL(#{GukeShopings.checkcode,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.memid,jdbcType=BIGINT}, 0),
+      IFNULL(#{GukeShopings.memname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.memcode,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.hyrmoney,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.checktime,jdbcType=VARCHAR}, "")
+      )
+      </foreach>
+	</insert>
+	
+  
+	<update id="updateShopByPrimaryKeySelective" parameterType="com.aikang.Bean.GukeShopings" statementType="PREPARED">
+        update gukeshop
+        <set>
+        	<if test="record.ordertype != null">
+                ordertype = #{record.ordertype,jdbcType=INTEGER},           
+            </if> 
+        	<if test="record.gukenum != null">
+                gukenum = #{record.gukenum,jdbcType=INTEGER},
+            </if>
+            <if test="record.gukeidx != null">
+                gukeidx = #{record.gukeidx,jdbcType=INTEGER},
+            </if>
+            <if test="record.billnumber != null">
+                billnumber = #{record.billnumber,jdbcType=VARCHAR},
+            </if> 
+            <if test="record.serinumber != null">
+                serinumber = #{record.serinumber,jdbcType=VARCHAR},
+            </if> 
+        	<if test="record.daynumber != null">
+                daynumber = #{record.daynumber,jdbcType=INTEGER},
+            </if>
+            <if test="record.wtype != null">
+                wtype = #{record.wtype,jdbcType=INTEGER},
+            </if>
+            <if test="record.wsex != null">
+                wsex = #{record.wsex,jdbcType=INTEGER},
+            </if>
+            <if test="record.wlev != null">
+                wlev = #{record.wlev,jdbcType=INTEGER},
+            </if>
+            <if test="record.company != null">
+                company = #{record.company,jdbcType=VARCHAR},
+            </if>   
+            <if test="record.rmid != null">
+                rmid = #{record.rmid,jdbcType=BIGINT},
+            </if>
+            <if test="record.rmname != null">
+                rmname = #{record.rmname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.sid != null">
+                sid = #{record.sid,jdbcType=BIGINT},
+            </if>
+      		<if test="record.sname != null">
+                sname = #{record.sname,jdbcType=VARCHAR},
+            </if> 
+            <if test="record.clocknumyy != null">
+                clocknumyy = #{record.clocknumyy,jdbcType=DOUBLE},
+            </if>
+            <if test="record.itembillyf != null">
+                itembillyf = #{record.itembillyf,jdbcType=DOUBLE},
+            </if>
+            <if test="record.itembillys != null">
+                itembillys = #{record.itembillys,jdbcType=DOUBLE},
+            </if>
+            <if test="record.itembillzk != null">
+                itembillzk = #{record.itembillzk,jdbcType=DOUBLE},
+            </if>
+            <if test="record.itembilljm != null">
+                itembilljm = #{record.itembilljm,jdbcType=DOUBLE},
+            </if>
+            <if test="record.itembilldk != null">
+                itembilldk = #{record.itembilldk,jdbcType=DOUBLE},
+            </if>
+      		<if test="record.hid != null">
+                hid = #{record.hid,jdbcType=BIGINT},
+            </if>
+            <if test="record.hcode != null">
+                hcode = #{record.hcode,jdbcType=INTEGER},
+            </if> 
+      		<if test="record.hname != null">
+                hname = #{record.hname,jdbcType=VARCHAR}, 
+            </if>
+            <if test="record.workstate != null">
+                workstate = #{record.workstate,jdbcType=INTEGER},
+            </if>
+            <if test="record.waitestate != null">
+                waitestate = #{record.waitestate,jdbcType=INTEGER},
+            </if>
+            <if test="record.maketime != null">
+                maketime = #{record.maketime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.waittime != null">
+                waittime = #{record.waittime,jdbcType=VARCHAR},
+            </if> 
+      		<if test="record.remark != null">
+                remark = #{record.remark,jdbcType=VARCHAR},
+            </if>
+      		<if test="record.kid != null">
+                kid = #{record.kid,jdbcType=BIGINT},
+            </if>
+            <if test="record.memid != null">
+                memid = #{record.memid,jdbcType=BIGINT},
+            </if>
+            <if test="record.memname != null">
+                memname = #{record.memname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.memcode != null">
+                memcode = #{record.memcode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.hyrmoney != null">
+                hyrmoney = #{record.hyrmoney,jdbcType=DOUBLE},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+    
+    <update id="updateShopListBillNumberByIdSelective"  parameterType="java.util.List" statementType="PREPARED">
+      update gukeshop
+      <trim prefix="set" suffixOverrides=",">
+      	<trim prefix="ordertype = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+            <if test="GukeShopings.ordertype != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.ordertype}
+            </if>
+           </foreach>
+        </trim>
+        <trim prefix="billnumber = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+            <if test="GukeShopings.billnumber != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.billnumber}
+            </if>
+           </foreach>
+        </trim>
+        <trim prefix="workstate = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+            <if test="GukeShopings.workstate != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.workstate}
+            </if> 
+          </foreach>
+        </trim>
+        <trim prefix="waitestate = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+            <if test="GukeShopings.waitestate != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.waitestate}
+            </if> 
+          </foreach>
+        </trim>
+        <trim prefix="waittime = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+            <if test="GukeShopings.waittime != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.waittime}
+            </if> 
+          </foreach>
+        </trim>
+        <trim prefix="worktime = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+      		<if test="GukeShopings.worktime != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.worktime} 
+            </if>
+            </foreach>
+        </trim>
+        <trim prefix="finishtime = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+      		<if test="GukeShopings.finishtime != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.finishtime}
+            </if> 
+            </foreach>
+        </trim>
+        <trim prefix="remark = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+      		<if test="GukeShopings.remark != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.remark}
+            </if>
+            </foreach>
+        </trim>
+        <trim prefix="kid = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+      		<if test="GukeShopings.kid != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.kid,jdbcType=BIGINT}
+            </if>
+            </foreach>
+        </trim>
+        <trim prefix="kname = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+      		<if test="GukeShopings.kname != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.kname,jdbcType=VARCHAR}
+            </if>
+            </foreach>
+        </trim>
+        <trim prefix="paystate = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">    
+      		<if test="GukeShopings.paystate != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.paystate,jdbcType=INTEGER}
+            </if>
+            </foreach>
+        </trim>
+        <trim prefix="paynum = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings"> 
+      		<if test="GukeShopings.paynum != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.paynum,jdbcType=DOUBLE}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="payid = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings"> 
+      		<if test="GukeShopings.payid != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.payid,jdbcType=BIGINT}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="checkcode = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings"> 
+      		<if test="GukeShopings.checkcode != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.checkcode,jdbcType=VARCHAR}
+      		</if>
+      		</foreach>
+        </trim>	
+        <trim prefix="memid = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">	
+      		<if test="GukeShopings.memid != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.memid,jdbcType=BIGINT}
+      		</if>
+      		</foreach>
+        </trim>	
+        <trim prefix="memname = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">	
+      		<if test="GukeShopings.memname != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.memname,jdbcType=VARCHAR}
+      		</if>
+      		</foreach>
+        </trim>	
+        <trim prefix="memcode = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+      		<if test="GukeShopings.memcode != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.memcode,jdbcType=VARCHAR}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="hyrmoney = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+      		<if test="GukeShopings.hyrmoney != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.hyrmoney,jdbcType=VARCHAR}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="checktime = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+      		<if test="GukeShopings.checktime != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.checktime,jdbcType=VARCHAR}
+      		</if>
+          </foreach>
+        </trim>
+        <trim prefix="itembillyf = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+      		<if test="GukeShopings.itembillyf != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.itembillyf,jdbcType=VARCHAR}
+      		</if>
+          </foreach>
+        </trim>
+        <trim prefix="clocknumyy = case" suffix="end,">
+          <foreach collection="record" item="GukeShopings">
+      		<if test="GukeShopings.clocknumyy != null">
+              when id=#{GukeShopings.id} then #{GukeShopings.clocknumyy,jdbcType=VARCHAR}
+      		</if>
+          </foreach>
+        </trim>
+      </trim>
+      where
+        <foreach collection="record" item="GukeShopings" separator="or">
+            id = #{GukeShopings.id}
+        </foreach>
+  </update>
+    <delete id="deleteShopDataByID">
+    	delete from gukeshop where id=#{id}
+  	</delete>
+    <delete id="deleteShopDataByIDAndGID">
+    	delete from gukeshop where id=#{id} and kid=#{GukeID}
+  	</delete>
+  	<delete id="deleteShopDataByGID">
+    	delete from gukeshop where kid=#{GukeID} and workstate=#{workstate} and paystate=#{paystate}
+  	</delete>
+  	
+  	
+  	
+    <delete id="deleteShopDataBybillnumber">
+    	delete from gukeshop where company=#{company} and billnumber=#{billnumber}
+  	</delete>
+
+	<insert id="insertShopDataListToRecord" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+	insert into gukeshoprecord 
+    (
+    	ordertype,
+    	gukenum,
+    	gukeidx,
+    	billnumber,
+    	serinumber,
+    	daynumber,
+    	wtype,
+    	wsex,
+    	wlev,
+    	company,
+    	rmid,
+    	rmname,
+    	sid, 
+    	sname,
+    	clocknumyy,
+    	itembillyf,
+    	itembillys,
+    	itembillzk,
+    	itembilljm,
+    	itembilldk, 
+    	hid, 
+    	hcode, 
+      	hname, 
+      	workstate,
+      	waitestate,
+      	maketime,
+      	waittime, 
+      	worktime, 
+      	finishtime, 
+      	remark, 
+      	kid, 
+      	kname, 
+      	paystate,
+      	paynum, 
+      	payid, 
+      	checkcode,
+		memid,
+		memname,
+		memcode,
+		hyrmoney,
+		checktime
+    )   
+	values 
+	<foreach collection="record" item="GukeShopings" close="" separator=","> 
+      (
+      IFNULL(#{GukeShopings.ordertype,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.gukenum,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.gukeidx,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.billnumber,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.serinumber,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.daynumber,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.wtype,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.wsex,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.wlev,jdbcType=INTEGER}, 0), 
+      IFNULL(#{GukeShopings.company,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.rmid,jdbcType=BIGINT}, 0),
+      IFNULL(#{GukeShopings.rmname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.sid,jdbcType=BIGINT}, 0), 
+      IFNULL(#{GukeShopings.sname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.clocknumyy,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.itembillyf,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.itembillys,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.itembillzk,jdbcType=DOUBLE}, 1.0),
+      IFNULL(#{GukeShopings.itembilljm,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.itembilldk,jdbcType=DOUBLE}, 0), 
+      IFNULL(#{GukeShopings.hid,jdbcType=BIGINT}, 0),
+      IFNULL(#{GukeShopings.hcode,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{GukeShopings.hname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.workstate,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.waitestate,jdbcType=INTEGER},0),
+      IFNULL(#{GukeShopings.maketime,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.waittime,jdbcType=VARCHAR}, ""),  
+      IFNULL(#{GukeShopings.worktime,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{GukeShopings.finishtime,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{GukeShopings.remark,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.kid,jdbcType=BIGINT}, 0),
+      IFNULL(#{GukeShopings.kname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.paystate,jdbcType=INTEGER}, 0),
+      IFNULL(#{GukeShopings.paynum,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.payid,jdbcType=BIGINT}, 0),
+      IFNULL(#{GukeShopings.checkcode,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.memid,jdbcType=BIGINT}, 0),
+      IFNULL(#{GukeShopings.memname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.memcode,jdbcType=VARCHAR}, ""),
+      IFNULL(#{GukeShopings.hyrmoney,jdbcType=DOUBLE}, 0),
+      IFNULL(#{GukeShopings.checktime,jdbcType=VARCHAR}, "")
+      )
+      </foreach>
+	</insert>
+	<select id="getHistorygetShopDataByGukeIDSortByBillNumber" resultMap="GukeShopings" statementType="PREPARED">
+        select *
+        from gukeshoprecord 
+        where kid=#{GukeID} and company=#{company} and workstate<![CDATA[ >= ]]>#{workstate1}  and workstate<![CDATA[ <= ]]>#{workstate2}
+        order by billnumber,gukeidx
+    </select>
+    <select id="getHistorygetShopDataDetailByGukeIDAndBillNumber" resultMap="GukeShopings" statementType="PREPARED">
+        select
+        gs.*,
+        sm.headpic as headpic
+        from gukeshoprecord gs
+        left join aikang_serviceitem sm on gs.`sid`=sm.`id`
+        where gs.kid=#{GukeID} and gs.company=#{company} and gs.billnumber=#{billnumber} and gs.workstate<![CDATA[ >= ]]>#{workstate1}  and gs.workstate<![CDATA[ <= ]]>#{workstate2}
+        order by gukeidx
+    </select>
+	<select id="getSimpHistoryShopDataByGukeIDAndGroupSortByDate" resultType="java.util.HashMap"
+		parameterType="java.util.HashMap">
+		SELECT 
+		any_value(gr.id) as id,
+		any_value(gr.billnumber) as billnumber,
+		any_value(gr.serinumber) as serinumber,
+		any_value(gr.gukenum) as gukenum,
+		any_value(gr.company) as company,
+		any_value(gr.sid) as sid,
+		any_value(gr.sname) as sname,
+		any_value(gr.maketime) as maketime,
+		any_value(sm.headpic) as spic,
+		any_value(cm.headpic) as cpic,
+		any_value(cm.cname) as cmcname,
+		COALESCE(SUM(itembillyf),0) as money
+		FROM gukeshoprecord gr
+		left join aikang_serviceitem sm on gr.`sid`=sm.`id`
+        left join aikang_company cm on gr.`company`=cm.`username`
+		where gr.kid=#{GukeID} and gr.company=#{company}
+		GROUP BY billnumber,id
+		order by maketime desc    <!--desc 按照降序排列  -->
+	</select>
+	
+	
+	
+	
+	
+	<resultMap id="GukePayTradeRecord" type="com.aikang.Bean.GukePayTradeRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="kid" property="kid" jdbcType="BIGINT"/>
+        <result column="kname" property="kname" jdbcType="VARCHAR"/>
+        <result column="gukenum" property="gukenum" jdbcType="INTEGER"/>
+        <result column="gukeidx" property="gukeidx" jdbcType="INTEGER"/>
+        <result column="billnumber" property="billnumber" jdbcType="VARCHAR"/>
+        <result column="daynumber" property="daynumber" jdbcType="INTEGER"/>
+        
+        <result column="appid" property="appid" jdbcType="VARCHAR"/>
+        <result column="mch_id" property="mch_id" jdbcType="VARCHAR"/>
+        <result column="device_info" property="device_info" jdbcType="VARCHAR"/>
+        <result column="sign" property="sign" jdbcType="VARCHAR"/>
+        <result column="sign_type" property="sign_type" jdbcType="VARCHAR"/>
+        <result column="err_code" property="err_code" jdbcType="VARCHAR"/>
+        <result column="openid" property="openid" jdbcType="VARCHAR"/>
+        <result column="is_subscribe" property="is_subscribe" jdbcType="VARCHAR"/>
+        <result column="trade_type" property="trade_type" jdbcType="VARCHAR"/>
+        <result column="bank_type" property="bank_type" jdbcType="VARCHAR"/>
+        <result column="total_fee" property="total_fee" jdbcType="VARCHAR"/>
+        
+        <result column="settlement_total_fee" property="settlement_total_fee" jdbcType="VARCHAR"/>
+        <result column="fee_type" property="fee_type" jdbcType="VARCHAR"/>
+        <result column="cash_fee" property="cash_fee" jdbcType="VARCHAR"/>
+        <result column="cash_fee_type" property="cash_fee_type" jdbcType="VARCHAR"/>
+        <result column="coupon_fee" property="coupon_fee" jdbcType="VARCHAR"/>
+        <result column="coupon_count" property="coupon_count" jdbcType="VARCHAR"/>
+        <result column="coupon_type_$n" property="coupon_type_$n" jdbcType="VARCHAR"/>
+        <result column="coupon_id_$n" property="coupon_id_$n" jdbcType="VARCHAR"/>
+        <result column="coupon_fee_$n" property="coupon_fee_$n" jdbcType="VARCHAR"/>
+        <result column="transaction_id" property="transaction_id" jdbcType="VARCHAR"/>
+        <result column="time_end" property="time_end" jdbcType="VARCHAR"/>
+        <result column="record_time" property="record_time" jdbcType="VARCHAR"/>
+
+    </resultMap>
+    
+    <insert id="insertGukePayTradeRecord" parameterType="com.aikang.Bean.GukePayTradeRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+    insert into guketraderecord 
+    (
+    	kid,
+    	kname,
+    	billnumber,
+    	gukenum,
+    	gukeidx,
+    	daynumber,
+    	appid,
+    	mch_id,
+    	device_info,
+    	sign,
+    	sign_type, 
+    	err_code, 
+    	openid, 
+    	is_subscribe, 
+      	trade_type, 
+      	bank_type,
+      	total_fee, 
+      	settlement_total_fee, 
+      	fee_type, 
+      	cash_fee, 
+      	cash_fee_type, 
+      	coupon_fee, 
+      	coupon_count, 
+      	coupon_type_$n,
+      	coupon_id_$n, 
+      	coupon_fee_$n, 
+      	transaction_id,
+		time_end,
+		record_time
+    )
+    values 
+      (
+      #{record.kid,jdbcType=BIGINT},
+      #{record.kname,jdbcType=VARCHAR},
+      #{record.billnumber,jdbcType=VARCHAR},
+      #{record.gukenum,jdbcType=INTEGER},
+      #{record.gukeidx,jdbcType=INTEGER},
+      #{record.daynumber,jdbcType=INTEGER}, 
+      #{record.appid,jdbcType=VARCHAR},
+      #{record.mch_id,jdbcType=VARCHAR},
+      #{record.device_info,jdbcType=VARCHAR},
+      #{record.sign,jdbcType=VARCHAR}, 
+      #{record.sign_type,jdbcType=VARCHAR},
+      #{record.err_code,jdbcType=VARCHAR}, 
+      #{record.openid,jdbcType=VARCHAR},
+      #{record.is_subscribe,jdbcType=VARCHAR}, 
+      #{record.trade_type,jdbcType=VARCHAR}, 
+      #{record.bank_type,jdbcType=VARCHAR}, 
+      #{record.total_fee,jdbcType=VARCHAR}, 
+      #{record.settlement_total_fee,jdbcType=VARCHAR}, 
+      #{record.fee_type,jdbcType=VARCHAR}, 
+      #{record.cash_fee,jdbcType=VARCHAR}, 
+      #{record.cash_fee_type,jdbcType=VARCHAR},
+      #{record.coupon_fee,jdbcType=VARCHAR},
+      #{record.coupon_count,jdbcType=VARCHAR},
+      #{record.coupon_type_$n,jdbcType=VARCHAR},
+      #{record.coupon_id_$n,jdbcType=VARCHAR},
+      #{record.coupon_fee_$n,jdbcType=VARCHAR},
+      #{record.transaction_id,jdbcType=VARCHAR},
+      #{record.time_end,jdbcType=VARCHAR},
+      #{record.record_time,jdbcType=VARCHAR}
+      )
+  </insert>
+    
+</mapper>

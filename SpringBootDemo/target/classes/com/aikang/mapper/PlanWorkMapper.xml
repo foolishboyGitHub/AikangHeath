@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.aikang.mapper.PlanWorkMapper">
     <resultMap id="BaseResultMap" type="com.aikang.Bean.PlanWork">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="hid" property="hid" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="hid" property="hid" jdbcType="BIGINT"/>
         <result column="sdx" property="sdx" jdbcType="INTEGER"/>
         <result column="sdxlast" property="sdxlast" jdbcType="INTEGER"/>
         <result column="state" property="state" jdbcType="INTEGER"/>
@@ -11,32 +12,277 @@
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="sex" property="sex" jdbcType="VARCHAR"/>
         <result column="servicecode" property="servicecode" jdbcType="VARCHAR"/>
-        <result column="DayidOfsdxMov" property="DayidOfsdxMov" jdbcType="INTEGER"/>
+        <result column="DayidOfsdxMov" property="DayidOfsdxMov" jdbcType="VARCHAR"/>
+        <result column="nmsSum" property="nmsSum" jdbcType="DOUBLE"/>
+        <result column="nmsSumLast" property="nmsSumLast" jdbcType="DOUBLE"/>
+        <result column="level" property="level" jdbcType="INTEGER"/>
+        <result column="earliestyytime" property="earliestyytime" jdbcType="VARCHAR"/>
+        
+        <collection property="mywkexts" ofType="com.aikang.Bean.WorkExtra">
+        	<result column="xhid" property="hid" jdbcType="BIGINT"/>
+	        <result column="xtmid" property="tmid" jdbcType="BIGINT"/>
+	        <result column="xtmname" property="tmname" jdbcType="VARCHAR"/>
+	        <result column="xrounde" property="rounde" jdbcType="BIGINT"/>
+	        <result column="xiswork" property="iswork" jdbcType="INTEGER"/>
+	        <result column="xrlastdate" property="rlastdate" jdbcType="VARCHAR"/>
+	    </collection>
+	    
+        <collection property="myitems" ofType="com.aikang.Bean.WrokingItem">
+	      <id column="wid" property="id"/>
+	      <result column="wcompany" property="company" jdbcType="VARCHAR"/>
+          <result column="wordertype" property="ordertype" jdbcType="INTEGER"/>
+          <result column="wgukenum" property="gukenum" jdbcType="INTEGER"/>
+          <result column="wgukeidx" property="gukeidx" jdbcType="INTEGER"/>
+          <result column="wbillnumber" property="billnumber" jdbcType="VARCHAR"/>
+          <result column="wdayid" property="dayid" jdbcType="VARCHAR"/>
+          <result column="whid" property="hid" jdbcType="BIGINT"/>
+          <result column="wwaittime" property="waittime" jdbcType="VARCHAR"/>
+          <result column="wclocknumyf" property="clocknumyf" jdbcType="INTEGER"/>
+          <result column="wsettmlong" property="settmlong" jdbcType="INTEGER"/>
+          <result column="wworkstate" property="workstate" jdbcType="INTEGER"/>
+	    </collection>
+	    <collection property="myexcs" ofType="com.aikang.Bean.PlanExcItem">
+	      <id column="eid" property="id"/>
+	      <result column="ecompany" property="company" jdbcType="VARCHAR"/>
+          <result column="ehid" property="hid" jdbcType="BIGINT"/>
+          <result column="esid" property="sid" jdbcType="BIGINT"/>
+	    </collection>
     </resultMap> 
     
+    <select id="getAllPlanWorksByCompanylist" resultMap="BaseResultMap" statementType="PREPARED">
+        select 
+        wl.*,
+        hr.name,hr.sex,hr.servicecode,hr.level, 
+        wm.id as wid, 
+        wm.company as wcompany,
+        wm.ordertype as wordertype,
+        wm.gukenum as wgukenum,
+        wm.gukeidx as wgukeidx,
+        wm.billnumber as wbillnumber,
+        wm.dayid as wdayid,
+        wm.hid as whid,
+        wm.waittime as wwaittime,
+        wm.clocknumyf as wclocknumyf,
+        sm.timelong as wsettmlong,
+        wm.workstate as wworkstate,
+        we.company as ecompany,
+        we.hid as ehid,
+        we.sid as esid
+        from aikang_worklist wl 
+        left join aikang_hr hr on wl.`hid`=hr.`id` and wl.`company`=hr.`company`
+        left join aikang_waiteritem wm on wm.`hid`=wl.`hid` and wm.`company`=wl.`company`
+        left join aikang_workexcitem we on we.`hid`=wl.`hid` and we.`company`=wl.`company`
+        left join aikang_serviceitem sm on wm.`sid`=sm.`id`and sm.`company`=wl.`company`
+        where 
+        wl.state <![CDATA[ >= ]]>#{state_1} 
+        and 
+        wl.state <![CDATA[ < ]]>#{state_2}
+        and 
+        wl.company in
+        <foreach collection="companylist" item="item" open="(" close=")" separator=",">
+        	#{item,jdbcType=VARCHAR}
+        </foreach>
+        order by wl.company,wl.sdx
+    </select>
+    <select id="getAllWorkExtraPlanWorksByCompanylist" resultMap="BaseResultMap" statementType="PREPARED">
+        select 
+        wl.*,
+        hr.name,hr.sex,hr.servicecode,hr.level, 
+        wm.id as wid, 
+        wm.company as wcompany,
+        wm.ordertype as wordertype,
+        wm.gukenum as wgukenum,
+        wm.gukeidx as wgukeidx,
+        wm.billnumber as wbillnumber,
+        wm.dayid as wdayid,
+        wm.hid as whid,
+        wm.waittime as wwaittime,
+        wm.workstate as wworkstate,
+        wm.clocknumyf as wclocknumyf,
+        sm.timelong as wsettmlong,
+        we.company as ecompany,
+        we.hid as ehid,
+        we.sid as esid,
+        wt.hid as xhid,
+        wt.tmid as xtmid,
+        wt.tmname as xtmname,
+        wt.rounde as xrounde,
+        wt.rlastdate as xrlastdate,
+        wt.iswork as xiswork
+        from aikang_worklist wl 
+        left join aikang_hr hr on wl.`hid`=hr.`id` and wl.`company`=hr.`company`
+        left join aikang_waiteritem wm on wm.`hid`=wl.`hid` and wm.`company`=wl.`company`
+        left join aikang_workexcitem we on we.`hid`=wl.`hid` and we.`company`=wl.`company`
+        left join aikang_serviceitem sm on wm.`sid`=sm.`id`and sm.`company`=wl.`company`
+        left join aikang_workextra wt on wt.`iswork`= 1 and wt.`hid`=wl.`hid` and wt.`company`=wl.`company`
+        where 
+        wl.state <![CDATA[ >= ]]>#{state_1} 
+        and 
+        wl.state <![CDATA[ < ]]>#{state_2}
+        and
+        wl.company in
+        <foreach collection="companylist" item="item" open="(" close=")" separator=",">
+        	#{item,jdbcType=VARCHAR}
+        </foreach>
+        order by wl.company,wt.rounde,wl.sdx
+    </select>
+    <select id="getPlanWorksInIds" resultMap="BaseResultMap" statementType="PREPARED">
+        select 
+        wl.*,
+        hr.name,hr.sex,hr.servicecode,hr.level,
+        wm.id as wid, 
+        wm.company as wcompany,
+        wm.ordertype as wordertype,
+        wm.gukenum as wgukenum,
+        wm.gukeidx as wgukeidx,
+        wm.billnumber as wbillnumber,
+        wm.dayid as wdayid,
+        wm.hid as whid,
+        wm.waittime as wwaittime,
+        wm.clocknumyf as wclocknumyf,
+        sm.timelong as wsettmlong,
+        wm.workstate as wworkstate       
+        from aikang_worklist wl
+        left join aikang_hr hr on wl.`hid`=hr.`id` and wl.`company`=hr.`company`
+        left join aikang_waiteritem wm on wm.`hid`=wl.`hid` and wm.`company`=wl.`company` 
+        left join aikang_serviceitem sm on wm.`sid`=sm.`id`and sm.`company`=wl.`company`
+        where wl.hid in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+        	#{item}
+        </foreach>
+    </select>
     <select id="getAllPlanWorks" resultMap="BaseResultMap" statementType="PREPARED">
-        select wl.*,hr.name,hr.sex,hr.servicecode from ${company}_worklist wl left join ${company}_hr hr on
-        wl.`hid`=hr.`id`
+        select 
+        wl.*,
+        hr.name,hr.sex,hr.servicecode,hr.level,
+        wm.id as wid, 
+        wm.company as wcompany,
+        wm.ordertype as wordertype,
+        wm.gukenum as wgukenum,
+        wm.gukeidx as wgukeidx,
+        wm.billnumber as wbillnumber,
+        wm.dayid as wdayid,
+        wm.hid as whid,
+        wm.waittime as wwaittime,
+        wm.clocknumyf as wclocknumyf,
+        sm.timelong as wsettmlong,
+        wm.workstate as wworkstate,
+        we.company as ecompany,
+        we.hid as ehid,
+        we.sid as esid 
+        from aikang_worklist wl 
+        left join aikang_hr hr on wl.`hid`=hr.`id` and wl.`company`=hr.`company`
+        left join aikang_waiteritem wm on wm.`hid`=wl.`hid` and wm.`company`=wl.`company`
+        left join aikang_workexcitem we on we.`hid`=wl.`hid` and we.`company`=wl.`company`
+        left join aikang_serviceitem sm on wm.`sid`=sm.`id`and sm.`company`=wl.`company`
+        where wl.company=#{company}
         order by wl.sdx
     </select>
+    <select id="getAllPlanWorksAtWorkExtra" resultMap="BaseResultMap" statementType="PREPARED">
+        select 
+        wl.*,
+        hr.name,hr.sex,hr.servicecode,hr.level,
+        wm.id as wid, 
+        wm.company as wcompany,
+        wm.ordertype as wordertype,
+        wm.gukenum as wgukenum,
+        wm.gukeidx as wgukeidx,
+        wm.billnumber as wbillnumber,
+        wm.dayid as wdayid,
+        wm.hid as whid,
+        wm.waittime as wwaittime,
+        wm.clocknumyf as wclocknumyf,
+        sm.timelong as wsettmlong,
+        wm.workstate as wworkstate,
+        we.company as ecompany,
+        we.hid as ehid,
+        we.sid as esid,
+        wt.hid as xhid,
+        wt.tmid as xtmid,
+        wt.tmname as xtmname,
+        wt.rounde as xrounde,
+        wt.rlastdate as xrlastdate,
+        wt.iswork as xiswork 
+        from aikang_worklist wl 
+        left join aikang_hr hr on wl.`hid`=hr.`id` and wl.`company`=hr.`company`
+        left join aikang_waiteritem wm on wm.`hid`=wl.`hid` and wm.`company`=wl.`company`
+        left join aikang_workexcitem we on we.`hid`=wl.`hid` and we.`company`=wl.`company`
+        left join aikang_serviceitem sm on wm.`sid`=sm.`id`and sm.`company`=wl.`company`
+        left join aikang_workextra wt on wt.`iswork`= 1 and wt.`hid`=wl.`hid` and wt.`company`=wl.`company` and wt.`tmname`=#{tmname}
+        where wl.company=#{company} and wt.iswork=1
+        order by wt.rounde,wl.sdx
+    </select>
     <select id="getPlanWorkById" resultMap="BaseResultMap" statementType="PREPARED">
-        select wl.*,hr.name,hr.sex,hr.servicecode from ${company}_worklist wl left join ${company}_hr hr on
+        select wl.*,hr.name,hr.sex,hr.servicecode,hr.level 
+        from aikang_worklist wl left join aikang_hr hr on
         wl.`hid`=hr.`id`
-        where id=#{id}
+        where wl.id=#{id} and wl.company=#{company}
     </select>
     <select id="getPlanWorkByHid" resultMap="BaseResultMap" statementType="PREPARED">
-        select wl.*,hr.name,hr.sex,hr.servicecode from ${company}_worklist wl left join ${company}_hr hr on
-        wl.`hid`=hr.`id`
-        where hid=#{hid}
+        select 
+        wl.*,
+        hr.name,hr.sex,hr.servicecode,hr.level,
+        wm.id as wid, 
+        wm.company as wcompany,
+        wm.ordertype as wordertype,
+        wm.gukenum as wgukenum,
+        wm.gukeidx as wgukeidx,
+        wm.billnumber as wbillnumber,
+        wm.dayid as wdayid,
+        wm.hid as whid,
+        wm.waittime as wwaittime,
+        wm.clocknumyf as wclocknumyf,
+        sm.timelong as wsettmlong,
+        wm.workstate as wworkstate,
+        we.company as ecompany,
+        we.hid as ehid,
+        we.sid as esid,
+        wt.hid as xhid,
+        wt.tmid as xtmid,
+        wt.tmname as xtmname,
+        wt.rounde as xrounde,
+        wt.rlastdate as xrlastdate,
+        wt.iswork as xiswork  
+        from aikang_worklist wl 
+        left join aikang_hr hr on wl.`hid`=hr.`id`
+        left join aikang_waiteritem wm on wm.`hid`=wl.`hid` and wm.`company`=wl.`company`
+        left join aikang_workexcitem we on we.`hid`=wl.`hid` and we.`company`=wl.`company`
+        left join aikang_workextra wt on wt.`iswork`= 1 and wt.`hid`=wl.`hid` and wt.`company`=wl.`company`
+        left join aikang_serviceitem sm on wm.`sid`=sm.`id`and sm.`company`=wl.`company`
+        where wl.hid=#{hid} and wl.company=#{company}
     </select>
     <insert id="addPlanWorks">
-	    insert into ${company}_worklist (hid,sdx,sdxlast,DayidOfsdxMov,state,round) values
+	    insert into aikang_worklist 
+	    (
+	    company,
+	    hid,
+	    sdx,
+	    sdxlast,
+	    DayidOfsdxMov,
+	    nmsSum,
+	    nmsSumLast,
+	    state,
+	    round,
+	    earliestyytime
+	    ) 
+	    values
 	    <foreach collection="record" item="PlanWork" separator=",">
-	      (#{PlanWork.hid},#{PlanWork.sdx},#{PlanWork.sdxlast},#{PlanWork.DayidOfsdxMov},#{PlanWork.state},#{PlanWork.round})
+	      (
+	      IFNULL(#{company}, ""),
+	      IFNULL(#{PlanWork.hid}, 0),
+	      IFNULL(#{PlanWork.sdx}, 0),
+	      IFNULL(#{PlanWork.sdxlast}, 0),
+	      IFNULL(#{PlanWork.DayidOfsdxMov}, ""),
+	      IFNULL(#{PlanWork.nmsSum}, 0.0),
+	      IFNULL(#{PlanWork.nmsSumLast}, 0.0),
+	      IFNULL(#{PlanWork.state}, 0),
+	      IFNULL(#{PlanWork.round}, 0),
+	      IFNULL(#{PlanWork.earliestyytime}, "")
+	      )
 	    </foreach>
 	</insert>
 		<update id="updatePlanWorksByIdSelective" parameterType="com.aikang.Bean.PlanWork" >
-	    update ${company}_worklist
+	    update aikang_worklist
 	    <set >
 	      <if test="record.sdx != null" >
 	        sdx = #{record.sdx,jdbcType=INTEGER},
@@ -45,7 +291,13 @@
 	        sdxlast = #{record.sdxlast,jdbcType=INTEGER},
 	      </if>
 	      <if test="record.DayidOfsdxMov != null" >
-	        DayidOfsdxMov = #{record.DayidOfsdxMov,jdbcType=INTEGER},
+	        DayidOfsdxMov = #{record.DayidOfsdxMov,jdbcType=VARCHAR},
+	      </if>
+	      <if test="record.nmsSum != null" >
+	        nmsSum = #{record.nmsSum,jdbcType=DOUBLE},
+	      </if>
+	      <if test="record.nmsSumLast != null" >
+	        nmsSumLast = #{record.nmsSumLast,jdbcType=DOUBLE},
 	      </if>
 	      <if test="record.state != null" >
 	        state = #{record.state,jdbcType=INTEGER},
@@ -53,20 +305,29 @@
 	      <if test="record.round != null" >
 	        round = #{record.round,jdbcType=INTEGER},
 	      </if>
+	      <if test="record.earliestyytime != null" >
+	        earliestyytime = #{record.earliestyytime,jdbcType=VARCHAR},
+	      </if>
 	    </set>
-	    where id = #{record.id,jdbcType=INTEGER}
+	    where id = #{record.id,jdbcType=INTEGER} and company=#{company}
   	</update>
   	<update id="updatePlanWorksByHidSelective" parameterType="com.aikang.Bean.PlanWork" >
-	    update ${company}_worklist
+	    update aikang_worklist
 	    <set >
 	      <if test="record.sdx != null" >
 	        sdx = #{record.sdx,jdbcType=INTEGER},
 	      </if>
-	      <if test="record.sdx != null" >
+	      <if test="record.sdxlast != null" >
 	        sdxlast = #{record.sdxlast,jdbcType=INTEGER},
 	      </if>
 	      <if test="record.DayidOfsdxMov != null" >
-	        DayidOfsdxMov = #{record.DayidOfsdxMov,jdbcType=INTEGER},
+	        DayidOfsdxMov = #{record.DayidOfsdxMov,jdbcType=VARCHAR},
+	      </if>
+	      <if test="record.nmsSum != null" >
+	        nmsSum = #{record.nmsSum,jdbcType=DOUBLE},
+	      </if>
+	      <if test="record.nmsSumLast != null" >
+	        nmsSumLast = #{record.nmsSumLast,jdbcType=DOUBLE},
 	      </if>
 	      <if test="record.state != null" >
 	        state = #{record.state,jdbcType=VARCHAR},
@@ -74,13 +335,16 @@
 	      <if test="record.round != null" >
 	        round = #{record.round,jdbcType=VARCHAR},
 	      </if>
+	      <if test="record.earliestyytime != null" >
+	        earliestyytime = #{record.earliestyytime,jdbcType=VARCHAR},
+	      </if>
 	    </set>
-	    where hid = #{record.hid,jdbcType=INTEGER}
+	    where hid = #{record.hid,jdbcType=BIGINT} and company=#{company}
   	</update>
 
     
     <update id="updateListPlanWorksByHidSelective"  parameterType="java.util.List">
-      update ${company}_worklist
+      update aikang_worklist
       <trim prefix="set" suffixOverrides=",">
         <trim prefix="sdx = case" suffix="end,">
           <foreach collection="record" item="PlanWork">
@@ -103,6 +367,20 @@
             </if>
           </foreach>
         </trim>
+        <trim prefix="nmsSum = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.nmsSum != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.nmsSum}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="nmsSumLast = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.nmsSumLast != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.nmsSumLast}
+            </if>
+          </foreach>
+        </trim>
         <trim prefix="state = case" suffix="end,">
           <foreach collection="record" item="PlanWork">
             <if test="PlanWork.state != null">
@@ -117,15 +395,165 @@
             </if>
           </foreach>
         </trim>
+        <trim prefix="earliestyytime = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.earliestyytime != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.earliestyytime}
+            </if>
+          </foreach>
+        </trim>
+      </trim>
+      where
+        <foreach collection="record" item="PlanWork" separator="or">
+            hid = #{PlanWork.hid} and company=#{company}
+        </foreach>
+  </update>
+  	
+  	<update id="updateNoCompanyAllListPlanWorksByHidSelective"  parameterType="java.util.List">
+      update aikang_worklist
+      <trim prefix="set" suffixOverrides=",">
+        <trim prefix="sdx = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.sdx != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.sdx}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="sdxlast = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.sdxlast != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.sdxlast}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="DayidOfsdxMov = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.DayidOfsdxMov != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.DayidOfsdxMov}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="nmsSum = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.nmsSum != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.nmsSum}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="nmsSumLast = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.nmsSumLast != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.nmsSumLast}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="state = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.state != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.state}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="round = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.round != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.round}
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="earliestyytime = case" suffix="end,">
+          <foreach collection="record" item="PlanWork">
+            <if test="PlanWork.earliestyytime != null">
+              when hid=#{PlanWork.hid} then #{PlanWork.earliestyytime}
+            </if>
+          </foreach>
+        </trim>
       </trim>
       where
         <foreach collection="record" item="PlanWork" separator="or">
             hid = #{PlanWork.hid}
         </foreach>
   </update>
-  
-  
-	<update id="truncatePlanWorks">
-	   truncate table ${company}_worklist
-	</update>
+	<delete id="truncatePlanWorks">
+    	delete from aikang_worklist where company=#{company}
+  	</delete>
+  	
+  	
+  	
+  	
+  	<resultMap id="WorkExtraResultMap" type="com.aikang.Bean.WorkExtra">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="tmid" property="tmid" jdbcType="BIGINT"/>
+        <result column="tmname" property="tmname" jdbcType="VARCHAR"/>
+        <result column="hid" property="hid" jdbcType="BIGINT"/>
+        <result column="iswork" property="iswork" jdbcType="INTEGER"/>
+        <result column="rounde" property="rounde" jdbcType="INTEGER"/>
+        <result column="rlastdate" property="rlastdate" jdbcType="VARCHAR"/>
+    </resultMap> 
+    
+    <insert id="addNewWorkExtraRecord">
+	    insert into aikang_workextra 
+	    (
+	    company,
+	    tmid,
+	    tmname,
+	    hid,
+	    iswork,
+	    rounde,
+	    rlastdate
+	    ) 
+	    values    
+	      (
+	      #{company},
+	      IFNULL(#{record.tmid}, 0),
+	      IFNULL(#{record.tmname}, ""),
+	      IFNULL(#{record.hid}, 0),
+	      IFNULL(#{record.iswork}, 0),
+	      IFNULL(#{record.rounde}, 0),
+	      IFNULL(#{record.rlastdate}, "2020-01-01 00:00:01")
+	      )
+	   
+	</insert>
+	
+	<select id="getWorkExtraByHid" resultMap="WorkExtraResultMap" statementType="PREPARED">
+        select * from aikang_workextra where company=#{company} and hid=#{hid}
+    </select>
+    <select id="getWorkExtraByHidAndTmname" resultMap="WorkExtraResultMap" statementType="PREPARED">
+        select * from aikang_workextra where company=#{company} and hid=#{hid} and tmname=#{tmname}
+    </select>
+    <select id="getWorkExtraByHidAndTmid" resultMap="WorkExtraResultMap" statementType="PREPARED">
+        select * from aikang_workextra where company=#{company} and hid=#{hid} and tmid=#{tmid}
+    </select>
+    <update id="updateWorkExtraIsworkByhidAndTmid"  statementType="PREPARED">
+    update aikang_workextra
+     set 
+     iswork = #{record.iswork,jdbcType=INTEGER},
+     tmname = #{record.tmname,jdbcType=VARCHAR}
+    where hid = #{record.hid} and tmid=#{record.tmid} and company=#{company}
+  </update>
+    <update id="updateAddWorkExtraIsworkRoundByhidAndTmid"  statementType="PREPARED">
+    update aikang_workextra
+     set 
+     rounde = #{record.rounde},
+     rlastdate = #{record.rlastdate}
+    where hid = #{record.hid} and tmid=#{record.tmid} and company=#{company}
+  </update>
+  <update id="SetWorkExtraRoundOrigByIfRlastdatePass"  statementType="PREPARED">
+    update aikang_workextra
+    set 
+    rounde = #{rounde},
+    rlastdate = #{nowdateset}
+    where 
+    	str_to_date(rlastdate,'%Y-%m-%d %H:%i:%S')
+		<![CDATA[ <= ]]> 
+		str_to_date(#{nowdate}, '%Y-%m-%d %H:%i:%S') 
+    
+  </update>
+    <delete id="deleteWorkExtraByHidAndTmname">
+    	delete from aikang_workextra where hid=#{record.hid} and tmname=#{record.tmname} and company=#{company}
+  	</delete>
+  	<delete id="deleteWorkExtraBytmid">
+    	delete from aikang_workextra where tmid=#{tmid} and company=#{company}
+  	</delete>
 </mapper>

@@ -18,23 +18,34 @@ var ShopSelMoneyChannelPanel = (function (_super) {
     ShopSelMoneyChannelPanel.prototype.childrenCreated = function () {
         this._AddClick(this._btn_pay_weixin, this._OnClick);
         this._AddClick(this._btn_pay_zhifubao, this._OnClick);
+        this._AddClick(this._btn_pay_huiyuan, this._OnClick);
         this._AddClick(this._btn_back_message, this._OnClick);
         this._AddClick(this._btn_back, this._OnClick);
         this.group_channelmessage.visible = false;
     };
     ShopSelMoneyChannelPanel.prototype.OnOpen = function () {
         EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_RequestMoneyChannel, this.onServerEventData, this);
+        EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_RequestHuiYuanPayInfo, this.onServerEventData, this);
+        EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopPay_Close_Sel_MoneyChanel_panel, this.eventclose, this);
     };
     ShopSelMoneyChannelPanel.prototype.OnClose = function () {
         EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_RequestMoneyChannel, this.onServerEventData, this);
+        EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_RequestHuiYuanPayInfo, this.onServerEventData, this);
+        EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopPay_Close_Sel_MoneyChanel_panel, this.eventclose, this);
     };
     ;
+    ShopSelMoneyChannelPanel.prototype.eventclose = function (e) {
+        this.CloseSelf();
+    };
     ShopSelMoneyChannelPanel.prototype.onServerEventData = function (e) {
         var json = e.data;
         switch (json.msg) {
             case FuncUrlUtil.ShopInfo_RequestMoneyChannel:
                 ShopPageManage.ins().data_MoneyChannelInfo = json.obj;
                 this.dealChannelInfo();
+                break;
+            case FuncUrlUtil.ShopInfo_RequestHuiYuanPayInfo:
+                this.setHuiyuanInfo(json);
                 break;
         }
     };
@@ -55,6 +66,19 @@ var ShopSelMoneyChannelPanel = (function (_super) {
             ViewManager.ins().open(ShopPayStateShowPanel);
             this.CloseSelf();
         }
+        else if (data.suc == "needbind") {
+            ViewManager.ins().open(ShopHuiYuanNedPhoneNumberPanel);
+            this.CloseSelf();
+        }
+    };
+    ShopSelMoneyChannelPanel.prototype.setHuiyuanInfo = function (json) {
+        var data = json.obj;
+        if (data.msg == "needbind") {
+            ViewManager.ins().open(ShopHuiYuanNedPhoneNumberPanel);
+            return;
+        }
+        ShopPageManage.ins().data_MyHuiYuanInfo = data.hl;
+        ViewManager.ins().open(ShopPayHuiYuanSelList);
     };
     ShopSelMoneyChannelPanel.prototype._OnClick = function (e) {
         switch (e.target) {
@@ -66,6 +90,9 @@ var ShopSelMoneyChannelPanel = (function (_super) {
                 break;
             case this._btn_pay_zhifubao:
                 this.sendRequestMoneyChannel("alpay");
+                break;
+            case this._btn_pay_huiyuan:
+                this.sendRequesHuiYuanPayInfo("huiyuan");
                 break;
             case this._btn_back_message:
                 this.group_selmoneychannel.visible = true;
@@ -85,6 +112,20 @@ var ShopSelMoneyChannelPanel = (function (_super) {
             type: type
         };
         var rurl = FuncUrlUtil.ShopInfo_RequestMoneyChannel;
+        sproto.sprotoRequest.sendPostRequestJson(JSON.stringify(order), rurl);
+    };
+    ShopSelMoneyChannelPanel.prototype.sendRequesHuiYuanPayInfo = function (type) {
+        var data = ShopPageManage.ins().data_ShopMakeList;
+        if (data == null || data.length <= 0) {
+            WarnWin.show("无可用订单", null, null);
+            return;
+        }
+        var order = {
+            company: GameGlobal.CurrentCompany,
+            billnumber: data[0].billnumber,
+            type: type
+        };
+        var rurl = FuncUrlUtil.ShopInfo_RequestHuiYuanPayInfo;
         sproto.sprotoRequest.sendPostRequestJson(JSON.stringify(order), rurl);
     };
     ////////////////'

@@ -86,7 +86,9 @@ var ShopAskNumPanel = (function (_super) {
                 }
                 break;
             case FuncUrlUtil.ShopInfo_GetShopInfo:
-                ShopPageManage.ins().data_ShopInfoItem = json.obj;
+                var map = json.obj;
+                ShopPageManage.ins().data_CompanyInfo = map.cm;
+                ShopPageManage.ins().data_ShopInfoItem = map.sl;
                 this.CloseSelf();
                 ViewManager.ins().open(MainTableViewPanel);
                 break;

@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.aikang.mapper.PerUrlRoleMapper" >
   <resultMap id="BaseResultMap" type="com.aikang.Bean.PerUrlRole" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
     <result column="mid" property="mid" jdbcType="INTEGER" />
     <result column="rid" property="rid" jdbcType="INTEGER" />
   </resultMap>
@@ -10,36 +11,49 @@
     id, mid, rid
   </sql>
   <delete id="deleteByRid">
-    delete from ${company}_menu_role where rid=#{rid}
+    delete from aikang_menu_role where rid=#{rid} and company=#{company}
   </delete>
   <delete id="deleteByMid">
-    delete from ${company}_menu_role where mid=#{mid}
+    delete from aikang_menu_role where mid=#{mid} and company=#{company}
   </delete>
   <insert id="insertRecord">
-    insert into ${company}_menu_role (mid,rid) values
+    insert into aikang_menu_role (company,mid,rid) values
     <foreach collection="mids" separator="," item="mid">
-      (#{mid},#{rid})
+      (#{company},#{mid},#{rid})
     </foreach>
   </insert>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from ${company}_menu_role
-    where id = #{id,jdbcType=INTEGER}
+    from aikang_menu_role
+    where id = #{id} and company=#{company}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from ${company}_menu_role
-    where id = #{id,jdbcType=INTEGER}
+    delete from aikang_menu_role
+    where id = #{id} and company=#{company}
   </delete>
   <insert id="insert" parameterType="com.aikang.Bean.PerUrlRole" >
-    insert into ${company}_menu_role (id, mid, rid)
-    values (#{record.id,jdbcType=INTEGER}, #{record.mid,jdbcType=INTEGER}, #{record.rid,jdbcType=INTEGER})
+    insert into aikang_menu_role 
+    (
+    company, 
+    mid, 
+    rid
+    )
+    values 
+    (
+    #{company}, 
+    #{record.mid,jdbcType=INTEGER}, 
+    #{record.rid,jdbcType=INTEGER}
+    )
   </insert>
   <insert id="insertSelective" parameterType="com.aikang.Bean.PerUrlRole" >
-    insert into ${company}_menu_role
+    insert into aikang_menu_role
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="record.id != null" >
         id,
+      </if>
+      <if test="company != null" >
+        company,
       </if>
       <if test="record.mid != null" >
         mid,
@@ -50,7 +64,10 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="record.id != null" >
-        #{record.id,jdbcType=INTEGER},
+        #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
       </if>
       <if test="record.mid != null" >
         #{record.mid,jdbcType=INTEGER},
@@ -61,7 +78,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.aikang.Bean.PerUrlRole" >
-    update ${company}_menu_role
+    update aikang_menu_role
     <set >
       <if test="record.mid != null" >
         mid = #{record.mid,jdbcType=INTEGER},
@@ -70,12 +87,12 @@
         rid = #{record.rid,jdbcType=INTEGER},
       </if>
     </set>
-    where id = #{record.id,jdbcType=INTEGER}
+    where id = #{record.id} and company=#{company}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.aikang.Bean.PerUrlRole" >
-    update ${company}_menu_role
+    update aikang_menu_role
     set mid = #{record.mid,jdbcType=INTEGER},
       rid = #{record.rid,jdbcType=INTEGER}
-    where id = #{record.id,jdbcType=INTEGER}
+    where id = #{record.id} and company=#{company}
   </update>
 </mapper>

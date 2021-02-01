@@ -20,10 +20,13 @@ import com.aikang.Bean.PlanWork;
 import com.aikang.Bean.RespBean;
 import com.aikang.Bean.Room;
 import com.aikang.Bean.ServiceItem;
+import com.aikang.Bean.SpeTimesec;
 import com.aikang.Bean.User;
 import com.aikang.Bean.WaiterItem;
+import com.aikang.Bean.WorkExtra;
 import com.aikang.service.PlanWorkService;
 import com.aikang.service.ServiceItemService;
+import com.aikang.service.TimesecService;
 import com.aikang.service.WaiterItemService;
 import com.aikang.utils.Util;
 import com.aikang.utils.WaiterStateUtil;
@@ -42,6 +45,9 @@ public class WorkerPickManager {
 	
 	@Autowired
 	PlanWorkService planWorkService;
+	
+	@Autowired
+	TimesecService tmSecService;
 	
 	//获取项目配置
 	@RequestMapping("/Refresh/GetItemCfg")
@@ -67,7 +73,7 @@ public class WorkerPickManager {
 	@RequestMapping("/Refresh/GetState")
     @ResponseBody
     public String getWorkPickInfo(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException, ParseException {
-		Integer hid = Util.getCurrentUser().getId();
+		Long hid = Util.getCurrentUser().getId();
 		List<WaiterItem> lws = wiService.getWaiterItemsByHid(hid);
     	
     	//设置等待 迟到 服务等时长 
@@ -108,6 +114,12 @@ public class WorkerPickManager {
 		if(rt == -3)//无法获得该单信息
 		{
 			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "无法获得该单信息，请重试!");
+			String s = Util.setResponseToClientString(request, response, err);
+			return s;
+		}
+		if(rt == -4)//无法获得该单信息
+		{
+			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "服务已经开始，不能重复操作");
 			String s = Util.setResponseToClientString(request, response, err);
 			return s;
 		}
@@ -173,7 +185,7 @@ public class WorkerPickManager {
 	}
 	
 	
-	//获取项目配置
+	//获取排钟信息
 	@RequestMapping("/TurnInfo/GetTurn")
     @ResponseBody
     public String TurnInfo_GetTurn(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException, ParseException {
@@ -198,6 +210,56 @@ public class WorkerPickManager {
 		_map.put("mb", mb);
 		_map.put("mr", mr);
 		RespBean ok = RespBean.ok("/WorkerPick/TurnInfo/GetTurn", _map);
+	    String s = Util.setResponseToClientString(request, response, ok);
+	    return s;
+	}
+	
+	//获取加班信息
+	@RequestMapping("/TurnInfo/GetWorkExtraInfo")
+    @ResponseBody
+    public String GetWorkExtraInfo(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException, ParseException {
+		String company = Util.getConpnany_Name();
+		List<SpeTimesec> stimes = tmSecService.getAllTypeSpetimesecs(0, company);		
+		User u = Util.getCurrentUser();
+		List<WorkExtra> workes = planWorkService.getWorkExtraByHid(u.getId(), company);
+		Map<String,Object> _map = new HashMap<String,Object>();//
+		_map.put("tms", stimes);
+		_map.put("wks", workes);
+		RespBean ok = RespBean.ok("/WorkerPick/TurnInfo/GetWorkExtraInfo", _map);
+	    String s = Util.setResponseToClientString(request, response, ok);
+	    return s;
+	}
+	
+	//设置加班信息
+	@RequestMapping("/TurnInfo/SetWorkExtraInfo")
+    @ResponseBody
+    public String SetWorkExtraInfo(@RequestBody  Map<String, String> wmap, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException, ParseException {
+		String company = Util.getConpnany_Name();
+		User u = Util.getCurrentUser();
+		
+		String tmids = wmap.get("tmid");
+		Long tmid = Long.parseLong(tmids);
+		String isworks = wmap.get("iswork");
+		Integer iswork = Integer.parseInt(isworks);
+		
+		SpeTimesec  stc = tmSecService.getAllSpeTimesecList(tmid,company);
+		if(stc == null){
+			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "设置失败 加班信息不存在，请重试!");
+			String s = Util.setResponseToClientString(request, response, err);
+			return s;
+		}
+		int p = planWorkService.setMyWorkextraisworkByTimesec(u.getId(), stc, iswork, company);
+		if(p!=1){
+			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "设置失败 更新错误，请重试!");
+			String s = Util.setResponseToClientString(request, response, err);
+			return s;
+		}
+		List<SpeTimesec> stimes = tmSecService.getAllTypeSpetimesecs(0, company);		
+		List<WorkExtra> workes = planWorkService.getWorkExtraByHid(u.getId(), company);
+		Map<String,Object> _map = new HashMap<String,Object>();//
+		_map.put("tms", stimes);
+		_map.put("wks", workes);
+		RespBean ok = RespBean.ok("/WorkerPick/TurnInfo/GetWorkExtraInfo", _map);
 	    String s = Util.setResponseToClientString(request, response, ok);
 	    return s;
 	}

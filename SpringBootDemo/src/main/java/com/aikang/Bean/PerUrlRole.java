@@ -2,17 +2,17 @@ package com.aikang.Bean;
 
 public class PerUrlRole {
 
-	private Integer id;
+	private Long id;
 
     private Integer mid;
 
     private Integer rid;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

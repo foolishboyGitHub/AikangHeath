@@ -4,33 +4,44 @@ public class PlanExcItem {
 
 	//排除不能做的项目
 	
-	private Integer id;
+	private Long id;
 	
-	private Integer hid; //人员
 	
-	private Integer sid; //服务项目
+	private String company;
+	
+	private Long hid; //人员
+	
+	private Long sid; //服务项目
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Integer getHid() {
+	public Long getHid() {
 		return hid;
 	}
 
-	public void setHid(Integer hid) {
+	public void setHid(Long hid) {
 		this.hid = hid;
 	}
 
-	public Integer getSid() {
+	public Long getSid() {
 		return sid;
 	}
 
-	public void setSid(Integer sid) {
+	public void setSid(Long sid) {
 		this.sid = sid;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 }

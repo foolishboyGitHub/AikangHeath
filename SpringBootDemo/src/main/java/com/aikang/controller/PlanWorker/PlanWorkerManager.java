@@ -1,6 +1,7 @@
 package com.aikang.controller.PlanWorker;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,9 +42,31 @@ public class PlanWorkerManager {
     @ResponseBody
     public String SaveItemIdx(@RequestBody PlanWork[] pws, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 		
-		if(pws.length > 10000)
+		if(pws.length > 1000)
 		{
-			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "请不要作弊!");
+			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "列表数量不能超过1000!");
+    		String s = Util.setResponseToClientString(request, response, err);
+    		return s;
+		}
+		List<Long> ids = new ArrayList<>();
+		for(int i=0; i<pws.length; i++){
+			ids.add(pws[i].getHid());
+		}
+		List<PlanWork> plos = planWorkService.getPlanWorksInIds(ids);
+		if(plos == null || plos.size() <= 0){
+			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "获得的服务人员列表为空!");
+    		String s = Util.setResponseToClientString(request, response, err);
+    		return s;
+		}
+		int find = 0;
+		for(int i=0; i<plos.size(); i++){
+			PlanWork pw = plos.get(i);
+			if(pw.getMyitems().size() > 0){
+				find = 1;
+			}
+		}
+		if(find == 1){
+			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "调整的列表中尚有人员有正在服务的钟单，不能进行此项操作!");
     		String s = Util.setResponseToClientString(request, response, err);
     		return s;
 		}
@@ -132,7 +155,7 @@ public class PlanWorkerManager {
     		String s = Util.setResponseToClientString(request, response, err);
     		return s;
 		}
-		int hid = pws[0].getHid();
+		long hid = pws[0].getHid();
 		if(!planWorkService.addExcItemByList(hid, pws)){
 			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "保存设置失败!");
     		String s = Util.setResponseToClientString(request, response, err);
@@ -159,7 +182,14 @@ public class PlanWorkerManager {
     @ResponseBody
     public String SaveRoundsConfig(@RequestBody RoundsConfig rfg, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 		
-		if(!planWorkService.addRoundsConfig(rfg)){
+		if(planWorkService.getRoundsConfig() == null){
+			planWorkService.addRoundsConfig(rfg);
+			RespBean ok = RespBean.ok("/PlanWorker/Config/SaveConfig", rfg);
+		    String s = Util.setResponseToClientString(request, response, ok);
+		    return s;
+		}
+		
+		if(!planWorkService.updateRoundsConfig(rfg)){
 			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "保存设置失败!");
     		String s = Util.setResponseToClientString(request, response, err);
     		return s;

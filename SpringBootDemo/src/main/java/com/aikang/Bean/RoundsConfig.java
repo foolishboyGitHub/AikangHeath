@@ -2,7 +2,9 @@ package com.aikang.Bean;
 
 public class RoundsConfig {
 	
-	private Integer id;
+	private Long id;
+	
+	private String company;
 	
 	private Integer paizhong_type;
 	
@@ -19,16 +21,25 @@ public class RoundsConfig {
 	private Integer yuezhong_tiqian;//钟单人员多少分钟内不进入排钟名单
 	
 	private Integer yuezhong_buzhipai;//约钟状态系统不指派 分钟以上的项目
-	
-	private Integer jiaozhong_dengdai;//上钟动牌 开单后 指派人员 分钟 未开始服务 重新 注：如果上钟动牌，在此规定时间内开始服务，则动牌牌序按照开单顺序，否则牌序按照上钟开始时间顺序，也就是谁先上钟谁在前。
+	/**
+	 * //上钟动牌 开单后 指派人员 分钟 未开始服务 重新 注：
+	 * 如果上钟动牌，在此规定时间内开始服务，则动牌牌序按照开单顺序，
+	 * 否则牌序按照上钟开始时间顺序，也就是谁先上钟谁在前。
+	 */
+	private Integer jiaozhong_dengdai;
 	
 	private Integer jieshu_type;
+	
+	/**
+	 * 累积提成少于多少不动牌
+	 */
+	private Double  noMoveSalarySum;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -110,5 +121,21 @@ public class RoundsConfig {
 
 	public void setJieshu_type(Integer jieshu_type) {
 		this.jieshu_type = jieshu_type;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public Double getNoMoveSalarySum() {
+		return noMoveSalarySum;
+	}
+
+	public void setNoMoveSalarySum(Double noMoveSalarySum) {
+		this.noMoveSalarySum = noMoveSalarySum;
 	}
 }

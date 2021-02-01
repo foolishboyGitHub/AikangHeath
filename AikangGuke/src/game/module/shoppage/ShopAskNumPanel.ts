@@ -125,8 +125,10 @@ class ShopAskNumPanel   extends BaseEuiView {
                 
 			break; 
 
-            case FuncUrlUtil.ShopInfo_GetShopInfo:			
-				ShopPageManage.ins().data_ShopInfoItem = json.obj;
+            case FuncUrlUtil.ShopInfo_GetShopInfo:
+                var map = json.obj;
+                ShopPageManage.ins().data_CompanyInfo  = map.cm;
+				ShopPageManage.ins().data_ShopInfoItem = map.sl;
 				this.CloseSelf();
                 ViewManager.ins().open(MainTableViewPanel);
 			break;

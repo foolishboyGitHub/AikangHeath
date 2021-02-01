@@ -87,7 +87,11 @@ class DataTransEvent   extends egret.Event {
 	public static Event_WaiterSet_Add_GetRule: string  = "Event_WaiterSet_Add_GetRule";
     public static Event_WaiterSet_Add_GetTypeWorks: string  = "Event_WaiterSet_Add_GetTypeWorks";
 
-    
+    //下单窗口 浮球显示
+    public static Event_ShopInfo_MakeShop_ShopOrderFloatingBallShow: string  = "Event_ShopInfo_MakeShop_ShopOrderFloatingBallShow";
+    //下单窗口 浮球隐藏
+    public static Event_ShopInfo_MakeShop_ShopOrderFloatingBallHide: string  = "Event_ShopInfo_MakeShop_ShopOrderFloatingBallHide";
+
     //添加商品完成 小球落下
     public static Event_ShopInfo_MakeShop_BotHit: string  = "Event_ShopInfo_MakeShop_BotHit";
 
@@ -102,6 +106,10 @@ class DataTransEvent   extends egret.Event {
 
      //下单时选择不同的顾客
     public static Event_ShopInfo_MakeShop__O_AddNew: string  = "Event_ShopInfo_MakeShop__O_AddNew";
+
+     //下单时选择不同的顾客
+    public static Event_ShopPay_Close_Sel_MoneyChanel_panel: string  = "Event_ShopPay_Close_Sel_MoneyChanel_panel";
+
 
 	public constructor(type: string, data: any = null, bubbles: boolean = false, cancelable: boolean = false) {
         super(type, bubbles, cancelable);

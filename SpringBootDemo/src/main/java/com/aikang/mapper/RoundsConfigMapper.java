@@ -11,4 +11,6 @@ public interface RoundsConfigMapper {
 	int truncateRoundsConfig(@Param("company") String company);
 	
 	int insertRoundsConfig(@Param("record") RoundsConfig record, @Param("company") String company);
+	
+	int updateRoundsConfigByIDSelective(@Param("record") RoundsConfig record, @Param("company") String company);
 }

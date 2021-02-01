@@ -39,8 +39,19 @@ class ShopServingBillDetialPanel   extends BaseEuiView {
 	OnOpen(...param: any[]) {
 		
         this._data = param[0];
-        this.setShopInfoList();
+		if(!this._data){
+			WarnWin.show("数据异常 data_systemrole 为空",null, this);
+			this.CloseSelf();
+			return;
+		}
+		let knarray: Array<any> = this._data;
+        if(knarray.length <= 0){
+            return;
+        }
+        let kenvo = knarray[0];
+		this.gethistoryinfoDetail(kenvo);
 
+		EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_GetHistoryShopInfoDetail, this.onServerEventData, this);
 		EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_ShowState_O_SelGuke, this.onShowSelGuke, this);
 		EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_MakeShop__O_AddNew, this.onAddNewShop, this);
 
@@ -51,23 +62,38 @@ class ShopServingBillDetialPanel   extends BaseEuiView {
 		this.scrollMy.removeEventListener(egret.Event.CHANGE, this.onScrollerChange, this);
 		EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopInfo_ShowState_O_SelGuke, this.onShowSelGuke, this);
 		EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopInfo_MakeShop__O_AddNew, this.onAddNewShop, this);
-
+		EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_GetHistoryShopInfoDetail, this.onServerEventData, this);
 		
 	};
+	public gethistoryinfoDetail(kenvo){
+		var comanyname = GameGlobal.CurrentCompany;
+		var cmpany = {
+			name:comanyname,
+			bill:kenvo.billnumber
+		};	
+		var rurl = FuncUrlUtil.ShopInfo_GetHistoryShopInfoDetail;
+		sproto.sprotoRequest.sendPostRequestJson(JSON.stringify(cmpany), rurl);
 
-	public setShopInfoList(){
-		let gukenum = 0;
-		let data = this._data;
-		if(!data){
-			WarnWin.show("数据异常 data_systemrole 为空",null, this);
-			this.CloseSelf();
-			return;
+		
+	}
+	private onServerEventData(e:DataTransEvent) {
+		var json = e.data;
+		switch (json.msg) {	
+			case FuncUrlUtil.ShopInfo_GetHistoryShopInfoDetail:			
+				ShopPageManage.ins().data_ShopHistoryListDetail = json.obj;
+				this.setShopInfoList();
+			break; 
+
+			 
 		}
-		let knarray: Array<any> = data;
+	}
+	public setShopInfoList(){
+		let knarray: Array<any> = ShopPageManage.ins().data_ShopHistoryListDetail;
 
         if(knarray.length <= 0){
             return;
         }
+		let gukenum = 0;
         if(knarray[0].workstate <= 2){
             this.lab_orderstate.text = "订单进行中...";
             this.lab_orderstate.textColor = 0x64A325;
@@ -86,7 +112,7 @@ class ShopServingBillDetialPanel   extends BaseEuiView {
 
 		let mArr: any[] = [];
 		let showallnum = 0;
-		for(var i=0; i<gukenum+1; i++){
+		for(var i=0; i<gukenum; i++){
 			let wArr: any[] = [];
 			for (var s = 0; s < knarray.length; s++) {
 				let kenvo: any = knarray[s];
@@ -213,57 +239,13 @@ class listShopHistoryDetalInfoItem extends eui.ItemRenderer {
             let kenvo: any = knarray[i];
 			if(kenvo.d.sid>0)
 				mArr.push({idx:i, d:kenvo.d, allnum:knarray.length});
-			if(kenvo.d.workstate <=1){
-				if(kenvo.d.hid > 0){
-					this.lab_waitestate.text = "技师正在赶来..."
-					this.lab_waitestate.textColor = 0x9AD635;
-				}else{
-					this.lab_waitestate.textColor = 0xD83457;
-					if(kenvo.d.waitestate == 1){
-						this.lab_waitestate.text = "技师全忙！ 请稍等。"
-					}
-					if(kenvo.d.waitestate == 2){
-						this.lab_waitestate.text = "所选等级技师全忙！ ，请稍等。"
-					}
-					if(kenvo.d.waitestate == 3){
-						this.lab_waitestate.text = "所选等级男技师全忙！ ，请稍等。"
-					}
-					if(kenvo.d.waitestate == 4){
-						this.lab_waitestate.text = "所选等级女技师全忙！ ，请稍等。"
-					}
-					if(kenvo.d.waitestate == 5){
-						this.lab_waitestate.text = "未到服务开始时间！ ，请稍等。"
-					}
-				}
-			}
+			this.lab_waitestate.text = ""
+			
         }
         let mCollection: eui.ArrayCollection = new eui.ArrayCollection(mArr);
         this.listShopGukeIdx.dataProvider = mCollection;
         this.listShopGukeIdx.itemRenderer = listGukeHistroyDetailIdxItem;
-		this.rect_back3.visible = false;
-		if(knarray.length <= 0){
-			this.height = 160;
-			this.rect_back3.visible = true;
-			this.rect_back3.height = 10;
-		}else{
-			this.height = 66 + knarray.length*150 + this.group_addNew.height+20;
-		}
-		this.group_addNew.y = this.listShopGukeIdx.y + this.listShopGukeIdx.height+20;
-		
-		if(ShopPageManage.ins()._selGukeIdx == data.idx){
-			this._radio_sevidx.selected = true;
-			this.rect_back1.strokeColor = 0x4B8789;
-			this.rect_back1.strokeWeight = 5;
-			this.rect_back2.strokeColor = 0x4B8789;
-			this.rect_back2.strokeWeight = 5;
-		}else{
-			this._radio_sevidx.selected = false;
-			this.rect_back1.strokeColor = 0x4B8789;
-			this.rect_back1.strokeWeight = 0;
-			this.rect_back2.strokeColor = 0xFFFFFF;
-			this.rect_back2.strokeWeight = 0;
-		}
-		this.rect_back2.height = this.rect_back1.height - 60;
+		this.setRectSize();
 	}
 	private setView(){
 		let data = this.data;
@@ -275,27 +257,7 @@ class listShopHistoryDetalInfoItem extends eui.ItemRenderer {
         for (var i = 0; i < knarray.length; i++) {
             let kenvo: any = knarray[i];
 
-			if(kenvo.d.hid > 0){
-				this.lab_waitestate.text = "技师正在赶来..."
-				this.lab_waitestate.textColor = 0x9AD635;
-			}else{
-				this.lab_waitestate.textColor = 0xD83457;
-				if(kenvo.d.waitestate == 1){
-					this.lab_waitestate.text = "技师全忙！ 请稍等。"
-				}
-				if(kenvo.d.waitestate == 2){
-					this.lab_waitestate.text = "所选等级技师全忙！ ，请稍等。"
-				}
-				if(kenvo.d.waitestate == 3){
-					this.lab_waitestate.text = "所选等级男技师全忙！ ，请稍等。"
-				}
-				if(kenvo.d.waitestate == 4){
-					this.lab_waitestate.text = "所选等级女技师全忙！ ，请稍等。"
-				}
-				if(kenvo.d.waitestate == 5){
-					this.lab_waitestate.text = "未到服务开始时间！ ，请稍等。"
-				}
-			}
+			this.lab_waitestate.text = ""
         }
 		
 		this.rect_back3.visible = false;
@@ -323,8 +285,36 @@ class listShopHistoryDetalInfoItem extends eui.ItemRenderer {
 		}
 		this.rect_back2.height = this.rect_back1.height - 60;
 	}
+	protected setRectSize(){
+		this.rect_back3.visible = false;
+		let knarray: Array<any> = this.data.d;
+		if(knarray.length <= 0){
+			this.height = 160;
+			this.rect_back3.visible = true;
+			this.rect_back3.height = 10;
+		}else{
+			this.height = 66 + knarray.length*150 + this.group_addNew.height+20;
+		}
+		this.group_addNew.y = this.listShopGukeIdx.y + this.listShopGukeIdx.height+20;
+		
+		if(ShopPageManage.ins()._selGukeIdx == this.data.idx){
+			this._radio_sevidx.selected = true;
+			this.rect_back1.strokeColor = 0x4B8789;
+			this.rect_back1.strokeWeight = 5;
+			this.rect_back2.strokeColor = 0x4B8789;
+			this.rect_back2.strokeWeight = 5;
+		}else{
+			this._radio_sevidx.selected = false;
+			this.rect_back1.strokeColor = 0x4B8789;
+			this.rect_back1.strokeWeight = 0;
+			this.rect_back2.strokeColor = 0xFFFFFF;
+			this.rect_back2.strokeWeight = 0;
+		}
+		this.rect_back2.height = this.rect_back1.height - 60;
+	}
     public doSomeChange() {
-		this.setData();
+		// this.setData();
+		this.setRectSize();
 		for (var i = 0; i < this.listShopGukeIdx.$indexToRenderer.length; i++) {
 			if(!this.listShopGukeIdx.$indexToRenderer[i])
 				continue;
@@ -342,27 +332,20 @@ class listGukeHistroyDetailIdxItem extends eui.ItemRenderer {
     /////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////////
-	protected pic_item: eui.Image;
+	protected group_img: eui.Group;
 	protected lab_itemname:eui.Label;
 	protected lab_itemtime:eui.Label;
 	protected lab_itemprice:eui.Label;
 	protected lab_waitetime:eui.Label;
 	protected lab_num:eui.Label;
+	protected _btn_del:eui.Button;
     createChildren() {
         super.childrenCreated();
-
+		this._btn_del.visible = false;
         this.addEventListener(egret.Event.REMOVED_FROM_STAGE,this.onRemove,this);
 	
     }
-	private _delItem(e:egret.TouchEvent){
-		var comanyname = GameGlobal.CurrentCompany;
-		var item = {
-			cname:comanyname,
-			shopid:this.data.d.id
-		};
-		var rurl = FuncUrlUtil.ShopInfo_DelShopItem;
-		sproto.sprotoRequest.sendPostRequestJson(JSON.stringify(item), rurl);
-	}
+
     dataChanged() {
         this.setData();
     }
@@ -404,7 +387,16 @@ class listGukeHistroyDetailIdxItem extends eui.ItemRenderer {
 		let wdate = new Date(data.d.waittime);
 		this.lab_waitetime.text = this.formatTime_lab(wdate);
 		this.lab_num.text = data.d.clocknumyy+"个";
-
+		sproto.sprotoRequest.loadURLImgOnThisDress(this.data.d.headpic, function(event:egret.Event){
+			var loader:egret.URLLoader = <egret.URLLoader>event.target;
+			//获取加载到的纹理对象
+			var texture:egret.Texture = <egret.Texture>loader.data;
+			let bitmap = new egret.Bitmap(texture);
+			bitmap.width= this.group_img.width;
+			bitmap.height = this.group_img.height;
+			this.group_img.addChild(bitmap);
+		},
+		this);
 	}
     public doSomeChange() {
 		

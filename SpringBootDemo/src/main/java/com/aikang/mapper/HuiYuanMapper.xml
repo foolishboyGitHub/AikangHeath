@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.HuiYuanMapper" >
+	<resultMap id="HuiYuanTypeMap" type="com.aikang.Bean.HuiYuanType" >
+	    <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="company" property="company" jdbcType="VARCHAR" />
+	    <result column="sdx" property="sdx" jdbcType="INTEGER" />
+	    <result column="typename" property="typename" jdbcType="VARCHAR" />
+	    <result column="seriid" property="seriid" jdbcType="VARCHAR" />
+	    <result column="rechargeam" property="rechargeam" jdbcType="DOUBLE" />
+	    <result column="overam" property="overam" jdbcType="DOUBLE" />
+	    <result column="giftam" property="giftam" jdbcType="DOUBLE" />
+	    <result column="disrate" property="disrate" jdbcType="DOUBLE" />
+	    <result column="actdays" property="actdays" jdbcType="DOUBLE" />
+	    <result column="enable" property="enable" jdbcType="BIT" />
+	    <result column="limitcharge" property="limitcharge" jdbcType="BIT" />
+	    <result column="maxdef" property="maxdef" jdbcType="DOUBLE" />
+	    <result column="csalary" property="csalary" jdbcType="DOUBLE" />
+	    <result column="rsalary" property="rsalary" jdbcType="DOUBLE" />
+	 </resultMap>
+	 <select id="getHuiYuanTypeByID" resultMap="HuiYuanTypeMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantype 
+        where id=#{id}
+     </select>
+     <select id="getHuiYuanTypeByTypename" resultMap="HuiYuanTypeMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantype 
+        where company=#{company} and typename=#{typename}
+     </select>
+     <select id="getHuiYuanTypeByTypenameEx" resultMap="HuiYuanTypeMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantype 
+        where company=#{company} and typename=#{typename} and id!=#{id}
+     </select>
+     <select id="getHuiYuanTypeByRechargeam" resultMap="HuiYuanTypeMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantype 
+        where company=#{company} and rechargeam=#{rechargeam}
+     </select>
+     <select id="getHuiYuanTypeByRechargeamEx" resultMap="HuiYuanTypeMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantype 
+        where company=#{company} and rechargeam=#{rechargeam} and id!=#{id}
+     </select>
+     <select id="getAllCompanyHuiYuanTypes" resultMap="HuiYuanTypeMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantype 
+        where company=#{company}
+        order by sdx
+     </select>
+     <select id="getAllEnableCompanyHuiYuanTypes" resultMap="HuiYuanTypeMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantype 
+        where company=#{company} and enable=#{enable}
+        order by sdx
+     </select>
+     <select id="getAllCompanyHuiYuanTypeNum" resultType="java.util.HashMap">
+        select 
+        COUNT(*) AS total
+        from aikang_huiyuantype 
+        where company=#{company}
+     </select>
+     
+	 <insert id="insertHuiYuanType" parameterType="com.aikang.Bean.HuiYuanType" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+		insert into aikang_huiyuantype 
+	    (
+	    	company,
+	    	sdx,
+	    	typename,
+	    	seriid,
+	    	rechargeam,
+	    	overam,
+	    	giftam,
+	    	disrate,
+	    	actdays,
+	    	enable,
+	    	limitcharge,
+			maxdef,
+			csalary,
+			rsalary
+	    )   
+		values 
+	      (
+	      IFNULL(#{record.company,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.sdx,jdbcType=INTEGER}, 0),
+	      IFNULL(#{record.typename,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.seriid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.rechargeam,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.overam,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.giftam,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.disrate,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.actdays,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.enable,jdbcType=BIT}, 1),
+	      IFNULL(#{record.limitcharge,jdbcType=BIT}, 0),
+	      IFNULL(#{record.maxdef,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.csalary,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.rsalary,jdbcType=DOUBLE}, 0)
+	      )
+	</insert>
+	<update id="updateHuiYuanTypeByPrimaryKeySelective" parameterType="com.aikang.Bean.HuiYuanType" statementType="PREPARED">
+        update aikang_huiyuantype
+        <set>
+        	<if test="record.company != null">
+                company = #{record.company,jdbcType=VARCHAR},           
+            </if>
+            <if test="record.sdx != null">
+                sdx = #{record.sdx,jdbcType=INTEGER},           
+            </if> 
+        	<if test="record.typename != null">
+                typename = #{record.typename,jdbcType=VARCHAR},
+            </if>
+            <if test="record.seriid != null">
+                seriid = #{record.seriid,jdbcType=VARCHAR},
+            </if>
+            <if test="record.rechargeam != null">
+                rechargeam = #{record.rechargeam,jdbcType=DOUBLE},
+            </if> 
+            <if test="record.overam != null">
+                overam = #{record.overam,jdbcType=DOUBLE},
+            </if> 
+        	<if test="record.giftam != null">
+                giftam = #{record.giftam,jdbcType=DOUBLE},
+            </if>
+            <if test="record.disrate != null">
+                disrate = #{record.disrate,jdbcType=DOUBLE},
+            </if>
+            <if test="record.actdays != null">
+                actdays = #{record.actdays,jdbcType=DOUBLE},
+            </if>
+            <if test="record.enable != null">
+                enable = #{record.enable,jdbcType=BIT},
+            </if>
+            <if test="record.limitcharge != null">
+                limitcharge = #{record.limitcharge,jdbcType=BIT},
+            </if>   
+            <if test="record.maxdef != null">
+                maxdef = #{record.maxdef,jdbcType=DOUBLE},
+            </if>
+            <if test="record.csalary != null">
+                csalary = #{record.csalary,jdbcType=DOUBLE},
+            </if>
+            <if test="record.rsalary != null">
+                rsalary = #{record.rsalary,jdbcType=DOUBLE},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+    <update id="updateHuiYuanTypeEnableByID" parameterType="com.aikang.Bean.HuiYuanType" statementType="PREPARED">
+        update aikang_huiyuantype
+        <set> 	
+            <if test="record.enable != null">
+                enable = #{record.enable,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+    <delete id="deleteHuiYuanTypeByID">
+    	delete from aikang_huiyuantype where id=#{id}
+  	</delete>
+  	
+  	
+  	
+  	
+  	
+  	
+  	<resultMap id="HuiYuanMap" type="com.aikang.Bean.HuiYuan" >
+	    <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="company" property="company" jdbcType="VARCHAR" />
+	    <result column="companycname" property="companycname" jdbcType="VARCHAR" />
+	    <result column="cardid" property="cardid" jdbcType="VARCHAR" />
+	    <result column="password" property="password" jdbcType="VARCHAR" />
+	    <result column="upass" property="upass" jdbcType="INTEGER" />
+	    <result column="seriid" property="seriid" jdbcType="VARCHAR" />
+	    <result column="typeseriid" property="typeseriid" jdbcType="VARCHAR" />
+	    <result column="typeid" property="typeid" jdbcType="BIGINT" />
+	    <result column="typecname" property="typecname" jdbcType="VARCHAR" />
+	    <result column="sex" property="sex" jdbcType="INTEGER" />
+	    <result column="hycname" property="hycname" jdbcType="VARCHAR" />
+	    <result column="phonecode" property="phonecode" jdbcType="VARCHAR" />
+	    <result column="adress" property="adress" jdbcType="VARCHAR" />
+	    <result column="workadress" property="workadress" jdbcType="VARCHAR" />
+	    <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+	    <result column="identitycode" property="identitycode" jdbcType="VARCHAR" />
+	    <result column="profession" property="profession" jdbcType="VARCHAR" />
+	    <result column="closedate" property="closedate" jdbcType="VARCHAR" />
+	    <result column="rmoney" property="rmoney" jdbcType="DOUBLE" />
+	    <result column="summoney" property="summoney" jdbcType="DOUBLE" />
+	    <result column="sudmoney" property="sudmoney" jdbcType="DOUBLE" />
+	    <result column="disrate" property="disrate" jdbcType="DOUBLE" />
+	    <result column="savepoint" property="savepoint" jdbcType="DOUBLE" />
+	    <result column="createdate" property="createdate" jdbcType="VARCHAR" />
+	    <result column="lastchagredate" property="lastchagredate" jdbcType="VARCHAR" />
+	 </resultMap>
+	 
+	 <select id="getHuiYuanByID" resultMap="HuiYuanMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuan 
+        where id=#{id}
+     </select>
+     <select id="getHuiYuanByCardid" resultMap="HuiYuanMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuan 
+        where cardid=#{cardid} and company=#{company}
+     </select>
+     <select id="getHuiYuanByPhonecodeAndType" resultMap="HuiYuanMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuan 
+        where phonecode=#{phonecode} and company=#{company} and typeseriid=#{typeseriid}
+     </select>
+     <select id="getHuiYuanByPhonecode" resultMap="HuiYuanMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuan 
+        where phonecode=#{phonecode} and company=#{company}
+     </select>
+     <select id="getAllCompanyHuiYuans" resultMap="HuiYuanMap" statementType="PREPARED">
+        select id,hycname,cardid,rmoney,typeseriid,typecname,savepoint
+        from aikang_huiyuan 
+        where company=#{company}      
+        order by createdate desc
+        limit #{start},#{pagesize}
+     </select>
+     <select id="QueryHuiYuanByInfokey" resultMap="HuiYuanMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuan 
+        where company=#{company} 
+        <if test="key != null and key != ''">
+            AND CONCAT(IFNULL(cardid,''),IFNULL(hycname,''),IFNULL(phonecode,'')) LIKE concat('%',#{key},'%')
+        </if>
+        order by createdate desc
+     </select>
+     <select id="getAllCompanyHuiYuanNum" resultType="java.util.HashMap">
+        select 
+        COUNT(*) AS total
+        from aikang_huiyuan 
+        where company=#{company}
+     </select>
+     
+     <insert id="insertHuiYuan" parameterType="com.aikang.Bean.HuiYuan" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+		insert into aikang_huiyuan
+	    (
+	    	company,
+	    	companycname,
+	    	cardid,
+	    	password,
+	    	upass,
+	    	seriid,
+	    	typeseriid,
+	    	typeid,
+	    	typecname,
+	    	sex,
+	    	hycname,
+	    	phonecode,
+	    	adress,
+	    	workadress,
+	    	birthday,
+	    	identitycode,
+	    	profession,
+	    	closedate,
+			rmoney,
+			summoney,
+			sudmoney,
+			disrate,
+			savepoint,
+			createdate,
+			lastchagredate
+	    )   
+		values 
+	      (
+	      IFNULL(#{record.company,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.companycname,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.cardid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.password,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.upass,jdbcType=INTEGER}, 0),
+	      IFNULL(#{record.seriid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.typeseriid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.typeid,jdbcType=BIGINT}, 0),
+	      IFNULL(#{record.typecname,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.sex,jdbcType=INTEGER}, 0),
+	      IFNULL(#{record.hycname,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.phonecode,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.adress,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.workadress,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.birthday,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.identitycode,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.profession,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.closedate,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.rmoney,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.summoney,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.sudmoney,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.disrate,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.savepoint,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.createdate,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.lastchagredate,jdbcType=VARCHAR}, "")
+	      )
+	</insert>
+	<update id="updateHuiYuanByPrimaryKeySelective" parameterType="com.aikang.Bean.HuiYuanType" statementType="PREPARED">
+        update aikang_huiyuan
+        <set>
+            <if test="record.password != null">
+                password = #{record.password,jdbcType=VARCHAR},           
+            </if> 
+        	<if test="record.upass != null">
+                upass = #{record.upass,jdbcType=INTEGER},
+            </if>
+            <if test="record.seriid != null">
+                seriid = #{record.seriid,jdbcType=VARCHAR},
+            </if>
+            <if test="record.typeseriid != null">
+                typeseriid = #{record.typeseriid,jdbcType=VARCHAR},
+            </if> 
+            <if test="record.typeid != null">
+                typeid = #{record.typeid,jdbcType=BIGINT},
+            </if> 
+        	<if test="record.typecname != null">
+                typecname = #{record.typecname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.sex != null">
+                sex = #{record.sex,jdbcType=INTEGER},
+            </if>
+            <if test="record.hycname != null">
+                hycname = #{record.hycname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.phonecode != null">
+                phonecode = #{record.phonecode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.adress != null">
+                adress = #{record.adress,jdbcType=VARCHAR},
+            </if>   
+            <if test="record.workadress != null">
+                workadress = #{record.workadress,jdbcType=VARCHAR},
+            </if>
+            <if test="record.birthday != null">
+                birthday = #{record.birthday,jdbcType=VARCHAR},
+            </if>
+            <if test="record.identitycode != null">
+                identitycode = #{record.identitycode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.profession != null">
+                profession = #{record.profession,jdbcType=VARCHAR},
+            </if>
+            <if test="record.closedate != null">
+                closedate = #{record.closedate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.rmoney != null">
+                rmoney = #{record.rmoney,jdbcType=DOUBLE},
+            </if>
+            <if test="record.summoney != null">
+                summoney = #{record.summoney,jdbcType=DOUBLE},
+            </if>
+            <if test="record.sudmoney != null">
+                sudmoney = #{record.sudmoney,jdbcType=DOUBLE},
+            </if>
+            <if test="record.disrate != null">
+                disrate = #{record.disrate,jdbcType=DOUBLE},
+            </if>
+            <if test="record.savepoint != null">
+                savepoint = #{record.savepoint,jdbcType=DOUBLE},
+            </if>
+            <if test="record.createdate != null">
+                createdate = #{record.createdate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.lastchagredate != null">
+                lastchagredate = #{record.lastchagredate,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+    
+    
+    
+    
+    
+    
+    
+    
+    <resultMap id="HuiYuanTradeRecordMap" type="com.aikang.Bean.HuiYuanTradeRecord" >
+	    <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="company" property="company" jdbcType="VARCHAR" />
+	    <result column="seriid" property="seriid" jdbcType="VARCHAR" />
+	    <result column="hyid" property="hyid" jdbcType="BIGINT" />
+	    <result column="hyseriid" property="hyseriid" jdbcType="VARCHAR" />
+	    <result column="hyname" property="hyname" jdbcType="VARCHAR" />
+	    <result column="trademoney" property="trademoney" jdbcType="DOUBLE" />
+	    <result column="tradetype" property="tradetype" jdbcType="INTEGER" />
+	    <result column="tradename" property="tradename" jdbcType="VARCHAR" />
+	    <result column="workerid" property="workerid" jdbcType="BIGINT" />
+	    <result column="workername" property="workername" jdbcType="VARCHAR" />
+	    <result column="recdate" property="recdate" jdbcType="VARCHAR" />
+	    <result column="daynum" property="daynum" jdbcType="INTEGER"/>
+	 </resultMap>
+	 
+	 <select id="getHuiYuanTradeRecordByID" resultMap="HuiYuanTradeRecordMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantraderecord 
+        where id=#{id}
+     </select>
+     <select id="getHuiYuanTradeRecordByhyid" resultMap="HuiYuanTradeRecordMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantraderecord 
+        where hyid=#{hyid} and company=#{company}
+     </select>
+     <select id="getHuiYuanTradeRecordByhyseriid" resultMap="HuiYuanTradeRecordMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantraderecord 
+        where hyseriid=#{hyseriid} and company=#{company}
+     </select>
+     <select id="QueryHuiYuanTradeRecordByInfokey" resultMap="HuiYuanMap" statementType="PREPARED">
+        select *
+        from aikang_huiyuantraderecord 
+        where company=#{company} 
+        <if test="key != null and key != ''">
+            AND CONCAT(IFNULL(hycname,''),IFNULL(workername,'')) LIKE concat('%',#{key},'%')
+        </if>
+        order by createdate desc
+     </select>
+     
+     <select id="queryHuiYuanTradeSummarySpanDay" resultType="java.util.HashMap"
+		parameterType="java.util.HashMap">
+		SELECT 
+		COALESCE(SUM(CASE WHEN tradetype = 0 THEN trademoney ELSE 0 END),0) as hybkmoney,
+		COALESCE(SUM(CASE WHEN tradetype = 1 THEN trademoney ELSE 0 END),0) as hyczmoney,
+		COALESCE(SUM(CASE WHEN tradetype = 2 THEN trademoney ELSE 0 END),0) as hyhkmoney,
+		COALESCE(SUM(CASE WHEN tradetype = 3 THEN trademoney ELSE 0 END),0) as hytkmoney,
+		COALESCE(SUM(CASE WHEN tradetype = 4 THEN trademoney ELSE 0 END),0) as hybcmoney,
+		COALESCE(SUM(CASE WHEN tradetype = 5 THEN trademoney ELSE 0 END),0) as hytzmoney,
+		COALESCE(SUM(CASE WHEN tradetype = 6 THEN trademoney ELSE 0 END),0) as hyzsmoney
+		FROM aikang_huiyuantraderecord
+		where company=#{company} and <![CDATA[daynum>=#{query.qs} ]]>  and <![CDATA[daynum < #{query.qe} ]]>
+	</select>
+	
+	 <insert id="insertHuiYuanTradeRecord" parameterType="com.aikang.Bean.HuiYuanTradeRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+		insert into aikang_huiyuantraderecord
+	    (
+	    	company,
+	    	seriid,
+	    	hyid,
+	    	hyseriid,
+	    	hyname,
+	    	trademoney,
+	    	tradetype,
+	    	tradename,
+	    	workerid,
+	    	workername,
+	    	recdate,
+	    	daynum
+	    )   
+		values 
+	      (
+	      IFNULL(#{record.company,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.seriid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.hyid,jdbcType=BIGINT}, 0),
+	      IFNULL(#{record.hyseriid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.hyname,jdbcType=INTEGER}, 0),
+	      IFNULL(#{record.trademoney,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{record.tradetype,jdbcType=INTEGER}, 0),
+	      IFNULL(#{record.tradename,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.workerid,jdbcType=BIGINT}, 0),
+	      IFNULL(#{record.workername,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.recdate,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.daynum,jdbcType=INTEGER}, 0)
+	      )
+	</insert>
+	
+	<update id="updateHuiYuanTradeRecordByPrimaryKeySelective" parameterType="com.aikang.Bean.HuiYuanType" statementType="PREPARED">
+        update aikang_huiyuantraderecord
+        <set>
+            <if test="record.hyid != null">
+                hyid = #{record.hyid,jdbcType=BIGINT},           
+            </if> 
+        	<if test="record.hyseriid != null">
+                hyseriid = #{record.hyseriid,jdbcType=VARCHAR},
+            </if>
+            <if test="record.hyname != null">
+                hyname = #{record.hyname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.trademoney != null">
+                trademoney = #{record.trademoney,jdbcType=DOUBLE},
+            </if> 
+            <if test="record.tradetype != null">
+                tradetype = #{record.tradetype,jdbcType=INTEGER},
+            </if> 
+        	<if test="record.tradename != null">
+                tradename = #{record.tradename,jdbcType=VARCHAR},
+            </if>
+            <if test="record.workerid != null">
+                workerid = #{record.workerid,jdbcType=BIGINT},
+            </if>
+            <if test="record.workername != null">
+                workername = #{record.workername,jdbcType=VARCHAR},
+            </if>
+            <if test="record.recdate != null">
+                recdate = #{record.recdate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.daynum != null">
+                daynum = #{record.daynum,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+    
+    
+    
+    
+    
+    
+    
+    
+     <resultMap id="WorkExtraSalaryRecordMap" type="com.aikang.Bean.WorkExtraSalaryRecord" >
+	    <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="company" property="company" jdbcType="VARCHAR" />
+	    <result column="seriid" property="seriid" jdbcType="VARCHAR" />
+	    <result column="workid" property="workid" jdbcType="BIGINT" />
+	    <result column="workname" property="workname" jdbcType="VARCHAR" />
+	    <result column="salarytype" property="salarytype" jdbcType="INTEGER" />
+	    <result column="salarymoney" property="salarymoney" jdbcType="DOUBLE" />
+	    <result column="typeid" property="typeid" jdbcType="BIGINT" />
+	    <result column="typeseriid" property="typeseriid" jdbcType="VARCHAR" />
+	    <result column="salaryname" property="salaryname" jdbcType="VARCHAR" />
+	    <result column="recdate" property="recdate" jdbcType="VARCHAR" />
+	    <result column="daynum" property="daynum" jdbcType="INTEGER"/>
+	 </resultMap>
+
+	<select id="getWorkExtraSalaryRecordByID" resultMap="HuiYuanTradeRecordMap" statementType="PREPARED">
+        select *
+        from aikang_workextrasalaryrecord 
+        where id=#{id}
+     </select>
+     <select id="getWorkExtraSalaryRecordByworkid" resultMap="HuiYuanTradeRecordMap" statementType="PREPARED">
+        select *
+        from aikang_workextrasalaryrecord 
+        where workid=#{workid} and company=#{company}
+     </select>
+     <select id="getWorkExtraSalaryRecordByhytypeseriid" resultMap="HuiYuanTradeRecordMap" statementType="PREPARED">
+        select *
+        from aikang_workextrasalaryrecord 
+        where typeseriid=#{typeseriid} and company=#{company}
+     </select>
+     <select id="getWorkExtraSalaryRecordBysalarytype" resultMap="HuiYuanTradeRecordMap" statementType="PREPARED">
+        select *
+        from aikang_workextrasalaryrecord 
+        where salarytype=#{salarytype} and company=#{company}
+     </select>
+     
+	 <insert id="insertWorkExtraSalaryRecordArray" parameterType="com.aikang.Bean.WorkExtraSalaryRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+		insert into aikang_workextrasalaryrecord
+	    (
+	    	company,
+	    	seriid,
+	    	workid,
+	    	workname,
+	    	salarytype,
+	    	salarymoney,
+	    	typeid,
+	    	typeseriid,
+	    	salaryname,
+	    	recdate,
+	    	daynum
+	    )   
+		values
+		<foreach collection="record" item="WorkExtraSalaryRecord" separator=",">  
+	      (
+	      IFNULL(#{WorkExtraSalaryRecord.company,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{WorkExtraSalaryRecord.seriid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{WorkExtraSalaryRecord.workid,jdbcType=BIGINT}, 0),
+	      IFNULL(#{WorkExtraSalaryRecord.workname,jdbcType=VARCHAR}, 0),
+	      IFNULL(#{WorkExtraSalaryRecord.salarytype,jdbcType=INTEGER}, 0),
+	      IFNULL(#{WorkExtraSalaryRecord.salarymoney,jdbcType=DOUBLE}, 0),
+	      IFNULL(#{WorkExtraSalaryRecord.typeid,jdbcType=BIGINT}, 0),
+	      IFNULL(#{WorkExtraSalaryRecord.typeseriid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{WorkExtraSalaryRecord.salaryname,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{WorkExtraSalaryRecord.recdate,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{WorkExtraSalaryRecord.daynum,jdbcType=DOUBLE}, 0)
+	      )
+	     </foreach>
+	</insert>
+	
+	<update id="updateWorkExtraSalaryRecordByPrimaryKeySelective" parameterType="com.aikang.Bean.HuiYuanType" statementType="PREPARED">
+        update aikang_workextrasalaryrecord
+        <set>
+            <if test="record.workid != null">
+                workid = #{record.workid,jdbcType=BIGINT},           
+            </if> 
+        	<if test="record.workname != null">
+                workname = #{record.workname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.salarytype != null">
+                salarytype = #{record.salarytype,jdbcType=INTEGER},
+            </if>
+            <if test="record.salarymoney != null">
+                salarymoney = #{record.salarymoney,jdbcType=DOUBLE},
+            </if> 
+            <if test="record.typeid != null">
+                typeid = #{record.typeid,jdbcType=BIGINT},
+            </if> 
+        	<if test="record.typeseriid != null">
+                typeseriid = #{record.typeseriid,jdbcType=VARCHAR},
+            </if>
+            <if test="record.salaryname != null">
+                salaryname = #{record.salaryname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.recdate != null">
+                recdate = #{record.recdate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.daynum != null">
+                daynum = #{record.daynum,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+</mapper>

@@ -66,8 +66,8 @@ var ShopPayStateShowPanel = (function (_super) {
             this._btn_back.visible = true;
             this.lab_payfail.visible = true;
         }
-        //10秒钟询问一下服务器是否付款成功
-        if (tm >= 0 && new Date().getTime() - this._lasttimeAskServer > 10 * 1000) {
+        //6秒钟询问一下服务器是否付款成功
+        if (tm >= 0 && new Date().getTime() - this._lasttimeAskServer > 6 * 1000) {
             this._lasttimeAskServer = new Date().getTime();
             var gd = ShopPageManage.ins().data_ShopMakeList;
             if (gd != null && gd.length > 0) {
@@ -97,6 +97,7 @@ var ShopPayStateShowPanel = (function (_super) {
         switch (e.target) {
             case this._btn_back_order:
                 EventCenter.Instance.dispatchEvent(new DataTransEvent(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, null));
+                EventCenter.Instance.dispatchEvent(new DataTransEvent(DataTransEvent.Event_ShopPay_Close_Sel_MoneyChanel_panel, null));
                 this.CloseSelf();
                 break;
             case this._btn_back:

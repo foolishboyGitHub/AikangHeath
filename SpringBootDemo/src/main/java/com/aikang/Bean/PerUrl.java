@@ -19,6 +19,8 @@ public class PerUrl {
     private Meta meta;
 
     private Integer parentId;
+    
+    private Integer isparent;
 
     private Boolean enabled;
     private List<PerUrl> children;
@@ -111,4 +113,12 @@ public class PerUrl {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
+
+	public Integer getIsparent() {
+		return isparent;
+	}
+
+	public void setIsparent(Integer isparent) {
+		this.isparent = isparent;
+	}
 }

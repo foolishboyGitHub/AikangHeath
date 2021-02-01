@@ -94,6 +94,10 @@ var DataTransEvent = (function (_super) {
     DataTransEvent.Event_WaiterSet_Add_AddNew = "Event_WaiterSet_Add_AddNew";
     DataTransEvent.Event_WaiterSet_Add_GetRule = "Event_WaiterSet_Add_GetRule";
     DataTransEvent.Event_WaiterSet_Add_GetTypeWorks = "Event_WaiterSet_Add_GetTypeWorks";
+    //下单窗口 浮球显示
+    DataTransEvent.Event_ShopInfo_MakeShop_ShopOrderFloatingBallShow = "Event_ShopInfo_MakeShop_ShopOrderFloatingBallShow";
+    //下单窗口 浮球隐藏
+    DataTransEvent.Event_ShopInfo_MakeShop_ShopOrderFloatingBallHide = "Event_ShopInfo_MakeShop_ShopOrderFloatingBallHide";
     //添加商品完成 小球落下
     DataTransEvent.Event_ShopInfo_MakeShop_BotHit = "Event_ShopInfo_MakeShop_BotHit";
     //下单时选择不同的顾客
@@ -104,6 +108,8 @@ var DataTransEvent = (function (_super) {
     DataTransEvent.Event_ShopInfo_ShowState_O_SelGuke = "Event_ShopInfo_ShowState_O_SelGuke";
     //下单时选择不同的顾客
     DataTransEvent.Event_ShopInfo_MakeShop__O_AddNew = "Event_ShopInfo_MakeShop__O_AddNew";
+    //下单时选择不同的顾客
+    DataTransEvent.Event_ShopPay_Close_Sel_MoneyChanel_panel = "Event_ShopPay_Close_Sel_MoneyChanel_panel";
     return DataTransEvent;
 }(egret.Event));
 __reflect(DataTransEvent.prototype, "DataTransEvent");

@@ -1,9 +1,9 @@
 namespace sproto {
 	export class sprotoRequest {
-		 private static _HttHostDress:string = "http://127.0.0.1:8086";
-		// private static _HttHostDress:string = "https://192.168.125.10:8086";
+		//  private static _HttHostDress:string = "http://127.0.0.1:8086";
+		//  private static _HttHostDress:string = "https://192.168.125.10:8086";
 		// private static _HttHostDress:string = "http://139.159.135.51:8086";
-		// private static _HttHostDress:string = "https://www.aijinkang.com:8086";
+		private static _HttHostDress:string = "https://www.aijinkang.com:8086";
 		// private static _HttHostDress:string = "http://192.168.125.10:8086";
 		public static Init(): void {
 
@@ -74,6 +74,19 @@ namespace sproto {
 
 		private static onPostProgress(event:egret.ProgressEvent):void {
 			console.log("sproto    post progress : " + Math.floor(100*event.bytesLoaded/event.bytesTotal) + "%");
+		}
+
+
+		public static loadURLImgOnThisDress(filename,  callback, thisobj){
+			var imgsrc:string = sproto.sprotoRequest._HttHostDress+"/img/load/"+filename;
+			var loader:egret.URLLoader = new egret.URLLoader();
+			loader.dataFormat = egret.URLLoaderDataFormat.TEXTURE;
+			//添加加载完成侦听
+			loader.addEventListener(egret.Event.COMPLETE, callback, thisobj);
+			//添加加载失败侦听
+			var request:egret.URLRequest = new egret.URLRequest(imgsrc);
+			//开始加载
+			loader.load(request);
 		}
 	}
 }

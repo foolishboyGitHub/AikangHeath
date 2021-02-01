@@ -1,6 +1,7 @@
 package com.aikang.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,17 @@ public class RoomService {
 	@Autowired
 	RoomMapper roomMapper;
 	
-	public Room getRoomByID(Integer rid){
+	public Room getRoomByID(Long rid){
 		return roomMapper.getRoomByID(rid, Util.getConpnany_Name());
 	}
-	
+	public Map<String, Object> getAllCompanyRoomNum(String company){
+		return roomMapper.getAllCompanyRoomNum(company);
+	}
 	public List<Room> getRoomByName(String rname){
 		return roomMapper.getRoomByName(rname, Util.getConpnany_Name());
 	}
 	
-	public List<Room> getRoomByName_ec(Integer id, String rname){
+	public List<Room> getRoomByName_ec(Long id, String rname){
 		return roomMapper.getRoomByName_ec(id, rname, Util.getConpnany_Name());
 	}
 	
@@ -38,7 +41,7 @@ public class RoomService {
 		return roomMapper.getAllRoom(Util.getConpnany_Name());
 	}
 	
-	public Integer deleteRoomByID(Integer rid){
+	public Integer deleteRoomByID(Long rid){
 		return roomMapper.deleteRoomByID(rid, Util.getConpnany_Name());
 	}
 	

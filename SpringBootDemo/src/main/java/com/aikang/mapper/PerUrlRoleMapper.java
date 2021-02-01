@@ -5,13 +5,13 @@ import com.aikang.Bean.PerUrlRole;
 
 public interface PerUrlRoleMapper {
 
-	int deleteByPrimaryKey(@Param("id") Integer id, @Param("company") String company);
+	int deleteByPrimaryKey(@Param("id") Long id, @Param("company") String company);
 
     int insert(@Param("record") PerUrlRole record, @Param("company") String company);
 
     int insertSelective(@Param("record") PerUrlRole record, @Param("company") String company);
 
-    PerUrlRole selectByPrimaryKey(@Param("id") Integer id, @Param("company") String company);
+    PerUrlRole selectByPrimaryKey(@Param("id") Long id, @Param("company") String company);
 
     int updateByPrimaryKeySelective(@Param("record") PerUrlRole record, @Param("company") String company);
 

@@ -76,11 +76,11 @@ var ShopOredrPanel = (function (_super) {
             this._listGukes.push({ name1: gname, hid: 0 });
         }
         this._listWlevs = [];
-        this._listWlevs.push({ name1: "初级技师", lev: 1 });
-        this._listWlevs.push({ name1: "中级技师", lev: 2 });
-        this._listWlevs.push({ name1: "高级技师", lev: 3 });
-        this._listWlevs.push({ name1: "特级技师", lev: 4 });
-        this._listWlevs.push({ name1: "专家坐诊", lev: 5 });
+        this._listWlevs.push({ name1: "高级技师", lev: 0 });
+        // this._listWlevs.push({name1:"中级技师", lev:1});
+        // this._listWlevs.push({name1:"高级技师", lev:2});
+        // this._listWlevs.push({name1:"特级技师", lev:3});
+        // this._listWlevs.push({name1:"专家坐诊", lev:4});
         this.rect_bot.visible = false;
         this.lab_haveset_selhid.visible = false;
         this.lab_haveset_settime.visible = false;

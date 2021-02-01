@@ -1,15 +1,28 @@
 package com.aikang.Bean;
 
 public class WBillItem {
-	private Integer id;
-	private Integer dayid; //单号
+	private Long id;
+	private String  company; //公司
+	/**
+	 * 结账类型 0-99=商家系统开单结账
+	 * 60=会员扣费
+	 * 61=会员补差价
+	 * 62=会员透支余额
+	 * 
+	 * 100-199=顾客自主扫码下单结账
+	 */
+	private Integer ordertype; //下单类型 0-99=商家系统开单 100-199=顾客自主扫码下单
+	private Integer gukenum; //顾客人数
+	private Integer gukeidx; //顾客序号
+	private String  billnumber; //单号
+	private String dayid; //单号
 	private Integer daynum; //当日数字日期
 	private Integer wtype; //排钟方式
-	private Integer rmid; //房间ID
+	private Long rmid; //房间ID
 	private String  rmname;//房间名称
-	private Integer sid;   //服务项目
+	private Long sid;   //服务项目
 	private String sname;  //服务项目名称
-	private Integer hid;   //服务人员ID
+	private Long hid;   //服务人员ID
 	private String hcode;	//服务人员排钟号
 	private String hname;	//服务人员姓名
 	/*
@@ -74,11 +87,13 @@ public class WBillItem {
 	//结算类型名称    这里是管理人员操作
 	private String pricetype;
 	//会员ID
-	private Long memid;
+	private Long hyid;
 	//会员姓名
-	private String memname;
+	private String hyname;
 	//会员姓名
-	private String memcode;
+	private String hyseriid;
+	//会员余额
+	private Double hyrmoney;
 	//收银员id
 	private String checkid;   
 	//收银员姓名
@@ -88,22 +103,22 @@ public class WBillItem {
 	//结算时间
 	private String checktime;
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-	public Integer getDayid() {
+	public String getDayid() {
 		return dayid;
 	}
-	public void setDayid(Integer dayid) {
+	public void setDayid(String dayid) {
 		this.dayid = dayid;
 	}
-	public Integer getSid() {
+	public Long getSid() {
 		return sid;
 	}
-	public void setSid(Integer sid) {
+	public void setSid(Long sid) {
 		this.sid = sid;
 	}
 	public String getSname() {
@@ -112,10 +127,10 @@ public class WBillItem {
 	public void setSname(String sname) {
 		this.sname = sname;
 	}
-	public Integer getHid() {
+	public Long getHid() {
 		return hid;
 	}
-	public void setHid(Integer hid) {
+	public void setHid(Long hid) {
 		this.hid = hid;
 	}
 	public String getHcode() {
@@ -220,10 +235,10 @@ public class WBillItem {
 	public void setBreakstart(String breakstart) {
 		this.breakstart = breakstart;
 	}
-	public Integer getRmid() {
+	public Long getRmid() {
 		return rmid;
 	}
-	public void setRmid(Integer rmid) {
+	public void setRmid(Long rmid) {
 		this.rmid = rmid;
 	}
 	public String getRmname() {
@@ -268,18 +283,7 @@ public class WBillItem {
 	public void setClocknum(Double clocknum) {
 		this.clocknum = clocknum;
 	}
-	public Long getMemid() {
-		return memid;
-	}
-	public void setMemid(Long memid) {
-		this.memid = memid;
-	}
-	public String getMemname() {
-		return memname;
-	}
-	public void setMemname(String memname) {
-		this.memname = memname;
-	}
+
 	public String getCheckid() {
 		return checkid;
 	}
@@ -322,17 +326,65 @@ public class WBillItem {
 	public void setChecktime(String checktime) {
 		this.checktime = checktime;
 	}
-	public String getMemcode() {
-		return memcode;
-	}
-	public void setMemcode(String memcode) {
-		this.memcode = memcode;
-	}
 	public String getCheckhcode() {
 		return checkhcode;
 	}
 	public void setCheckhcode(String checkhcode) {
 		this.checkhcode = checkhcode;
+	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
+	}
+	public Integer getOrdertype() {
+		return ordertype;
+	}
+	public void setOrdertype(Integer ordertype) {
+		this.ordertype = ordertype;
+	}
+	public Integer getGukenum() {
+		return gukenum;
+	}
+	public void setGukenum(Integer gukenum) {
+		this.gukenum = gukenum;
+	}
+	public Integer getGukeidx() {
+		return gukeidx;
+	}
+	public void setGukeidx(Integer gukeidx) {
+		this.gukeidx = gukeidx;
+	}
+	public String getBillnumber() {
+		return billnumber;
+	}
+	public void setBillnumber(String billnumber) {
+		this.billnumber = billnumber;
+	}
+	public Long getHyid() {
+		return hyid;
+	}
+	public void setHyid(Long hyid) {
+		this.hyid = hyid;
+	}
+	public String getHyname() {
+		return hyname;
+	}
+	public void setHyname(String hyname) {
+		this.hyname = hyname;
+	}
+	public String getHyseriid() {
+		return hyseriid;
+	}
+	public void setHyseriid(String hyseriid) {
+		this.hyseriid = hyseriid;
+	}
+	public Double getHyrmoney() {
+		return hyrmoney;
+	}
+	public void setHyrmoney(Double hyrmoney) {
+		this.hyrmoney = hyrmoney;
 	}
 
 }

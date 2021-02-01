@@ -2,11 +2,13 @@ package com.aikang.Bean;
 
 public class ServiceItem {
 	
-	private Integer id;
+	private Long id;
+	
+	private String company;
 	
 	private Integer timelong;   //时长 分钟
 	
-	private Integer priveType;   //价格类型
+	private Integer priveType;   //价格类型 0=按照时间  1=按照次数
 	
 	private Double price;   //价格
 	
@@ -26,6 +28,8 @@ public class ServiceItem {
 	
 	private String  name;   //项目名称
 	
+	private String  headpic;   //项目备注
+	
 	private String  mark;   //项目备注
 	
 	private Integer  enabled;   //项目是否有效
@@ -34,7 +38,13 @@ public class ServiceItem {
 	
 	private Integer  timepermit;   //起步时间限制
 	
-	private Integer  pointChange;   //起步时间限制
+	private Integer  pointChange;   //兑换
+	
+	private Integer  isspecialwork; //是否特殊工作项目  比如拔罐 采耳等项目 需要专人来做， 那么不会因为技师不会这个项目而过牌。
+	/**
+	 * 不显示在顾客 售卖列表里0=显示。1=不显示
+	 */
+	private Integer  noshowinshop; //不显示在顾客 售卖列表里。1=不显示
 	
 	private String  sp1;   //预留 1
 	
@@ -44,11 +54,11 @@ public class ServiceItem {
 	
 	private Integer sdx;   //排序
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -211,5 +221,37 @@ public class ServiceItem {
 
 	public void setSdx(Integer sdx) {
 		this.sdx = sdx;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public Integer getIsspecialwork() {
+		return isspecialwork;
+	}
+
+	public void setIsspecialwork(Integer isspecialwork) {
+		this.isspecialwork = isspecialwork;
+	}
+
+	public String getHeadpic() {
+		return headpic;
+	}
+
+	public void setHeadpic(String headpic) {
+		this.headpic = headpic;
+	}
+
+	public Integer getNoshowinshop() {
+		return noshowinshop;
+	}
+
+	public void setNoshowinshop(Integer noshowinshop) {
+		this.noshowinshop = noshowinshop;
 	}
 }

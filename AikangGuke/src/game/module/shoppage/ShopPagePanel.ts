@@ -9,8 +9,10 @@ class ShopPagePanel   extends BaseEuiView {
 	protected lab_companyname: eui.Label;
 	protected lab_companydress: eui.Label;
 	protected lab_companyphone: eui.Label;
+	protected lab_companymobil: eui.Label;
 	protected pic_companypic: eui.Image;
-	private _btn_gohistory:eui.Button;
+
+	protected group_companypic:eui.Group;
 
 	
 
@@ -21,12 +23,12 @@ class ShopPagePanel   extends BaseEuiView {
 
 	protected childrenCreated(){
 
-		this._AddClick(this._btn_gohistory, this._OnClick);
+		// this._AddClick(this._btn_gohistory, this._OnClick);
 
     }
 
 	OnOpen() {
-		
+		this.on_setCompanyInfo();
 		this.onList_wait_Update();	
 		ViewManager.ins().open(ShopOrderFloatingBallPanel);
 	}
@@ -45,6 +47,23 @@ class ShopPagePanel   extends BaseEuiView {
 
 			 
 		}
+	}
+	private on_setCompanyInfo(){
+		var data = ShopPageManage.ins().data_CompanyInfo;
+		this.lab_companyname.text = decodeURI(data.cname);
+		this.lab_companydress.text = "地址："+data.adress;
+		this.lab_companyphone.text = "电话："+data.sevtelephone;
+		this.lab_companymobil.text = "手机："+data.sevmobilephone;
+		sproto.sprotoRequest.loadURLImgOnThisDress(data.headpic, function(event:egret.Event){
+			var loader:egret.URLLoader = <egret.URLLoader>event.target;
+			//获取加载到的纹理对象
+			var texture:egret.Texture = <egret.Texture>loader.data;
+			let bitmap = new egret.Bitmap(texture);
+			bitmap.width= this.group_companypic.width;
+			bitmap.height = this.group_companypic.height;
+			this.group_companypic.addChild(bitmap);
+		},
+		this);
 	}
 	private onList_wait_Update(){
 		var json =ShopPageManage.ins().data_ShopInfoItem;
@@ -66,9 +85,9 @@ class ShopPagePanel   extends BaseEuiView {
 	private _OnClick(e: egret.TouchEvent) {
 		switch (e.target) {
 
-			 case this._btn_gohistory:
-			 		ViewManager.ins().open(ShopServingBillListPanel);
-			 	break;  
+			//  case this._btn_gohistory:
+			//  		ViewManager.ins().open(ShopServingBillListPanel);
+			//  	break;  
 		}
 	}
 }
@@ -82,7 +101,7 @@ class listShopInfoItem extends eui.ItemRenderer {
 	protected lab_itemname:eui.Label;
 	protected lab_itemtime:eui.Label;
 	protected lab_itemprice:eui.Label;
-	protected pic_itempic:eui.Image;
+	protected group_imgshow:eui.Group;
 	protected _btn_detail:eui.Button;
 	protected _btn_order:eui.Button;
     /////////////////////////////////////////////////////////////////////////////
@@ -103,8 +122,19 @@ class listShopInfoItem extends eui.ItemRenderer {
 
     dataChanged() {
       this.lab_itemname.text = this.data.d.name;
-	  this.lab_itemtime.text = this.data.d.timelong +"|养生";
+	  this.lab_itemtime.text = this.data.d.timelong +"|";
 	  this.lab_itemprice.text = "¥"+this.data.d.price;
+
+	  sproto.sprotoRequest.loadURLImgOnThisDress(this.data.d.headpic, function(event:egret.Event){
+			var loader:egret.URLLoader = <egret.URLLoader>event.target;
+			//获取加载到的纹理对象
+			var texture:egret.Texture = <egret.Texture>loader.data;
+			let bitmap = new egret.Bitmap(texture);
+			bitmap.width= this.group_imgshow.width;
+			bitmap.height = this.group_imgshow.height;
+			this.group_imgshow.addChild(bitmap);
+		},
+		this);
     }
 
     public doSomeChange() {

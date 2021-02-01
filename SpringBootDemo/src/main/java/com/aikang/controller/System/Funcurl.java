@@ -78,7 +78,7 @@ public class Funcurl {
     @ResponseBody
 //		    @CrossOrigin  //这个可以实现本方法的 局部跨域  因为配置了跨域 这里不需要了
     public String GetAllUrlWithRole(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-		List<PerUrl> pr = perUrlService.getAllMenusHasRole();
+		List<PerUrl> pr = perUrlService.getAllMenus2();
     	RespBean ok = RespBean.ok("/System/Funcurl/GetAllUrlWithRole", pr);
         String s = Util.setResponseToClientString(request, response, ok);
         return s;

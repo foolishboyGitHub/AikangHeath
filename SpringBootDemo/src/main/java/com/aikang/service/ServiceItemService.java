@@ -1,7 +1,9 @@
 package com.aikang.service;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +25,20 @@ public class ServiceItemService {
 		return serviceItemMapper.getAllEnabledServiceItems(keywords, Util.getConpnany_Name());
 	}
 	
+	public List<ServiceItem> getEnabledAllServiceItems(String keywords, String companyname){
+		return serviceItemMapper.getAllEnabledServiceItems(keywords, companyname);
+	}
+	public Map<String, Object> getAllCompanyServiceItemNum(String company){
+		return serviceItemMapper.getAllCompanyServiceItemNum(company);
+	}
+	public List<ServiceItem> getEnabledAllGukeShopServiceItems(String keywords, String companyname){
+		return serviceItemMapper.getEnabledAllGukeShopServiceItems(keywords, companyname);
+	}
+	
 	public List<ServiceItem> getAllServiceItems(String keywords){
 		return serviceItemMapper.getAllServiceItems(keywords, Util.getConpnany_Name());
 	}
-	public ServiceItem getServiceItemsById(int id){
+	public ServiceItem getServiceItemsById(long id){
 		return serviceItemMapper.selectBy_id(id, Util.getConpnany_Name());
 	}
 	public String ifexistof(ServiceItem sItem){
@@ -52,7 +64,7 @@ public class ServiceItemService {
     		return false;
     	}
     	Integer con = serviceItemMapper.insert(sItem, Util.getConpnany_Name());
-    	Integer id = sItem.getId();
+    	Long id = sItem.getId();
     	return con==1;
     }
 	
@@ -60,7 +72,7 @@ public class ServiceItemService {
 		return serviceItemMapper.getAllPriceTypeItems(Util.getConpnany_Name());
 	}
 	
-	public PriceType getPriceTypeItemById(int id){
+	public PriceType getPriceTypeItemById(long id){
 		return serviceItemMapper.selectPriceTypeBy_id(id, Util.getConpnany_Name());
 	}
 	
@@ -69,11 +81,11 @@ public class ServiceItemService {
     		return false;
     	}
     	Integer con = serviceItemMapper.insertPriceType(pt, Util.getConpnany_Name());
-    	Integer id = pt.getId();
+    	Long id = pt.getId();
     	return con==1;
     }
 	
-	public Integer deletePriceTypeByid(Integer id){
+	public Integer deletePriceTypeByid(Long id){
 
     	Integer con = serviceItemMapper.deletePriceTypeByid(id, Util.getConpnany_Name());
     	

@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.aikang.mapper.RoundsConfigMapper">
     <resultMap id="BaseResultMap" type="com.aikang.Bean.RoundsConfig">
-        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
         <result column="paizhong_type" property="paizhong_type" jdbcType="INTEGER"/>
         <result column="dongpai_type" property="dongpai_type" jdbcType="INTEGER"/>
         <result column="zhipai_type" property="zhipai_type" jdbcType="INTEGER"/>
@@ -13,20 +14,21 @@
         <result column="yuezhong_buzhipai" property="yuezhong_buzhipai" jdbcType="INTEGER"/>
         <result column="jiaozhong_dengdai" property="jiaozhong_dengdai" jdbcType="INTEGER"/>
         <result column="jieshu_type" property="jieshu_type" jdbcType="INTEGER"/>
+        <result column="noMoveSalarySum" property="noMoveSalarySum" jdbcType="DOUBLE"/>
     </resultMap> 
     
     <select id="getRoundsConfig" resultMap="BaseResultMap" statementType="PREPARED">
-        select * from ${company}_roundsconfig
+        select * from aikang_roundsconfig where company=#{company}
     </select>
       
   	
   	<insert id="insertRoundsConfig" parameterType="com.aikang.Bean.RoundsConfig" statementType="PREPARED">
-	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Integer">
+	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Long">
 	       select LAST_INSERT_ID()
 	   </selectKey>
-    insert into ${company}_roundsconfig 
+    insert into aikang_roundsconfig 
     (
-	    id, 
+    	company,
 	    paizhong_type, 
 	    dongpai_type, 
 	    zhipai_type, 
@@ -36,9 +38,12 @@
 	    yuezhong_tiqian,
 	    yuezhong_buzhipai,
 	    jiaozhong_dengdai,
-	    jieshu_type
+	    jieshu_type,
+	    noMoveSalarySum
     )
-    values (#{record.id,jdbcType=INTEGER}, 
+    values 
+    (
+      #{company,jdbcType=VARCHAR},  
       #{record.paizhong_type,jdbcType=INTEGER}, 
       #{record.dongpai_type,jdbcType=INTEGER}, 
       #{record.zhipai_type,jdbcType=INTEGER}, 
@@ -48,11 +53,50 @@
       #{record.yuezhong_tiqian,jdbcType=INTEGER}, 
       #{record.yuezhong_buzhipai,jdbcType=INTEGER}, 
       #{record.jiaozhong_dengdai,jdbcType=INTEGER}, 
-      #{record.jieshu_type,jdbcType=INTEGER}
+      #{record.jieshu_type,jdbcType=INTEGER},
+      #{record.noMoveSalarySum,jdbcType=DOUBLE}
       )
   </insert>
-  
-  <update id="truncateRoundsConfig">
-	   truncate table ${company}_roundsconfig
-	</update>
+  <update id="updateRoundsConfigByIDSelective" parameterType="com.aikang.Bean.RoundsConfig" statementType="PREPARED">
+        update aikang_roundsconfig
+        <set>
+            <if test="record.paizhong_type != null">
+                paizhong_type = #{record.paizhong_type,jdbcType=INTEGER},
+            </if>
+            <if test="record.dongpai_type != null">
+                dongpai_type = #{record.dongpai_type,jdbcType=INTEGER},
+            </if>
+      		<if test="record.zhipai_type != null">
+                zhipai_type = #{record.zhipai_type,jdbcType=INTEGER},
+            </if> 
+      		<if test="record.dianzhong_budongpai != null">
+                dianzhong_budongpai = #{record.dianzhong_budongpai,jdbcType=INTEGER},
+            </if>
+            <if test="record.yuezhong_buguopai != null">
+                yuezhong_buguopai = #{record.yuezhong_buguopai,jdbcType=INTEGER},
+            </if>
+            <if test="record.fujia_shoudong != null">
+                fujia_shoudong = #{record.fujia_shoudong,jdbcType=INTEGER},
+            </if>
+            <if test="record.yuezhong_tiqian != null">
+                yuezhong_tiqian = #{record.yuezhong_tiqian,jdbcType=INTEGER},
+            </if>
+            <if test="record.yuezhong_buzhipai != null">
+                yuezhong_buzhipai = #{record.yuezhong_buzhipai,jdbcType=INTEGER},
+            </if>
+            <if test="record.jiaozhong_dengdai != null">
+                jiaozhong_dengdai = #{record.jiaozhong_dengdai,jdbcType=INTEGER},
+            </if>
+            <if test="record.jieshu_type != null">
+                jieshu_type = #{record.jieshu_type,jdbcType=INTEGER},
+            </if> 
+            <if test="record.noMoveSalarySum != null">
+                noMoveSalarySum = #{record.noMoveSalarySum,jdbcType=DOUBLE},
+            </if>
+        </set>
+        where id = #{record.id} and company=#{company}
+    </update>
+	<delete id="truncateRoundsConfig">
+    	delete from aikang_roundsconfig where company=#{company}
+  	</delete>
 </mapper>

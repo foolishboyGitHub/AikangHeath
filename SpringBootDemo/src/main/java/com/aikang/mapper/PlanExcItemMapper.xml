@@ -2,27 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.aikang.mapper.PlanExcItemMapper">
     <resultMap id="BaseResultMap" type="com.aikang.Bean.PlanExcItem">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="hid" property="hid" jdbcType="INTEGER"/>
-        <result column="sid" property="sid" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="hid" property="hid" jdbcType="BIGINT"/>
+        <result column="sid" property="sid" jdbcType="BIGINT"/>
     </resultMap> 
     
     <select id="getAllPlanExcItems" resultMap="BaseResultMap" statementType="PREPARED">
-        select * from ${company}_workexcitem
+        select * from aikang_workexcitem where company=#{company}
     </select>
     
     <select id="getPlanExcItemsByHid" resultMap="BaseResultMap" statementType="PREPARED">
-        select * from ${company}_workexcitem where hid=#{hid}
+        select * from aikang_workexcitem where hid=#{hid} and company=#{company}
     </select>
     
     <delete id="deleteExcItemByHid">
-    	delete from ${company}_workexcitem where hid=#{hid}
+    	delete from aikang_workexcitem where hid=#{hid} and company=#{company}
   	</delete>
   	
   	<insert id="addExcItemByList">
-    insert into ${company}_workexcitem (hid,sid) values
+    insert into ${company}_workexcitem (company,hid,sid) values
     <foreach collection="record" item="PlanExcItem" separator=",">
-      (#{PlanExcItem.hid},#{PlanExcItem.sid})
+      (#{company}, #{PlanExcItem.hid},#{PlanExcItem.sid})
     </foreach>
   </insert>
 </mapper>

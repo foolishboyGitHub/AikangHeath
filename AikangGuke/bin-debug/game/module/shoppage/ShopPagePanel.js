@@ -16,9 +16,10 @@ var ShopPagePanel = (function (_super) {
         return _this;
     }
     ShopPagePanel.prototype.childrenCreated = function () {
-        this._AddClick(this._btn_gohistory, this._OnClick);
+        // this._AddClick(this._btn_gohistory, this._OnClick);
     };
     ShopPagePanel.prototype.OnOpen = function () {
+        this.on_setCompanyInfo();
         this.onList_wait_Update();
         ViewManager.ins().open(ShopOrderFloatingBallPanel);
     };
@@ -31,6 +32,22 @@ var ShopPagePanel = (function (_super) {
             case FuncUrlUtil.ShopInfo_GetShopInfo:
                 break;
         }
+    };
+    ShopPagePanel.prototype.on_setCompanyInfo = function () {
+        var data = ShopPageManage.ins().data_CompanyInfo;
+        this.lab_companyname.text = decodeURI(data.cname);
+        this.lab_companydress.text = "地址：" + data.adress;
+        this.lab_companyphone.text = "电话：" + data.sevtelephone;
+        this.lab_companymobil.text = "手机：" + data.sevmobilephone;
+        sproto.sprotoRequest.loadURLImgOnThisDress(data.headpic, function (event) {
+            var loader = event.target;
+            //获取加载到的纹理对象
+            var texture = loader.data;
+            var bitmap = new egret.Bitmap(texture);
+            bitmap.width = this.group_companypic.width;
+            bitmap.height = this.group_companypic.height;
+            this.group_companypic.addChild(bitmap);
+        }, this);
     };
     ShopPagePanel.prototype.onList_wait_Update = function () {
         var json = ShopPageManage.ins().data_ShopInfoItem;
@@ -47,9 +64,6 @@ var ShopPagePanel = (function (_super) {
     };
     ShopPagePanel.prototype._OnClick = function (e) {
         switch (e.target) {
-            case this._btn_gohistory:
-                ViewManager.ins().open(ShopServingBillListPanel);
-                break;
         }
     };
     ////////////////'
@@ -74,8 +88,17 @@ var listShopInfoItem = (function (_super) {
     };
     listShopInfoItem.prototype.dataChanged = function () {
         this.lab_itemname.text = this.data.d.name;
-        this.lab_itemtime.text = this.data.d.timelong + "|养生";
+        this.lab_itemtime.text = this.data.d.timelong + "|";
         this.lab_itemprice.text = "¥" + this.data.d.price;
+        sproto.sprotoRequest.loadURLImgOnThisDress(this.data.d.headpic, function (event) {
+            var loader = event.target;
+            //获取加载到的纹理对象
+            var texture = loader.data;
+            var bitmap = new egret.Bitmap(texture);
+            bitmap.width = this.group_imgshow.width;
+            bitmap.height = this.group_imgshow.height;
+            this.group_imgshow.addChild(bitmap);
+        }, this);
     };
     listShopInfoItem.prototype.doSomeChange = function () {
     };

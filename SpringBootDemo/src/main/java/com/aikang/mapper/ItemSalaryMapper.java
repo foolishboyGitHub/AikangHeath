@@ -9,12 +9,13 @@ import com.aikang.Bean.WaiterItem;
 
 public interface ItemSalaryMapper {
 
-	List<ServiceSalary> getItemSalaryByHid(@Param("hid") Integer hid,@Param("company") String company);
+	List<ServiceSalary> getItemSalaryByHid(@Param("hid") Long hid,@Param("company") String company);
 	
 	List<ServiceSalary> getItemSalarysByWaitItems(@Param("record") List<WaiterItem> record,@Param("company") String company);
 	
+	ServiceSalary getItemSalarysByHidSid(@Param("sid") Long sid, @Param("hid") Long hid, @Param("company") String company);
 	
-	Integer deleteSalaryByHid(@Param("hid") Integer hid, @Param("company") String company);
+	Integer deleteSalaryByHid(@Param("hid") Long hid, @Param("company") String company);
 	
-	Integer addSalaryByHid(@Param("hid") Integer hid, @Param("record") ServiceSalary[] record, @Param("company") String company);
+	Integer addSalaryByHid(@Param("hid") Long hid, @Param("record") ServiceSalary[] record, @Param("company") String company);
 }

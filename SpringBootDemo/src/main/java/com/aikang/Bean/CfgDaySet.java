@@ -2,7 +2,11 @@ package com.aikang.Bean;
 
 public class CfgDaySet {
 
-	private Integer id;
+	private Long id;
+	
+	private String company;
+	
+	
 	/*
 	 * 日单号
 	 */
@@ -33,11 +37,11 @@ public class CfgDaySet {
 	 */
 	private Integer roundsdx;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -87,5 +91,13 @@ public class CfgDaySet {
 
 	public void setDaynumlast(Integer daynumlast) {
 		this.daynumlast = daynumlast;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 }

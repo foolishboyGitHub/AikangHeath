@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.aikang.mapper.CfgDaySetMapper">
     <resultMap id="BaseResultMap" type="com.aikang.Bean.CfgDaySet">
-        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
         <result column="dayidlast" property="dayidlast" jdbcType="INTEGER"/>
         <result column="daynumlast" property="daynumlast" jdbcType="INTEGER"/>
         <result column="dayidlasttime" property="dayidlasttime" jdbcType="VARCHAR"/>
@@ -11,18 +12,31 @@
         <result column="roundsdx" property="roundsdx" jdbcType="INTEGER"/>
     </resultMap> 
     
+    <select id="getAllDaySetConfigByCompanylist" resultMap="BaseResultMap" statementType="PREPARED">
+        select * 
+        from aikang_cfgdayset
+        where company in
+        <foreach collection="companylist" item="item" open="(" close=")" separator=",">
+        	#{item}
+        </foreach>
+        order by company
+    </select>
+    
     <select id="getDaySetConfig" resultMap="BaseResultMap" statementType="PREPARED">
-        select * from ${company}_cfgdayset
+        select * 
+        from aikang_cfgdayset
+        where company=#{company}
     </select>
       
   	
   	<insert id="insertDaySetConfig" parameterType="com.aikang.Bean.CfgDaySet" statementType="PREPARED">
-	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Integer">
+	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Long">
 	       select LAST_INSERT_ID()
 	   </selectKey>
-    insert into ${company}_cfgdayset 
+    insert into aikang_cfgdayset 
     (
-	    id, 
+	    id,
+	    company, 
 	    dayidlast, 
 	    daynumlast,
 	    dayidlasttime,
@@ -30,7 +44,10 @@
 	    roundsetlasttime,
 	    roundsdx
     )
-    values (#{record.id,jdbcType=INTEGER}, 
+    values 
+    (
+      #{record.id,jdbcType=BIGINT},
+      #{company,jdbcType=VARCHAR},  
       #{record.dayidlast,jdbcType=INTEGER}, 
       #{record.daynumlast,jdbcType=INTEGER}, 
       #{record.dayidlasttime,jdbcType=VARCHAR},
@@ -40,7 +57,7 @@
       )
   </insert>
   <update id="updateDaySetByIdSelective" parameterType="com.aikang.Bean.CfgDaySet" >
-	    update ${company}_cfgdayset
+	    update aikang_cfgdayset
 	    <set >
 	      <if test="record.dayidlast != null" >
 	        dayidlast = #{record.dayidlast,jdbcType=INTEGER},
@@ -61,9 +78,27 @@
 	        roundsdx = #{record.roundsdx,jdbcType=VARCHAR},
 	      </if>
 	    </set>
-	    where id = #{record.id,jdbcType=INTEGER}
+	    where id = #{record.id} and company=#{company}
   </update>
-  <update id="truncateDaySetConfig">
-	   truncate table ${company}_cfgdayset
-	</update>
+  
+  <update id="updateListSdxByIdsAtSomeCompany"  parameterType="java.util.List" statementType="PREPARED">
+      update aikang_cfgdayset
+      <trim prefix="set" suffixOverrides=",">
+        <trim prefix="roundsdx = case" suffix="end,">
+          <foreach collection="record" item="CfgDaySet">
+            <if test="CfgDaySet.roundsdx != null">
+              when id=#{CfgDaySet.id} then #{CfgDaySet.roundsdx}
+            </if>
+           </foreach>
+        </trim>
+      </trim>
+      where
+        <foreach collection="record" item="CfgDaySet" separator="or">
+            id = #{CfgDaySet.id}
+        </foreach>
+  </update>
+  
+  <delete id="truncateDaySetConfig">
+    	delete from aikang_cfgdayset where company=#{company}
+  	</delete>
 </mapper>

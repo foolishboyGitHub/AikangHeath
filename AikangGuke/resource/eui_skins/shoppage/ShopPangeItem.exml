@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="ShopPangeItem" width="720" height="160" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+<e:Skin class="ShopPangeItem" width="720" height="220" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
     <e:Rect width="100%" height="100%" fillColor="0xf9f8f2" strokeAlpha="0" strokeWeight="0"/>
 	<e:Rect bottom="0" width="690" height="1" x="18" strokeAlpha="0" fillColor="0x827e7e" strokeColor="0x757272" strokeWeight="0"/>
-    <e:Image id="pic_itempic" anchorOffsetX="0" width="164" anchorOffsetY="0" height="116" verticalCenter="0" x="18" source=""/>
-    <e:Label id="lab_itemname"  y="21" size="26" anchorOffsetX="0" width="483" stroke="0.2" strokeColor="0x000000" height="26" text="中式穴位推拿或沐足二选一" fontFamily="SimHei" textAlign="left" textColor="0x000000" x="196"/>
-    <e:Label id="lab_itemtime"  y="63" size="22" anchorOffsetX="0" width="280" stroke="0.2" strokeColor="0x000000" height="26" text="75分钟|养生" fontFamily="SimHei" textAlign="left" x="196" textColor="0x161616"/>
-    <e:Label id="lab_itemprice"  y="102" size="36" anchorOffsetX="0" width="280" stroke="0.2" strokeColor="0x000000" height="28" text="¥86 " fontFamily="SimHei" textAlign="left" x="196" textColor="0xd82020"/>
-    <e:Button id="_btn_order" x="562" y="100" label="选规格" skinName="BtnShopInfoListAdd"/>
+    <e:Group id="group_imgshow" width="200" height="160" x="54" y="25">
+    </e:Group>
+    <e:Label id="lab_itemname"  y="21" size="32" anchorOffsetX="0" width="490" stroke="0.2" strokeColor="0x000000" height="26" text="中式穴位推拿或沐足二选一" fontFamily="SimHei" textAlign="left" textColor="0x000000" x="288"/>
+    <e:Label id="lab_itemtime"  y="83" size="26" anchorOffsetX="0" width="303" stroke="0.2" strokeColor="0x000000" height="26" text="75分钟|" fontFamily="SimHei" textAlign="left" x="288" textColor="0x161616"/>
+    <e:Label id="lab_itemprice"  y="144" size="36" anchorOffsetX="0" width="150" stroke="0.2" strokeColor="0x000000" height="28" text="¥86 " fontFamily="SimHei" textAlign="left" x="288" textColor="0xd82020"/>
+    <e:Button id="_btn_order" x="546" y="139" label="选规格" skinName="BtnShopInfoListAdd" height="50" width="150"/>
 </e:Skin>

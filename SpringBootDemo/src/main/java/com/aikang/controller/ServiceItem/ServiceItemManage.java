@@ -1,6 +1,7 @@
 package com.aikang.controller.ServiceItem;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -176,6 +177,21 @@ public class ServiceItemManage {
     @ResponseBody
     public String AddNewMemItem(@RequestBody ServiceItem sItem, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
     	
+		Map<String, Object> map = stemService.getAllCompanyServiceItemNum(Util.getConpnany_Name());
+		
+		if(map == null || map.get("total") == null){
+			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "公司项目信息库异常 ，请与服务商联系!");
+    		String s = Util.setResponseToClientString(request, response, err);
+    		return s;
+		}
+		Integer total = Integer.parseInt(map.get("total").toString());
+		if(total > 100){
+			RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "公司服务项目总数不能超过100个!");
+    		String s = Util.setResponseToClientString(request, response, err);
+    		return s;
+		}
+		
+		
 		String sexist = stemService.ifexistof(sItem);
     	if(sexist == "name"){
     		RespBean err = RespBean.configRsp(Util.MSG_ERROR, "/Error_Get", "项目名称已被使用");

@@ -14,8 +14,9 @@ class loginview  extends BaseEuiView {
 	private _input_password:eui.EditableText;
 	private _loginBtn:eui.Button;
 	private revmsg:eui.Label;
-	private _gouqiu:eui.Button;
-	private btn_navito: eui.Button;
+
+	private group_login:eui.Group;
+
 	public constructor() {
 		super();
 		this.skinName = "login";
@@ -24,7 +25,7 @@ class loginview  extends BaseEuiView {
 
 	protected childrenCreated(): void {
         this._AddClick(this._loginBtn, this._OnClick);
-		this._AddClick(this.btn_navito, this._OnClick);
+		this.group_login.visible = false;
 
 		this._input_company.restrict = "A-Za-z0-9_-";
 		this._input_username.restrict = "A-Za-z0-9_-";
@@ -41,14 +42,17 @@ class loginview  extends BaseEuiView {
 			case this._loginBtn:
                 this.onLogin();
 				break; 
-			case this.btn_navito:
-                _WX_TestNavito();
-				break; 
+			// case this.btn_navito:
+            //     _WX_TestNavito();
+			// 	break; 
 		}
 	}
 	public onLogin() {
-		var sessioncode = "073Qv1000hU6aK1CT41004ns373Qv10x";
-		var params = "company="+this._input_company.text 
+		var company = egret.getOption("company");
+		var sessioncode = egret.getOption("sessioncode");
+		// company = "aikang";
+		// sessioncode = "0139eCGa1YDUqA0TIpFa1VG3R149eCGB";
+		var params = "company="+company 
 		+ "&username="+this._input_username.text + "&password="+md5.hex_md5(this._input_password.text)
 		+ "&type="+egret.getOption("type") + "&wndtype="+"wxweb"
 		+ "&relogin="+egret.getOption("relogin") + "&sessioncode="+sessioncode;
@@ -62,7 +66,7 @@ class loginview  extends BaseEuiView {
 		this._input_company.text = loginManager.ins()._talkcompany;
 		this._input_username.text = loginManager.ins()._talkusername;
 		this._input_password.text = loginManager.ins()._talkpassword;
-		this.onLogin();
+		// this.onLogin();
 	}
 	public onTalkInfoShow(m){
 		let o=m.data;
@@ -80,6 +84,8 @@ class loginview  extends BaseEuiView {
 		EventCenter.Instance.addEventListener(DataTransEvent.Event_loginManager, this.onResponseDologin, this);
 		EventCenter.Instance.addEventListener(loginManager.ins().talk_message_login_now, this.onTalkLogin, this);
 		EventCenter.Instance.addEventListener(loginManager.ins().talk_message_infomessage, this.onTalkInfoShow, this);
+		
+		this.onLogin();
 	}
 
 	OnClose() {
@@ -95,6 +101,7 @@ class loginview  extends BaseEuiView {
 		this.revmsg.text = "登录返回！";
 		if(json.status == sproto.sprotoRespType.MSG_ERROR)//返回错误
 		{
+			this.group_login.visible = true;
 			loginManager.ins()._loginState = 0;
 		
 			console.log("error resp :" + json.msg);
@@ -159,9 +166,13 @@ class loginview  extends BaseEuiView {
 		GameGlobal.myUser = scl.user;
 		let rs = "ROLE_worker";
 		let urs:string = scl.user.roles[0].name
-		GameGlobal.CurrentCompany = egret.getOption("company");
-		GameGlobal.CurrentCompany = "aikang";
-		ViewManager.ins().open(ShopAskNumPanel);	
+		GameGlobal.CurrentCompany = scl.user.companytest;
+		// GameGlobal.CurrentCompany = "aikang";
+		if(GameGlobal.CurrentCompany== null || GameGlobal.CurrentCompany==""){
+			ViewManager.ins().open(ShopSerchForCompanyPanel);
+		}else{
+			ViewManager.ins().open(ShopAskNumPanel);	
+		}
 		this.CloseSelf();
     }
 	

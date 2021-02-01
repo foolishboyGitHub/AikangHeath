@@ -17,7 +17,7 @@ var loginview = (function (_super) {
     }
     loginview.prototype.childrenCreated = function () {
         this._AddClick(this._loginBtn, this._OnClick);
-        this._AddClick(this.btn_navito, this._OnClick);
+        this.group_login.visible = false;
         this._input_company.restrict = "A-Za-z0-9_-";
         this._input_username.restrict = "A-Za-z0-9_-";
         // this.revmsg.text = "url:"+window.location.href 
@@ -31,14 +31,14 @@ var loginview = (function (_super) {
             case this._loginBtn:
                 this.onLogin();
                 break;
-            case this.btn_navito:
-                _WX_TestNavito();
-                break;
         }
     };
     loginview.prototype.onLogin = function () {
-        var sessioncode = "073Qv1000hU6aK1CT41004ns373Qv10x";
-        var params = "company=" + this._input_company.text
+        var company = egret.getOption("company");
+        var sessioncode = egret.getOption("sessioncode");
+        // company = "aikang";
+        // sessioncode = "0139eCGa1YDUqA0TIpFa1VG3R149eCGB";
+        var params = "company=" + company
             + "&username=" + this._input_username.text + "&password=" + md5.hex_md5(this._input_password.text)
             + "&type=" + egret.getOption("type") + "&wndtype=" + "wxweb"
             + "&relogin=" + egret.getOption("relogin") + "&sessioncode=" + sessioncode;
@@ -52,7 +52,7 @@ var loginview = (function (_super) {
         this._input_company.text = loginManager.ins()._talkcompany;
         this._input_username.text = loginManager.ins()._talkusername;
         this._input_password.text = loginManager.ins()._talkpassword;
-        this.onLogin();
+        // this.onLogin();
     };
     loginview.prototype.onTalkInfoShow = function (m) {
         var o = m.data;
@@ -70,6 +70,7 @@ var loginview = (function (_super) {
         EventCenter.Instance.addEventListener(DataTransEvent.Event_loginManager, this.onResponseDologin, this);
         EventCenter.Instance.addEventListener(loginManager.ins().talk_message_login_now, this.onTalkLogin, this);
         EventCenter.Instance.addEventListener(loginManager.ins().talk_message_infomessage, this.onTalkInfoShow, this);
+        this.onLogin();
     };
     loginview.prototype.OnClose = function () {
         EventCenter.Instance.removeEventListener(DataTransEvent.Event_loginManager, this.onResponseDologin, this);
@@ -83,6 +84,7 @@ var loginview = (function (_super) {
         var scl = json.obj.scl;
         this.revmsg.text = "登录返回！";
         if (json.status == sproto.sprotoRespType.MSG_ERROR) {
+            this.group_login.visible = true;
             loginManager.ins()._loginState = 0;
             console.log("error resp :" + json.msg);
             if (scl == "userLocked") {
@@ -134,9 +136,14 @@ var loginview = (function (_super) {
         GameGlobal.myUser = scl.user;
         var rs = "ROLE_worker";
         var urs = scl.user.roles[0].name;
-        GameGlobal.CurrentCompany = egret.getOption("company");
-        GameGlobal.CurrentCompany = "aikang";
-        ViewManager.ins().open(ShopAskNumPanel);
+        GameGlobal.CurrentCompany = scl.user.companytest;
+        // GameGlobal.CurrentCompany = "aikang";
+        if (GameGlobal.CurrentCompany == null || GameGlobal.CurrentCompany == "") {
+            ViewManager.ins().open(ShopSerchForCompanyPanel);
+        }
+        else {
+            ViewManager.ins().open(ShopAskNumPanel);
+        }
         this.CloseSelf();
     };
     ////////////////'

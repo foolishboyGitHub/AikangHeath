@@ -1,15 +1,15 @@
 package com.aikang.Bean;
 
 public class CSHidRids {
-	private Integer hid;
+	private Long hid;
 	
 	private Integer[] rids;
 
-	public Integer getHid() {
+	public Long getHid() {
 		return hid;
 	}
 
-	public void setHid(Integer hid) {
+	public void setHid(Long hid) {
 		this.hid = hid;
 	}
 

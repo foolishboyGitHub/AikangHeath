@@ -23,6 +23,8 @@ var ShopOrderFloatingBallPanel = (function (_super) {
     };
     ShopOrderFloatingBallPanel.prototype.OnOpen = function () {
         EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, this.onRedBotHit, this);
+        EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_MakeShop_ShopOrderFloatingBallShow, this.onThisShow, this);
+        EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_MakeShop_ShopOrderFloatingBallHide, this.onThisHide, this);
         EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_MakeOrder, this.onServerEventData, this);
         EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_CheckOrderBills, this.onServerEventData, this);
         EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_BackToShoping, this.onServerEventData, this);
@@ -30,6 +32,8 @@ var ShopOrderFloatingBallPanel = (function (_super) {
     };
     ShopOrderFloatingBallPanel.prototype.OnClose = function () {
         EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, this.onRedBotHit, this);
+        EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopInfo_MakeShop_ShopOrderFloatingBallShow, this.onThisShow, this);
+        EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopInfo_MakeShop_ShopOrderFloatingBallHide, this.onThisHide, this);
         EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_MakeOrder, this.onServerEventData, this);
         EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_CheckOrderBills, this.onServerEventData, this);
         EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_BackToShoping, this.onServerEventData, this);
@@ -42,6 +46,7 @@ var ShopOrderFloatingBallPanel = (function (_super) {
             num = data.length;
         }
         this._godd = 0;
+        ShopPageManage.ins()._addstate = 0;
         if (num > 0) {
             var item = data[0];
             this._godd = item.workstate;
@@ -78,7 +83,7 @@ var ShopOrderFloatingBallPanel = (function (_super) {
                     price += item.itembillyf;
                 }
                 this._btn_bot_left.label = "¥" + price;
-                this._btn_bot_right.label = "下单";
+                this._btn_bot_right.label = "选好了";
             }
             if (this._shopMakeInfoListPaeul == null) {
                 this._shopMakeInfoListPaeul = new ShopMakeInfoListPaeul();
@@ -104,7 +109,7 @@ var ShopOrderFloatingBallPanel = (function (_super) {
                 price += item.itembillyf;
             }
             this._btn_bot_left.label = "¥" + price;
-            this._btn_bot_right.label = "结账";
+            this._btn_bot_right.label = "下单";
             if (this._shopOrderInfoListPaeul == null) {
                 this._shopOrderInfoListPaeul = new ShopOrderInfoListPanel();
                 this.group_shopmakelist.addChild(this._shopOrderInfoListPaeul);
@@ -129,10 +134,10 @@ var ShopOrderFloatingBallPanel = (function (_super) {
                 price += item.itembillyf;
             }
             this._btn_bot_left.label = "¥" + price;
-            this._btn_bot_right.label = "结账";
+            this._btn_bot_right.label = "下单";
             this._btn_bot_right.enabled = true;
             if (price == 0) {
-                this._btn_bot_right.label = "已结账";
+                this._btn_bot_right.label = "已付款";
                 this._btn_bot_right.enabled = false;
             }
             if (this._shopOrderInfoListPaeul == null) {
@@ -146,6 +151,12 @@ var ShopOrderFloatingBallPanel = (function (_super) {
             this._shopOrderInfoListPaeul.visible = true;
             this._shopOrderInfoListPaeul.setShopInfoList();
         }
+    };
+    ShopOrderFloatingBallPanel.prototype.onThisHide = function () {
+        this.visible = false;
+    };
+    ShopOrderFloatingBallPanel.prototype.onThisShow = function () {
+        this.visible = true;
     };
     ShopOrderFloatingBallPanel.prototype.onRedBotHit = function () {
         this.setBotStatus();
@@ -186,7 +197,12 @@ var ShopOrderFloatingBallPanel = (function (_super) {
                     }
                 }
                 else {
-                    this._shopOrderInfoListPaeul._on_Show();
+                    if (this._shopOrderInfoListPaeul.visible == false) {
+                        this._shopOrderInfoListPaeul._on_Show();
+                    }
+                    else {
+                        this._shopOrderInfoListPaeul._on_hide();
+                    }
                 }
                 break;
             case this._btn_bot_right:

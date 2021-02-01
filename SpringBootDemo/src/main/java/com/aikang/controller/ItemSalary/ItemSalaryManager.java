@@ -43,7 +43,7 @@ public class ItemSalaryManager {
 	
 	@RequestMapping("/Querry/GetSalaryByUid")
     @ResponseBody
-    public String getaSalarySet(@RequestBody Integer hid, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+    public String getaSalarySet(@RequestBody Long hid, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 		List<ServiceSalary> sls = itemSalaryService.getItemSalarysByHid(hid);
 		RespBean ok = RespBean.ok("/ServiceSalary/Querry/GetSalaryByUid", sls);
 	    String s = Util.setResponseToClientString(request, response, ok);
@@ -62,7 +62,7 @@ public class ItemSalaryManager {
 	
 	@RequestMapping("/Config/GetSalaryByUid")
     @ResponseBody
-    public String getSalarySet(@RequestBody Integer hid, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+    public String getSalarySet(@RequestBody Long hid, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 		List<ServiceSalary> sls = itemSalaryService.getItemSalarysByHid(hid);
 		RespBean ok = RespBean.ok("/ServiceSalary/Config/GetSalaryByUid", sls);
 	    String s = Util.setResponseToClientString(request, response, ok);

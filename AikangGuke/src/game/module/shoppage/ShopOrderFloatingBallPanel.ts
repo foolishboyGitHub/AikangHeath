@@ -35,7 +35,9 @@ class ShopOrderFloatingBallPanel   extends BaseEuiView {
 	OnOpen() {
 
 		
-		EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, this.onRedBotHit, this);	
+		EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, this.onRedBotHit, this);
+		EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_MakeShop_ShopOrderFloatingBallShow, this.onThisShow, this);
+		EventCenter.Instance.addEventListener(DataTransEvent.Event_ShopInfo_MakeShop_ShopOrderFloatingBallHide, this.onThisHide, this);	
 		EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_MakeOrder, this.onServerEventData, this);
 		EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_CheckOrderBills, this.onServerEventData, this);
 		EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_BackToShoping, this.onServerEventData, this);
@@ -45,6 +47,8 @@ class ShopOrderFloatingBallPanel   extends BaseEuiView {
 
 	OnClose() {
 		EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, this.onRedBotHit, this);
+		EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopInfo_MakeShop_ShopOrderFloatingBallShow, this.onThisShow, this);
+		EventCenter.Instance.removeEventListener(DataTransEvent.Event_ShopInfo_MakeShop_ShopOrderFloatingBallHide, this.onThisHide, this);	
 		
 		EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_MakeOrder, this.onServerEventData, this);
 		EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_CheckOrderBills, this.onServerEventData, this);
@@ -59,6 +63,7 @@ class ShopOrderFloatingBallPanel   extends BaseEuiView {
 			num = data.length;
 		}
 		this._godd = 0;
+		ShopPageManage.ins()._addstate = 0;
 		if(num > 0){
 			let item: any = data[0];
 			this._godd = item.workstate;
@@ -100,7 +105,7 @@ class ShopOrderFloatingBallPanel   extends BaseEuiView {
 					price += item.itembillyf;
 				}
 				this._btn_bot_left.label = "¥"+price;
-				this._btn_bot_right.label = "下单";
+				this._btn_bot_right.label = "选好了";
 			}
 			if(this._shopMakeInfoListPaeul == null)
 			{
@@ -129,7 +134,7 @@ class ShopOrderFloatingBallPanel   extends BaseEuiView {
 				price += item.itembillyf;
 			}
 			this._btn_bot_left.label = "¥"+price;
-			this._btn_bot_right.label = "结账";
+			this._btn_bot_right.label = "下单";
 
 			if(this._shopOrderInfoListPaeul == null){
 				this._shopOrderInfoListPaeul = new ShopOrderInfoListPanel();
@@ -158,10 +163,10 @@ class ShopOrderFloatingBallPanel   extends BaseEuiView {
 				price += item.itembillyf;
 			}
 			this._btn_bot_left.label = "¥"+price;
-			this._btn_bot_right.label = "结账";
+			this._btn_bot_right.label = "下单";
 			this._btn_bot_right.enabled = true;
 			if(price == 0){
-				this._btn_bot_right.label = "已结账";
+				this._btn_bot_right.label = "已付款";
 				this._btn_bot_right.enabled = false;
 			}
 			
@@ -178,6 +183,12 @@ class ShopOrderFloatingBallPanel   extends BaseEuiView {
 			this._shopOrderInfoListPaeul.setShopInfoList();
 		}
 
+	}
+	private onThisHide(){
+		this.visible = false;
+	}
+	private onThisShow(){
+		this.visible = true;
 	}
 	private onRedBotHit(){
 		this.setBotStatus();
@@ -221,7 +232,11 @@ class ShopOrderFloatingBallPanel   extends BaseEuiView {
 						this._shopMakeInfoListPaeul._on_hide();
 					}
 				}else{
-					this._shopOrderInfoListPaeul._on_Show();
+					if(this._shopOrderInfoListPaeul.visible == false){
+						this._shopOrderInfoListPaeul._on_Show();
+					}else{
+						this._shopOrderInfoListPaeul._on_hide();
+					}
 				}
 			break;
 			case this._btn_bot_right:

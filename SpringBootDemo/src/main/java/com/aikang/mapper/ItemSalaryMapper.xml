@@ -2,9 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.aikang.mapper.ItemSalaryMapper">
     <resultMap id="BaseResultMap" type="com.aikang.Bean.ServiceSalary">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="hid" property="hid" jdbcType="INTEGER"/>
-        <result column="sid" property="sid" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="hid" property="hid" jdbcType="BIGINT"/>
+        <result column="sid" property="sid" jdbcType="BIGINT"/>
         <result column="sdx" property="sdx" jdbcType="INTEGER"/>
         <result column="defsalarylz" property="defsalarylz" jdbcType="DOUBLE"/>
         <result column="defsalarydz" property="defsalarydz" jdbcType="DOUBLE"/>
@@ -21,30 +22,55 @@
         seri.id as sid, seri.name, seri.dSalaryLz,seri.dSalaryDz,seri.dSalaryDp,seri.dSalarySz,
         serl.id,serl.hid,serl.defsalarylz,serl.defsalarydz,serl.defsalarydp,serl.defsalarysz,
         sot.sdx
-        from ${company}_serviceitem seri left join ${company}_servicesalary serl on seri.`id`=serl.`sid` and serl.`hid`=#{hid}
-        left join ${company}_serviceitemsort sot on seri.`id`=sot.`sid`
-        
+        from aikang_serviceitem seri left join aikang_servicesalary serl on seri.`id`=serl.`sid` and serl.`hid`=#{hid}
+        left join aikang_serviceitemsort sot on seri.`id`=sot.`sid`
+        where seri.company=#{company}
         order by sot.sdx
     </select>
     <select id="getItemSalarysByWaitItems" resultMap="BaseResultMap" statementType="PREPARED">
-        select seri.* from ${company}_servicesalary seri 
+        select * from aikang_servicesalary 
         where
         <foreach collection="record" item="item" open="(" close=")" separator="or">
         (
         	hid = #{item.hid}
-        	and sid = #{item.sid}
+        	and 
+        	sid = #{item.sid}
+        	and 
+        	company=#{company}
         )
         </foreach>
-        order by seri.hid
+        order by hid
+    </select>
+    <select id="getItemSalarysByHidSid" resultMap="BaseResultMap" statementType="PREPARED">
+        select 
+        IFNULL(asy.`defsalarylz`,0) as defsalarylz,
+		IFNULL(asy.`defsalarydz`,0) as defsalarydz,
+		IFNULL(asy.`defsalarydp`,0) as defsalarydp,
+		IFNULL(asy.`defsalarysz`,0) as defsalarysz,
+        asi.dSalaryLz,
+        asi.dSalaryDz,
+        asi.dSalaryDp,
+        asi.dSalarySz
+        from aikang_serviceitem asi
+        left join aikang_servicesalary asy on asy.`sid`=#{sid} and asy.`hid`=#{hid}
+        where asi.id = #{sid}
+        and 
+        asi.company=#{company}
+
     </select>
     <delete id="deleteSalaryByHid">
-    	delete from ${company}_servicesalary where hid=#{hid}
+    	delete from aikang_servicesalary where hid=#{hid} and company=#{company}
   	</delete>
   		
   	<insert id="addSalaryByHid">
-	    insert into ${company}_servicesalary (hid,sid,defsalarylz,defsalarydz,defsalarydp,defsalarysz) values
+	    insert into aikang_servicesalary 
+	    (
+	    company,
+	    hid,sid,defsalarylz,defsalarydz,defsalarydp,defsalarysz) 
+	    values
 	    <foreach collection="record" item="ServiceSalary" separator=",">
 	      (
+	      #{company},
 	      #{hid},
 	      #{ServiceSalary.sid},
 	      #{ServiceSalary.defsalarylz},

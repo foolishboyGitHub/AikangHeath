@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +19,14 @@ import com.aikang.Bean.PlanExcItem;
 import com.aikang.Bean.PlanWork;
 import com.aikang.Bean.RespBean;
 import com.aikang.Bean.RoundsConfig;
+import com.aikang.Bean.SpeTimesec;
 import com.aikang.Bean.WaiterItem;
+import com.aikang.Bean.WorkExtra;
 import com.aikang.mapper.CfgDaySetMapper;
 import com.aikang.mapper.PlanExcItemMapper;
 import com.aikang.mapper.PlanWorkMapper;
 import com.aikang.mapper.RoundsConfigMapper;
+import com.aikang.mapper.SpeTimesecMapper;
 import com.aikang.mapper.WaiterItemMapper;
 import com.aikang.utils.Util;
 import com.aikang.utils.WaiterStateUtil;
@@ -49,6 +53,9 @@ public class PlanWorkService {
 	
 	@Autowired
 	WaiterItemService wiService;
+	
+	@Autowired
+	SpeTimesecMapper speTimesecMapper;
 	
 	public List<PlanWork> getAllPlanWorks(){
 		return planWorkMapper.getAllPlanWorks(Util.getConpnany_Name());
@@ -100,6 +107,24 @@ public class PlanWorkService {
 			}else if(wtype == WorkStateUtil.WST_PLAN_SZ){	
 				swl.add(pw);									
 			}
+		}
+		return swl;
+	}
+	public List<PlanWork> GetModifyTypePlanWorks(int tyy, int wtype, int wsex) throws ParseException{
+		
+		List<PlanWork> works = planWorkMapper.getAllPlanWorks(Util.getConpnany_Name());
+//		srotWorkList(works);
+		List<PlanWork> swl = new ArrayList<PlanWork>();
+
+//		List<WaiterItem> witems = waiterItemMapper.getAllWaiterItem(Util.getConpnany_Name());
+		for(int i=0; i<works.size(); i++){
+			PlanWork pw = works.get(i);
+			int state = pw.getState();
+			
+			if(WorkStateUtil.IF_TP(state)){
+				continue;
+			}
+			swl.add(pw);
 		}
 		return swl;
 	}
@@ -163,7 +188,7 @@ public class PlanWorkService {
     				apl.get(i).setRound(0);
     				apl.get(i).setSdx(i);
     				apl.get(i).setSdxlast(i);
-    				apl.get(i).setDayidOfsdxMov(0);
+    				apl.get(i).setDayidOfsdxMov("");
     			}
     			planWorkMapper.updateListPlanWorksByHidSelective(apl, Util.getConpnany_Name());
     			cds.setRoundsdx(apl.size());
@@ -171,6 +196,9 @@ public class PlanWorkService {
     	    	cfgDaySetMapper.updateDaySetByIdSelective(cds, Util.getConpnany_Name());
     		}
     	}
+	}
+	public int updateListPlanWorksByHidSelective(List<PlanWork> apl, String company){
+		return planWorkMapper.updateListPlanWorksByHidSelective(apl, company);
 	}
 	public void srotWorkList(List<PlanWork> apl){
 		int allnum = apl.size();
@@ -195,78 +223,12 @@ public class PlanWorkService {
 	public List<PlanWork> getAllPlanWorksAtTurnNoReset() throws ParseException{
 		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	Date date = new Date();
-    	RoundsConfig rcfg = roundsConfigMapper.getRoundsConfig(Util.getConpnany_Name());
 		List<PlanWork> apl = planWorkMapper.getAllPlanWorks(Util.getConpnany_Name());
 		
-		//判断是否有预约
-		List<WaiterItem> wis = waiterItemMapper.getAllWaiterItem(Util.getConpnany_Name());
-		for(int i=0; i<apl.size(); i++){
-			int find = 0;
-			PlanWork pwk = apl.get(i);
-			if(wis.size() == 0)
-				continue;
-			Date neardate = null;
-			WaiterItem nearwm = null;
-			int dayid = 0;
-			
-			
-			for(int w=0; w<wis.size(); w++){
-				if(wis.get(w).getHid() != null && wis.get(w).getWorkstate()!=null){
-					WaiterItem wm = wis.get(w);
-					Date dwtime = ft.parse(wm.getWaittime());
-					if(wm.getHid() == pwk.getHid() && wm.getWorkstate() < WaiterStateUtil.SST_SZ_MIN){
-						if(neardate == null){
-							neardate = dwtime;
-							nearwm = wm;
-						}else{
-							if(dwtime.getTime() < neardate.getTime()){
-								neardate = dwtime;
-								nearwm = wm;
-							}
-						
-						}
-					}
-					if(wm.getHid() == pwk.getHid() 
-							&& wm.getWorkstate() >= WaiterStateUtil.SST_SZ_MIN
-							&& wm.getWorkstate() < WaiterStateUtil.SST_FW_FINISH)
-					{
-						dayid = wm.getDayid();
-					}
-				}
-			}
-			//如果技师不在服务中， 那么离现在最近的钟单是什么状态 就是什么状态 
-			if(!WorkStateUtil.IF_FW(pwk.getState()) && nearwm!=null){
-				if(nearwm.getWorkstate() == WaiterStateUtil.SST_YY_WAIT){
-					pwk.setState(WorkStateUtil.WST_YY_MIN);															
-				}
-				if(nearwm.getWorkstate() == WaiterStateUtil.SST_YY_RECV){
-					pwk.setState(WorkStateUtil.WST_YY_MIN + 1);
-				}
-				if(nearwm.getWorkstate() >= WaiterStateUtil.SST_HJ_MIN && nearwm.getWorkstate() < WaiterStateUtil.SST_HJ_MAX){
-					pwk.setState(WorkStateUtil.WST_YY_MIN + 2);
-				}
-				if(nearwm.getWorkstate() >= WaiterStateUtil.SST_SD_MIN && nearwm.getWorkstate() < WaiterStateUtil.SST_SD_MAX){
-					pwk.setState(WorkStateUtil.WST_SD_MIN);
-				}
-			}
-			//在规定时间之外有没有约钟
-			for(int w=0; w<wis.size(); w++){
-				if(wis.get(w).getHid() != null && wis.get(w).getWorkstate()!=null){
-					WaiterItem wm = wis.get(w);
-					Date dwtime = ft.parse(wm.getWaittime());
-					if(dayid != wm.getDayid() && wm.getHid() == pwk.getHid() && wm.getWorkstate() < WaiterStateUtil.SST_SZ_MIN){
-						
-						if(dwtime.getTime() - date.getTime() > rcfg.getYuezhong_tiqian()){
-							find = 1;
-							break;
-						}
-						
-					}
-				}
-			}
-			apl.get(i).setYystate(find);
-		}
 		return apl;
+	}
+	public List<PlanWork> getPlanWorksInIds(List<Long> ids){
+		return planWorkMapper.getPlanWorksInIds(ids);
 	}
 	public Integer addPlanWorksByList(PlanWork[] record){
     	int delnum = planWorkMapper.truncatePlanWorks(Util.getConpnany_Name());
@@ -280,11 +242,15 @@ public class PlanWorkService {
 		return planExcItemMapper.getAllPlanExcItems(Util.getConpnany_Name());
 	}
 	
-	public List<PlanExcItem> getPlanExcItemsByHid(Integer hid){
+	public List<PlanExcItem> getPlanExcItemsByHid(long hid){
 		return planExcItemMapper.getPlanExcItemsByHid(hid, Util.getConpnany_Name());
 	}
 	
-	public boolean addExcItemByList(Integer hid, PlanExcItem[] record){
+	public List<PlanExcItem> getPlanExcItemsByHid(long hid, String companyname){
+		return planExcItemMapper.getPlanExcItemsByHid(hid, companyname);
+	}
+	
+	public boolean addExcItemByList(long hid, PlanExcItem[] record){
 		int num = planExcItemMapper.deleteExcItemByHid(hid, Util.getConpnany_Name());
 		
 		return planExcItemMapper.addExcItemByList(record, Util.getConpnany_Name()) == record.length;
@@ -295,12 +261,13 @@ public class PlanWorkService {
 	}
 	
 	public boolean addRoundsConfig(RoundsConfig record){
-		int num = roundsConfigMapper.truncateRoundsConfig(Util.getConpnany_Name());
-		
 		return roundsConfigMapper.insertRoundsConfig(record, Util.getConpnany_Name()) == 1;
 	}
+	public boolean updateRoundsConfig(RoundsConfig record){
+		return roundsConfigMapper.updateRoundsConfigByIDSelective(record, Util.getConpnany_Name()) == 1;
+	}
 	
-	public PlanWork getPlanWorkByHid(int hid){
+	public PlanWork getPlanWorkByHid(long hid){
 		return planWorkMapper.getPlanWorkByHid(hid, Util.getConpnany_Name());
 	}
 	
@@ -338,5 +305,130 @@ public class PlanWorkService {
 			pwk.setRound(0);
 		}
 		return planWorkMapper.updatePlanWorksByHidSelective(pwk, pwk.getHid(), Util.getConpnany_Name());
+	}
+	public int updatePlanWorksByHidSelective(PlanWork pwk){
+		return planWorkMapper.updatePlanWorksByHidSelective(pwk, pwk.getHid(), Util.getConpnany_Name());
+	}
+	public List<PlanWork> GetYuyuePlanWorks(String companyname)
+	{
+		
+		List<PlanWork> works = planWorkMapper.getAllPlanWorks(companyname);
+//		srotWorkList(works);
+		List<PlanWork> swl = new ArrayList<PlanWork>();
+		for(int i=0; i<works.size(); i++){
+			PlanWork pw = works.get(i);
+			if(!WorkStateUtil.IF_TP(pw.getState()) ){
+				swl.add(pw);
+			}
+		}
+		return swl;
+		
+	}
+	
+	public List<WaiterItem> getWaiterItemsByHid(String companyname, Long hid){
+		return waiterItemMapper.getWaiterItemsByHid(hid, companyname);
+	}
+	
+	public List<PlanWork> GetNowCanPlanWorks(String companyname) throws ParseException{
+		
+		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	Date date = new Date();
+    	
+    	//判断是否在加班时段
+    	String dstr = ft.format(date.getTime());
+    	String td = dstr.substring(11, 16) ;
+    	String jstr1 = "2000-01-01 "+td+":00";
+    	String jstr2 = "2000-01-02 "+td+":00";
+
+    	//先获取所有本公司本加班时段表
+    	List<SpeTimesec> setms = speTimesecMapper.getAllTypeSpetimesecAtSometime(0, jstr1, jstr2, companyname);
+		List<PlanWork> swl = new ArrayList<PlanWork>();
+		List<PlanWork> works = new ArrayList<PlanWork>();
+		if(setms==null || setms.size() <=0)
+		{
+			//非加班时段
+			works = planWorkMapper.getAllPlanWorks(companyname);
+			for(int i=0; i<works.size(); i++){
+    			PlanWork pw = works.get(i);
+    			int state = pw.getState();
+    			
+    			if(WorkStateUtil.IF_TP(state) || WorkStateUtil.IF_SZ(state) || WorkStateUtil.IF_FW(state)){
+    				continue;
+    			}
+    			swl.add(pw);	
+    		}
+		}
+		else
+		{
+			//加班时段
+			works = planWorkMapper.getAllPlanWorksAtWorkExtra(setms.get(0).getName(), companyname);
+			for(int i=0; i<works.size(); i++){
+    			PlanWork pw = works.get(i);
+    			int state = pw.getState();
+    			
+    			if(WorkStateUtil.IF_TP(state) || WorkStateUtil.IF_SZ(state) || WorkStateUtil.IF_FW(state)){
+    				continue;
+    			}
+    			if(pw.getMywkexts() == null){
+    				continue;
+    			}
+    			int findjb = 0;
+    			if(pw.getMywkexts() != null){
+	    			for(int b=0; b<pw.getMywkexts().size(); b++){
+	    				if(pw.getMywkexts().get(b).getTmid() == setms.get(0).getId()){
+	    					findjb = 1;
+	        				break;
+	        			}
+	    			}
+    			}
+    			if(findjb == 0){
+    				continue;
+    			}
+    			swl.add(pw);	
+    		}
+		}
+		
+		return swl;
+	}
+	
+	
+	public int addNewWorkExtraRecord(WorkExtra workextra, String company)
+	{
+		return planWorkMapper.addNewWorkExtraRecord(workextra, company);
+	}
+	
+	public List<WorkExtra> getWorkExtraByHid(Long hid, String company)
+	{
+		return planWorkMapper.getWorkExtraByHid(hid, company);
+	}
+	
+	public int setMyWorkextraisworkByTimesec(Long hid, SpeTimesec tms, int iswork, String company)
+	{
+		WorkExtra wet = planWorkMapper.getWorkExtraByHidAndTmid(hid, tms.getId(),  company);
+		if(wet == null){
+			WorkExtra nwet = new WorkExtra();
+			nwet.setHid(hid);
+			nwet.setTmid(tms.getId());
+			nwet.setTmname(tms.getName());
+			nwet.setIswork(iswork);
+			int inum = planWorkMapper.addNewWorkExtraRecord(nwet, company);
+			if(inum != 1){
+				return -1;
+			}
+		}
+		else
+		{
+			WorkExtra nwet = new WorkExtra();
+			nwet.setHid(hid);
+			nwet.setTmid(tms.getId());
+			nwet.setTmname(tms.getName());
+			nwet.setIswork(iswork);
+			int unum = planWorkMapper.updateWorkExtraIsworkByhidAndTmid(nwet, company);
+			if(unum != 1){
+				return -2;
+			}
+		}
+		
+		return 1;
 	}
 }

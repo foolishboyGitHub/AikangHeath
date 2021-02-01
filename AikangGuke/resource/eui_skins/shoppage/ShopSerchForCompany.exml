@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ShopSerchForCompany" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Rect width="100%" height="100%" fillColor="0xededed" fillAlpha="0"/>
+    <e:Group width="100%" height="100%">
+        <e:Rect width="100%" height="220" y="0" ellipseWidth="60" ellipseHeight="60" strokeColor="0xe5c920" fillColor="0xe5c920"/>
+        <e:Rect width="100%" height="1200" y="120" fillColor="0xffffff" strokeWeight="10" strokeColor="0xe5c920"/>
+        <e:Label  y="91" size="20" anchorOffsetX="0" width="30" stroke="0.2" strokeColor="0x000000" text="●" fontFamily="SimHei" textAlign="left" height="26" x="45" textColor="0xb78c64"/>
+        <e:Label  y="90" size="26" anchorOffsetX="0" width="255" stroke="0.2" strokeColor="0x000000" text="想去哪儿？" fontFamily="SimHei" textAlign="left" height="26" x="103" textColor="0xba7328"/>
+    </e:Group> 
+    <e:Group height="110" y="180" width="100%">
+        <e:Rect height="50" width="400" x="100" fillColor="0xfcfcfc" strokeWeight="2" y="24" strokeColor="0xba7328"/>
+        <e:Image source="serach" width="30" height="30" y="33" x="111"/>
+        <e:EditableText id="elab_serach" x="152" y="29" height="40" width="330" text="门店名称，地址等..." size="22" verticalAlign="middle" textColor="0xafa8a8"/>
+        <e:Button id="btn_serach" x="496" y="24" skinName="btnserach" height="50" width="150" label="搜索"/>
+    </e:Group>
+    <e:Group width="100%" height="80" y="315">
+        <e:Label  y="38" size="20" anchorOffsetX="0" width="30" stroke="0.2" strokeColor="0x000000" text="●" fontFamily="SimHei" textAlign="left" height="26" x="45" textColor="0xb78c64"/>
+        <e:Label id="lab_guessyou"  y="36" size="26" anchorOffsetX="0" width="338" stroke="0.2" strokeColor="0x000000" text="最近常去的..." fontFamily="SimHei" textAlign="left" height="26" x="103" textColor="0xa57340"/>
+    </e:Group>
+    <e:Scroller id="scrollMy" bounces="false" skinName="scrollHasNoBar" x="20" y="400" width="680" anchorOffsetY="0" height="850">
+        <e:List id="listorder" itemRendererSkinName="ShopSerchForCompanyItem">
+            <e:ArrayCollection>
+                <e:Array>
+
+                </e:Array>
+            </e:ArrayCollection>
+                    <e:layout>
+                        <e:VerticalLayout gap="10"/>
+                    </e:layout>
+            </e:List>
+    </e:Scroller>
+</e:Skin>

@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin class="ShopHistoryBillListSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui">
     <e:Rect width="100%" height="100%" fillColor="0xededed"/>
-    <e:Group width="100%" height="110">
-        <e:Rect width="100%" height="120" y="-10" fillColor="0xffffff" ellipseWidth="30" ellipseHeight="30"/>
-        <e:Button id="_btn_goshop" y="10" label="&lt;- 前往点单"  anchorOffsetX="0" skinName="btnShopHistoryOrder" x="10"/>
-        <e:Label  y="65" size="22" anchorOffsetX="0" width="360" stroke="0.2" strokeColor="0x000000" height="34" text="订单" fontFamily="Tahoma" textAlign="center" textColor="0x000000" x="150" verticalAlign="middle"/>
+    <e:Group width="100%" height="89">
+        <e:Rect width="100%" height="101" y="-10" fillColor="0xffffff" ellipseWidth="30" ellipseHeight="30"/>
+        <e:Label  y="34" size="36" anchorOffsetX="0" width="360" stroke="0.2" strokeColor="0x000000" height="34" text="历史订单" fontFamily="Tahoma" textAlign="center" textColor="0x000000" x="150" verticalAlign="middle"/>
     </e:Group>
-    <e:Scroller id="scrollMy" bounces="false" skinName="scrollHasNoBar" x="5" y="120" width="710" anchorOffsetY="0" height="1120">
+    <e:Scroller id="scrollMy" bounces="false" skinName="scrollHasNoBar" x="5" y="96" width="710" anchorOffsetY="0" height="1120">
         <e:List id="listorder" itemRendererSkinName="ShopHistoryBillListItem">
             <e:ArrayCollection>
                 <e:Array>
-                    <e:Object x="null"/>
-                    <e:Object x="null"/>
-                    <e:Object x="null"/>
                 </e:Array>
             </e:ArrayCollection>
                     <e:layout>

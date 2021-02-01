@@ -7,25 +7,25 @@ var WaiterStateUtil = (function () {
     WaiterStateUtil.getStateName = function (state) {
         var str = "";
         if (state == this.SST_YY_WAIT) {
-            str = "预约";
+            str = "等待服务中...";
         }
         if (state == this.SST_YY_RECV) {
-            str = "定约";
+            str = "服务人员准备中...";
         }
         if (state >= this.SST_WF_MIN && state < this.SST_WF_MAX) {
-            str = "缺人";
+            str = "缺少服务人员";
         }
         if (state >= this.SST_HJ_MIN && state < this.SST_HJ_MAX) {
-            str = "呼叫";
+            str = "呼叫服务人员...";
         }
         if (state >= this.SST_SD_MIN && state < this.SST_SD_MAX) {
-            str = "准备";
+            str = "服务人员正在赶来...";
         }
         if (state >= this.SST_SZ_MIN && state < this.SST_SZ_MAX) {
-            str = "试钟";
+            str = "开始为您服务...";
         }
         if (state >= this.SST_FW_MIN && state < this.SST_FW_MAX) {
-            str = "上钟";
+            str = "服务进行中....";
         }
         if (state >= this.SST_ZT_MIN && state < this.SST_ZT_MAX) {
             str = "暂停";
@@ -37,7 +37,7 @@ var WaiterStateUtil = (function () {
             str = "定约";
         }
         if (state >= this.SST_FW_FINISH) {
-            str = "结束";
+            str = "服务已完成";
         }
         return str;
     };
@@ -74,6 +74,12 @@ var WaiterStateUtil = (function () {
     };
     WaiterStateUtil.getStateNameColor = function (state) {
         var color = 0x888888;
+        if (state <= this.SST_YY_WAIT) {
+            color = 0xff6622;
+        }
+        if (state == this.SST_YY_RECV) {
+            color = 0x693888;
+        }
         if (state >= this.SST_WF_MIN && state < this.SST_WF_MAX) {
             color = 0xff0000;
         }

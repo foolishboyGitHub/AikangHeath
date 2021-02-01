@@ -18,6 +18,8 @@ declare class BtnCloseX extends eui.Skin{
 }
 declare class BtnDel01 extends eui.Skin{
 }
+declare class btnforcheckok extends eui.Skin{
+}
 declare class BtnN10Skin extends eui.Skin{
 }
 declare class BtnN11Skin extends eui.Skin{
@@ -36,6 +38,12 @@ declare class BtnN9Skin extends eui.Skin{
 }
 declare class BtnNShop01 extends eui.Skin{
 }
+declare class BtnNShop02 extends eui.Skin{
+}
+declare class BtnNShop03 extends eui.Skin{
+}
+declare class btnpayhuiyuan extends eui.Skin{
+}
 declare class btnpayweixin extends eui.Skin{
 }
 declare class btnpayzhifubao extends eui.Skin{
@@ -43,6 +51,8 @@ declare class btnpayzhifubao extends eui.Skin{
 declare class BtnRecive01 extends eui.Skin{
 }
 declare class BtnSave01 extends eui.Skin{
+}
+declare class btnserach extends eui.Skin{
 }
 declare class btnShopbotLeft extends eui.Skin{
 }
@@ -146,6 +156,8 @@ declare class login extends eui.Skin{
 }
 declare class MainTableViewSkin extends eui.Skin{
 }
+declare class MyInfoMainSkin extends eui.Skin{
+}
 declare module skins{
 	class PanelSkin extends eui.Skin{
 	}
@@ -170,7 +182,15 @@ declare class ShopHistoryBillListIDetailSkin extends eui.Skin{
 }
 declare class ShopHistoryBillListItem extends eui.Skin{
 }
+declare class ShopHistoryBillListItemChild extends eui.Skin{
+}
 declare class ShopHistoryBillListSkin extends eui.Skin{
+}
+declare class ShopHuiYuanListItem extends eui.Skin{
+}
+declare class ShopHuiYuanNedPhoneNumber extends eui.Skin{
+}
+declare class ShopHuiYuanPanel extends eui.Skin{
 }
 declare class ShopMakeInfoItem extends eui.Skin{
 }
@@ -194,9 +214,17 @@ declare class ShopPangeItem extends eui.Skin{
 }
 declare class ShopPangeSkin extends eui.Skin{
 }
+declare class ShopPayHuiYuanSelListSkin extends eui.Skin{
+}
 declare class ShopPayStateShow extends eui.Skin{
 }
 declare class ShopSelMoneyChannel extends eui.Skin{
+}
+declare class ShopSerchForCompany extends eui.Skin{
+}
+declare class ShopSerchForCompanyItem extends eui.Skin{
+}
+declare class ShopSerchForCompanyOnSerach extends eui.Skin{
 }
 declare class ShopTimeBarItem extends eui.Skin{
 }
@@ -223,6 +251,8 @@ declare class WarmCodeCheck extends eui.Skin{
 declare class WarmPriceSkin extends eui.Skin{
 }
 declare class WarmPriceTypeItemSkin extends eui.Skin{
+}
+declare class WarmSelHuiYuanPay extends eui.Skin{
 }
 declare class WarmTimeSkin extends eui.Skin{
 }

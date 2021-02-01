@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.CompanyMapper">
+    <resultMap id="BaseResultMap" type="com.aikang.Bean.Company">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="seriid" property="seriid" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="cname" property="cname" jdbcType="VARCHAR"/>
+		<result column="adress" property="adress" jdbcType="VARCHAR"/>
+		<result column="shoptime" property="shoptime" jdbcType="VARCHAR"/>
+		<result column="telephone" property="telephone" jdbcType="VARCHAR"/>
+		<result column="mobilephone" property="mobilephone" jdbcType="VARCHAR"/>
+		<result column="ismobil" property="ismobil" jdbcType="INTEGER"/>
+		<result column="sevtelephone" property="sevtelephone" jdbcType="VARCHAR"/>
+		<result column="sevmobilephone" property="sevmobilephone" jdbcType="VARCHAR"/>
+		<result column="notice" property="notice" jdbcType="VARCHAR"/>
+		<result column="remark" property="remark" jdbcType="VARCHAR"/>
+		<result column="headpic" property="headpic" jdbcType="VARCHAR"/>
+		<result column="createtime" property="createtime" jdbcType="VARCHAR"/>
+		<result column="chargetime" property="chargetime" jdbcType="VARCHAR"/>
+		<result column="overtime" property="overtime" jdbcType="VARCHAR"/>
+		<result column="level" property="level" jdbcType="INTEGER"/>
+		<result column="summoney" property="summoney" jdbcType="DOUBLE"/>
+    </resultMap> 
+    
+	
+    <select id="getAllCompany" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from aikang_company;
+    </select>
+    <select id="getCompanyByID" resultMap="BaseResultMap" statementType="PREPARED">
+        select * 
+        from aikang_company
+        where id=#{id}
+    </select>
+    <select id="getCompanyByUsername" resultMap="BaseResultMap" statementType="PREPARED">
+        select * 
+        from aikang_company
+        where username=#{username}
+    </select>
+    
+    <select id="getCompanyByMobilphone" resultMap="BaseResultMap" statementType="PREPARED">
+        select * 
+        from aikang_company
+        where mobilephone=#{mobilephone}
+    </select>
+	<select id="getCompanyByGuessGukeLike" resultType="java.util.HashMap">
+        select
+        username as ofcompany,
+        cname as ofcname,
+        adress as ofadress,
+        headpic as ofheadpic 
+        from aikang_company
+        where 
+        str_to_date(overtime,'%Y-%m-%d %H:%i:%S')
+		<![CDATA[ >= ]]> 
+		now()
+        <if test="key != null">
+            AND CONCAT(IFNULL(cname,''),IFNULL(adress,'')) LIKE concat('%',#{key},'%')
+        </if>
+        order by createtime asc
+        limit #{start},#{pagesize}
+    </select>
+    
+    <select id="getCompanyByGuessGukeNoWord" resultType="java.util.HashMap">
+        select
+        username as ofcompany,
+        cname as ofcname,
+        adress as ofadress,
+        headpic as ofheadpic 
+        from aikang_company
+        where 
+        str_to_date(overtime,'%Y-%m-%d %H:%i:%S')
+		<![CDATA[ >= ]]> 
+		now()
+        order by createtime asc
+        limit #{start},#{pagesize}
+    </select>
+  		
+  	<insert id="insertCompanyData" parameterType="com.aikang.Bean.Company" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+		insert into aikang_company 
+	    (
+	    	seriid,
+	    	username,
+	    	password,
+	    	cname,
+	    	adress,
+	    	shoptime,
+	    	telephone,
+	    	mobilephone,
+	    	ismobil,
+	    	sevtelephone,
+	    	sevmobilephone,
+	    	notice,
+			remark,
+			headpic,
+			createtime,
+			chargetime,
+			overtime,
+			level,
+			summoney
+	    )   
+		values 
+	      (
+	      IFNULL(#{record.seriid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.username,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.password,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.cname,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.adress,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.shoptime,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.telephone,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.mobilephone,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.ismobil,jdbcType=INTEGER}, 0),
+	      IFNULL(#{record.sevtelephone,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.sevmobilephone,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.notice,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.remark,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.headpic,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.createtime,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.chargetime,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.overtime,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.level,jdbcType=INTEGER}, 0),
+	      IFNULL(#{record.summoney,jdbcType=DOUBLE}, 0)
+	      )
+	</insert>
+
+	<update id="updateCompanyDataByIDSelective" parameterType="com.aikang.Bean.Company" statementType="PREPARED">
+        update aikang_company
+        <set>
+            <if test="record.password != null">
+                password = #{record.password,jdbcType=VARCHAR},
+            </if>
+            <if test="record.cname != null">
+                cname = #{record.cname,jdbcType=VARCHAR},
+            </if>
+      		<if test="record.adress != null">
+                adress = #{record.adress,jdbcType=VARCHAR},
+            </if>
+            <if test="record.shoptime != null">
+                shoptime = #{record.shoptime,jdbcType=VARCHAR},
+            </if>
+      		<if test="record.telephone != null">
+                telephone = #{record.telephone,jdbcType=VARCHAR},
+            </if>
+           	<if test="record.mobilephone != null">
+                mobilephone = #{record.mobilephone,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ismobil != null">
+                ismobil = #{record.ismobil,jdbcType=INTEGER},
+            </if>
+            <if test="record.sevtelephone != null">
+                sevtelephone = #{record.sevtelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="record.sevmobilephone != null">
+                sevmobilephone = #{record.sevmobilephone,jdbcType=VARCHAR},
+            </if>
+            <if test="record.notice != null">
+                notice = #{record.notice,jdbcType=VARCHAR},
+            </if>
+            <if test="record.remark != null">
+                remark = #{record.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="record.headpic != null">
+                headpic = #{record.headpic,jdbcType=VARCHAR},
+            </if>
+            <if test="record.chargetime != null">
+                chargetime = #{record.chargetime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.overtime != null">
+                overtime = #{record.overtime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.level != null">
+                level = #{record.level,jdbcType=INTEGER},
+            </if>
+            <if test="record.summoney != null">
+                summoney = #{record.summoney,jdbcType=DOUBLE},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+    
+    
+    
+    <insert id="insertAdminUser" parameterType="com.aikang.Bean.User" statementType="PREPARED">
+	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Long">
+	       select LAST_INSERT_ID()
+	   </selectKey>
+	    insert into aikang_admintab
+	    (
+	      company,
+	      phone, 
+	      password,
+	      name,
+	      username
+	      )
+	    values (
+		  #{record.company,jdbcType=VARCHAR},
+	      #{record.phone,jdbcType=CHAR}, 
+	      #{record.password,jdbcType=VARCHAR},
+	      #{record.name,jdbcType=VARCHAR},
+	      #{record.username,jdbcType=VARCHAR}
+     	 )
+  	</insert>
+  	<update id="updateAdminByCompany" parameterType="com.aikang.Bean.User" statementType="PREPARED">
+        update aikang_admintab
+        <set>
+      		<if test="record.phone != null">
+                phone = #{record.phone,jdbcType=VARCHAR},
+            </if> 
+           	<if test="record.password != null">
+                password = #{record.password,jdbcType=VARCHAR},
+            </if> 
+        </set>
+        where company = #{record.company,jdbcType=VARCHAR}
+    </update>
+    
+    
+    
+    <resultMap id="CompanyPictureMap" type="com.aikang.Bean.CompanyPicture">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="seriid" property="seriid" jdbcType="VARCHAR"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+		<result column="filename" property="filename" jdbcType="VARCHAR"/>
+		<result column="filenamemin" property="filenamemin" jdbcType="VARCHAR"/>
+		<result column="createdate" property="createdate" jdbcType="VARCHAR"/>
+		<result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getAllCompanyPictureNum" resultType="java.util.HashMap">
+        select 
+        COUNT(*) AS total
+        from aikang_picture 
+        where company=#{company}
+     </select>
+    <select id="getCompanyPictureByID" resultMap="CompanyPictureMap" statementType="PREPARED">
+        select * 
+        from aikang_picture
+        where id=#{id}
+    </select>
+    <select id="getCompanyPictureBySeriid" resultMap="CompanyPictureMap" statementType="PREPARED">
+        select * 
+        from aikang_picture
+        where company=#{company} and seriid=#{seriid}
+    </select>
+    <select id="getCompanyPictureByFilename" resultMap="CompanyPictureMap" statementType="PREPARED">
+        select * 
+        from aikang_picture
+        where company=#{company} and filename=#{filename}
+    </select>
+    <select id="getAllCompanyPicture" resultMap="CompanyPictureMap" statementType="PREPARED">
+        select * 
+        from aikang_picture
+        where company=#{company}
+    </select>
+
+  		
+  	<insert id="insertCompanyPictureData" parameterType="com.aikang.Bean.CompanyPicture" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+		insert into aikang_picture 
+	    (
+	    	seriid,
+	    	company,
+	    	filename,
+	    	filenamemin,
+	    	createdate,
+	    	remark
+	    )   
+		values 
+	      (
+	      IFNULL(#{record.seriid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.company,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.filename,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.filenamemin,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.createdate,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.remark,jdbcType=VARCHAR}, "")
+	      )
+	</insert>
+	<delete id="deleteCompanyPictureByID">
+    	delete from aikang_picture where id=#{id}
+  	</delete>
+  	<delete id="deleteCompanyPictureBySeriid">
+    	delete from aikang_picture where seriid=#{seriid} and company=#{company}
+  	</delete>
+  	
+  	
+  	<resultMap id="CompanyOfenMap" type="com.aikang.Bean.CompanyOfen">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="seriid" property="seriid" jdbcType="VARCHAR"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+		<result column="username" property="username" jdbcType="VARCHAR"/>
+		<result column="lasttime" property="lasttime" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getGukeOfenDataByCompanyAndUsername" resultMap="CompanyOfenMap" statementType="PREPARED">
+        select * 
+        from gukeofen
+        where company=#{company} and username=#{username}
+    </select>
+    <select id="getUserOfenCompanyByUsername" resultType="java.util.HashMap">
+        select 
+        gf.company as ofcompany,
+        ac.cname as ofcname,
+        ac.adress as ofadress,
+        ac.headpic as ofheadpic
+        from gukeofen gf
+        left join aikang_company ac on gf.`company`=ac.`username`
+        where gf.username=#{username}
+        order by gf.lasttime desc
+        limit #{start},#{pagesize}
+    </select>
+    
+    <insert id="insertGukeOfenInfo" parameterType="com.aikang.Bean.CompanyOfen" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+		insert into gukeofen 
+	    (
+	    	seriid,
+	    	company,
+	    	username,
+	    	lasttime
+	    )   
+		values 
+	      (
+	      IFNULL(#{record.seriid,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.company,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.username,jdbcType=VARCHAR}, ""),
+	      IFNULL(#{record.lasttime,jdbcType=VARCHAR}, "")
+	      )
+	</insert>
+	<update id="updateGukeCompanyOfenDataByIDSelective" parameterType="com.aikang.Bean.CompanyOfen" statementType="PREPARED">
+        update gukeofen
+        <set>
+            <if test="record.lasttime != null">
+                lasttime = #{record.lasttime,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{record.id,jdbcType=BIGINT}
+    </update>
+</mapper>

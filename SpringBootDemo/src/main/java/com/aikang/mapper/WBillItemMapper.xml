@@ -2,15 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.aikang.mapper.WBillItemMapper">
 	<resultMap id="BaseResultMap" type="com.aikang.Bean.WBillItem">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="rmid" property="rmid" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="rmid" property="rmid" jdbcType="BIGINT"/>
         <result column="rmname" property="rmname" jdbcType="VARCHAR"/>
         <result column="wtype" property="wtype" jdbcType="INTEGER"/>
         <result column="dayid" property="dayid" jdbcType="INTEGER"/>
         <result column="daynum" property="daynum" jdbcType="INTEGER"/>
-        <result column="sid" property="sid" jdbcType="INTEGER"/>
+        <result column="sid" property="sid" jdbcType="BIGINT"/>
         <result column="sname" property="sname" jdbcType="VARCHAR"/>
-        <result column="hid" property="hid" jdbcType="INTEGER"/>
+        <result column="hid" property="hid" jdbcType="BIGINT"/>
         <result column="hcode" property="hcode" jdbcType="VARCHAR"/>
         <result column="hname" property="hname" jdbcType="VARCHAR"/>
         <result column="workstate" property="workstate" jdbcType="INTEGER"/>
@@ -35,35 +36,59 @@
 		<result column="clocknumzs" property="clocknumzs" jdbcType="DOUBLE"/>
 		<result column="itembill" property="itembill" jdbcType="DOUBLE"/>
 		<result column="pricetype" property="pricetype" jdbcType="VARCHAR"/>
-		<result column="memid" property="memid" jdbcType="BIGINT"/>
-		<result column="memname" property="memname" jdbcType="VARCHAR"/>
-		<result column="memcode" property="memcode" jdbcType="VARCHAR"/>
+		<result column="hyid" property="hyid" jdbcType="BIGINT"/>
+		<result column="hyname" property="hyname" jdbcType="VARCHAR"/>
+		<result column="hyseriid" property="hyseriid" jdbcType="VARCHAR"/>
+		<result column="hyrmoney" property="hyrmoney" jdbcType="DOUBLE"/>
 		<result column="checkid" property="checkid" jdbcType="VARCHAR"/>
 		<result column="checkname" property="checkname" jdbcType="VARCHAR"/>
 		<result column="checkhcode" property="checkhcode" jdbcType="VARCHAR"/>
 		<result column="checktime" property="checktime" jdbcType="VARCHAR"/>
     </resultMap>
     <select id="getAllWBillItem" resultMap="BaseResultMap" statementType="PREPARED">
-        select wi.* from ${company}_wbillitem wi order by wi.dayid
+        select wi.* from aikang_wbillitem wi order by wi.dayid where company=#{company}
     </select>
     <select id="getBillItemsByHid" resultMap="BaseResultMap" statementType="PREPARED">
         select wi.id,wi.rmid,wi.rmname,wi.wtype,wi.dayid,wi.sid,wi.sname,wi.hid,wi.hcode,wi.hname,
         wi.workstate,wi.worktime,wi.waittime,wi.breakstart,wi.breaklong,wi.finishtime
-        from ${company}_wbillitem wi 
-        where hid=#{hid}
+        from aikang_wbillitem wi 
+        where hid=#{hid} and company=#{company}
         order by wi.dayid
     </select>
     <select id="getCompanyBillItemById" resultMap="BaseResultMap" statementType="PREPARED">
-        select wi.* from ${company}_wbillitem wi
-        where id=#{id}
+        select wi.* from aikang_wbillitem wi
+        where id=#{id} and company=#{company}
     </select>
     <select id="getCompanyWBillItemByIds" resultMap="BaseResultMap" statementType="PREPARED">
-        select wi.* from ${company}_wbillitem wi 
-        where id in
+        select wi.* from aikang_wbillitem wi 
+        where  company=#{company} and id in
         <foreach collection="ids" item="item" open="(" close=")" separator=",">
         	#{item}
         </foreach>
         order by wi.dayid
+    </select>
+    
+    <select id="getCompanyHuiYuanSpandWBillItemByseriid" resultType="java.util.HashMap" 
+    	parameterType="java.util.HashMap">
+        select 
+        wi.sid as sid,
+        wi.sname as sname,
+        wi.clocknum as clocknum,
+        wi.itembill as itembill,
+        wi.wtype as wtype,
+        wi.hid as hid,
+        wi.hname as hname,
+        wi.checkname as checkname,
+        wi.finishtime as finishtime,
+        wi.checktime as checktime,
+        wi.hyname as hyname,
+        wi.hyrmoney as hyrmoney,
+        ah.cardid as cardid,
+        ah.typecname as typename
+        from aikang_wbillitem wi
+        left join aikang_huiyuan ah on wi.`hyseriid`=ah.`seriid` 
+        where  wi.company=#{company} and wi.hyid = #{id}
+        order by wi.checktime desc, wi.hyrmoney asc
     </select>
     
     <select id="queryBillSummarySpanDay" resultType="java.util.HashMap"
@@ -71,8 +96,8 @@
 		SELECT 
 		COALESCE(SUM(itembill),0) as money,
 		COALESCE(SUM(worksalary),0) as salary
-		FROM ${company}_wbillitem
-		where <![CDATA[daynum>=#{query.qs} ]]>  and <![CDATA[daynum < #{query.qe} ]]>
+		FROM aikang_wbillitem
+		where company=#{company} and <![CDATA[daynum>=#{query.qs} ]]>  and <![CDATA[daynum < #{query.qe} ]]>
 	</select>
 	
 	<select id="queryAllWorksServiceSpanDay" resultType="java.util.HashMap"
@@ -85,12 +110,12 @@
 		any_value(wtype) as wtype,
 		COALESCE(SUM(clocknumzs),0) as clocknum,
 		COALESCE(SUM(worksalary),0) as salary
-		FROM ${company}_wbillitem
-		where <![CDATA[daynum>=#{query.qs} ]]>  and <![CDATA[daynum < #{query.qe} ]]>
+		FROM aikang_wbillitem
+		where company=#{company} and <![CDATA[daynum>=#{query.qs} ]]>  and <![CDATA[daynum < #{query.qe} ]]>
 		<if test="query.qh >= 0">
             and hid = #{query.qh}
         </if>
-		GROUP BY hid,sname,wtype WITH rollup
+		GROUP BY hid,sname,wtype WITH rollup        <!-- WITH rollup 会带来一项分组的统计-->
 	</select>
     <select id="queryAllWorksDetailsSpanDay" resultType="java.util.HashMap"
 		parameterType="java.util.HashMap">
@@ -107,18 +132,68 @@
 		worksalary,
 		itembill,
 		pricetype,
-		memname,
-		memcode,
+		hyname,
+		hyseriid,
 		checktime
-		FROM ${company}_wbillitem
-		where <![CDATA[daynum>=#{query.qs} ]]>  and <![CDATA[daynum < #{query.qe} ]]>
+		FROM aikang_wbillitem
+		where company=#{company} and <![CDATA[daynum>=#{query.qs} ]]>  and <![CDATA[daynum < #{query.qe} ]]>
 		<if test="query.qh >= 0">
             and hid = #{query.qh}
         </if>
+        order by checktime desc
 	</select>
-    <insert id="insertWBillItems" parameterType="com.aikang.Bean.WBillItem" useGeneratedKeys="true" keyProperty="record.id" keyColumn="id" statementType="PREPARED">
-    insert into ${company}_wbillitem 
+	
+	<select id="queryXiaoFeiJiLuSpanDay" resultType="java.util.HashMap"
+		parameterType="java.util.HashMap">
+		SELECT
+		wb.id,
+		wb.dayid,
+		wb.rmname, 
+		wb.hid,
+		wb.sid,
+		wb.sname,
+		wb.hname,
+		wb.hcode,
+		wb.wtype,
+		wb.clocknum,
+		wb.clocknumzs,
+		wb.worksalary,
+		wb.itembill,
+		wb.pricetype,
+		wb.hyname,
+		wb.hyseriid,
+		wb.hyrmoney,
+		wb.maketime,
+		wb.checktime,
+		wb.hyid,
+		hy.cardid,
+		hy.typecname
+		FROM aikang_wbillitem wb
+		left join aikang_huiyuan hy on wb.`hyid`=hy.`id` and wb.`company`=hy.`company`
+		where wb.company=#{company} and <![CDATA[wb.daynum>=#{query.qs} ]]>  and <![CDATA[wb.daynum < #{query.qe} ]]>
+		<if test="query.qh >= 0">
+            and wb.hid = #{query.qh}
+        </if>
+        <if test="query.qi >= 0">
+            and wb.sid = #{query.qi}
+        </if>
+        <if test="query.qt == 1">
+            and <![CDATA[wb.hyid>0 ]]>
+        </if>
+        <if test="query.qt == 2">
+            and <![CDATA[wb.hyid<=0 ]]>
+        </if>
+        order by wb.checktime desc
+	</select>
+	
+    <insert id="insertWBillItems" parameterType="com.aikang.Bean.WBillItem" useGeneratedKeys="true" keyProperty="id" keyColumn="id" statementType="PREPARED">
+    insert into aikang_wbillitem 
     (
+    	company,
+    	ordertype,
+    	gukenum,
+    	gukeidx,
+    	billnumber,
     	rmid,
     	rmname,
     	wtype,
@@ -151,9 +226,10 @@
 		clocknumzs,
 		itembill,
 		pricetype,
-		memid,
-		memname,
-		memcode,
+		hyid,
+		hyname,
+		hyseriid,
+		hyrmoney,
 		checkid,   
 		checkname,
 		checkhcode,
@@ -162,14 +238,19 @@
     values 
     <foreach collection="record" item="WBillItem" separator=","> 
       (
-      #{WBillItem.rmid,jdbcType=INTEGER},
+      #{WBillItem.company,jdbcType=VARCHAR},
+      #{WBillItem.ordertype,jdbcType=INTEGER},
+      #{WBillItem.gukenum,jdbcType=INTEGER},
+      #{WBillItem.gukeidx,jdbcType=INTEGER},
+      #{WBillItem.billnumber,jdbcType=VARCHAR},
+      #{WBillItem.rmid,jdbcType=BIGINT},
       #{WBillItem.rmname,jdbcType=VARCHAR},
       #{WBillItem.wtype,jdbcType=INTEGER}, 
       #{WBillItem.dayid,jdbcType=INTEGER}, 
       #{WBillItem.daynum,jdbcType=INTEGER}, 
-      #{WBillItem.sid,jdbcType=INTEGER}, 
+      #{WBillItem.sid,jdbcType=BIGINT}, 
       #{WBillItem.sname,jdbcType=VARCHAR}, 
-      #{WBillItem.hid,jdbcType=INTEGER},
+      #{WBillItem.hid,jdbcType=BIGINT},
       #{WBillItem.hcode,jdbcType=VARCHAR}, 
       #{WBillItem.hname,jdbcType=VARCHAR}, 
       #{WBillItem.workstate,jdbcType=INTEGER}, 
@@ -194,9 +275,10 @@
       #{WBillItem.clocknumzs,jdbcType=DOUBLE},
       #{WBillItem.itembill,jdbcType=DOUBLE},
       #{WBillItem.pricetype,jdbcType=VARCHAR},
-      #{WBillItem.memid,jdbcType=BIGINT},
-      #{WBillItem.memname,jdbcType=VARCHAR},
-      #{WBillItem.memcode,jdbcType=VARCHAR},
+      #{WBillItem.hyid,jdbcType=BIGINT},
+      #{WBillItem.hyname,jdbcType=VARCHAR},
+      #{WBillItem.hyseriid,jdbcType=VARCHAR},
+      #{WBillItem.hyrmoney,jdbcType=DOUBLE},
       #{WBillItem.checkid,jdbcType=VARCHAR},
       #{WBillItem.checkname,jdbcType=VARCHAR},
       #{WBillItem.checkhcode,jdbcType=VARCHAR},
@@ -206,7 +288,7 @@
   </insert>
 
   <update id="updateWaiterStateListByIdSelective"  parameterType="java.util.List" statementType="PREPARED">
-      update ${company}_wbillitem
+      update aikang_wbillitem
       <trim prefix="set" suffixOverrides=",">
         <trim prefix="workstate = case" suffix="end,">
           <foreach collection="record" item="WBillItem">
@@ -222,10 +304,10 @@
         </foreach>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.aikang.Bean.WBillItem" statementType="PREPARED">
-        update ${company}_wbillitem
+        update aikang_wbillitem
         <set>      
             <if test="record.rmid != null">
-                rmid = #{record.rmid,jdbcType=INTEGER},
+                rmid = #{record.rmid,jdbcType=BIGINT},
             </if>
             <if test="record.rmname != null">
                 rmname = #{record.rmname,jdbcType=VARCHAR},
@@ -240,13 +322,13 @@
                 daynum = #{record.daynum,jdbcType=INTEGER},
             </if>
             <if test="record.sid != null">
-                sid = #{record.sid,jdbcType=INTEGER},
+                sid = #{record.sid,jdbcType=BIGINT},
             </if>
       		<if test="record.sname != null">
                 sname = #{record.sname,jdbcType=VARCHAR},
             </if> 
       		<if test="record.hid != null">
-                hid = #{record.hid,jdbcType=INTEGER},
+                hid = #{record.hid,jdbcType=BIGINT},
             </if>
             <if test="record.hcode != null">
                 hcode = #{record.hcode,jdbcType=INTEGER},
@@ -320,14 +402,17 @@
       		<if test="record.pricetype != null">
                 pricetype = #{record.pricetype,jdbcType=VARCHAR},
       		</if>
-      		<if test="record.memid != null">
-                memid = #{record.memid,jdbcType=BIGINT},
+      		<if test="record.hyid != null">
+                hyid = #{record.hyid,jdbcType=BIGINT},
       		</if>
-      		<if test="record.memname != null">
-                memname = #{record.memname,jdbcType=VARCHAR},
+      		<if test="record.hyname != null">
+                hyname = #{record.hyname,jdbcType=VARCHAR},
       		</if>
-      		<if test="record.memcode != null">
-                memcode = #{record.memcode,jdbcType=VARCHAR},
+      		<if test="record.hyseriid != null">
+                hyseriid = #{record.hyseriid,jdbcType=VARCHAR},
+      		</if>
+      		<if test="record.hyrmoney != null">
+                hyrmoney = #{record.hyrmoney,jdbcType=VARCHAR},
       		</if>
       		<if test="record.checkid != null">
                 checkid = #{record.checkid,jdbcType=VARCHAR},
@@ -343,9 +428,9 @@
       		</if>
 
         </set>
-        where id = #{record.id,jdbcType=INTEGER}
+        where id = #{record.id}
     </update>
   	<delete id="deleteWBillItemByID">
-    	delete from ${company}_wbillitem where id=#{id}
+    	delete from aikang_wbillitem where id=#{id}
   	</delete>
 </mapper>

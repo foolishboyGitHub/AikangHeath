@@ -5,9 +5,9 @@
         <e:Rect id="rect_bake_all"  width="100%" height="100%" fillAlpha="0.6" fillColor="0x333131"/>
         <e:Group id="group_shoplist" width="100%" horizontalCenter="0" bottom="0" height="1080">
             <e:Rect width="100%" height="100%" fillAlpha="0.8" strokeColor="0x070404" strokeAlpha="0.6" anchorOffsetY="0" ellipseWidth="40" ellipseHeight="40" fillColor="0xf7e6b2"/>
-			<e:Rect width="100%" height="100%" fillColor="0xffffff" y="50"/>
-            <e:Label id="labelPerName" text="每一个服务对象会有一名服务人员" size="18" width="400" style="l_brown_1" bold="true" y="15"  textAlign="center" horizontalCenter="0" fontFamily="Tahoma" verticalAlign="middle" textColor="0xa85846"/>
-            <e:Group width="100%" horizontalCenter="0" y="50">
+			<e:Rect width="100%" height="100%" fillColor="0xffffff" y="60"/>
+            <e:Label id="labelPerName" text="注意：每一个服务对象会有一名服务人员" size="22" width="520" style="l_brown_1" bold="true" y="15"  textAlign="center" horizontalCenter="0" fontFamily="Tahoma" verticalAlign="middle"  textColor="0xad3a29"/>
+            <e:Group width="100%" horizontalCenter="0" y="60">
                 <e:Rect width="100%" height="100%" fillAlpha="0.3" y="0" strokeAlpha="1" fillColor="0xffffff"/>
                 <e:Scroller id="scrollMy" bounces="false" skinName="scrollHasNoBar" x="0" y="0" width="720" anchorOffsetY="0">
                     <e:List id="listGuke" width="680" itemRendererSkinName="ShopMakeInfoParent">

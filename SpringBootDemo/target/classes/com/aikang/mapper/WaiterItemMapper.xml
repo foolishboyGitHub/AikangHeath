@@ -2,15 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.aikang.mapper.WaiterItemMapper">
 	<resultMap id="BaseResultMap" type="com.aikang.Bean.WaiterItem">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="rmid" property="rmid" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="ordertype" property="ordertype" jdbcType="INTEGER"/>
+        <result column="gukenum" property="gukenum" jdbcType="INTEGER"/>
+        <result column="gukeidx" property="gukeidx" jdbcType="INTEGER"/>
+        <result column="billnumber" property="billnumber" jdbcType="VARCHAR"/>
+        <result column="serinumber" property="serinumber" jdbcType="VARCHAR"/>
+        <result column="rmid" property="rmid" jdbcType="BIGINT"/>
         <result column="rmname" property="rmname" jdbcType="VARCHAR"/>
         <result column="wtype" property="wtype" jdbcType="INTEGER"/>
-        <result column="dayid" property="dayid" jdbcType="INTEGER"/>
+        <result column="wtypek" property="wtypek" jdbcType="INTEGER"/>
+        <result column="wlev" property="wlev" jdbcType="INTEGER"/>
+        <result column="dayid" property="dayid" jdbcType="VARCHAR"/>
         <result column="daynum" property="daynum" jdbcType="INTEGER"/>
         <result column="sid" property="sid" jdbcType="INTEGER"/>
         <result column="sname" property="sname" jdbcType="VARCHAR"/>
-        <result column="hid" property="hid" jdbcType="INTEGER"/>
+        <result column="salarylz" property="salarylz" jdbcType="DOUBLE"/>
+        <result column="stimelong" property="stimelong" jdbcType="INTEGER"/>
+        <result column="hid" property="hid" jdbcType="BIGINT"/>
         <result column="hcode" property="hcode" jdbcType="VARCHAR"/>
         <result column="hname" property="hname" jdbcType="VARCHAR"/>
         <result column="movsdx" property="movsdx" jdbcType="INTEGER"/>
@@ -23,58 +33,232 @@
         <result column="breakstart" property="breakstart" jdbcType="VARCHAR"/>
         <result column="breaklong" property="breaklong" jdbcType="INTEGER"/>
         <result column="finishtime" property="finishtime" jdbcType="VARCHAR"/>
+        <result column="finishtimeyj" property="finishtimeyj" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
         <result column="kid" property="kid" jdbcType="BIGINT"/>
         <result column="kname" property="kname" jdbcType="VARCHAR"/>
+        <result column="hyid" property="hyid" jdbcType="BIGINT"/>
+		<result column="hyname" property="hyname" jdbcType="VARCHAR"/>
+		<result column="hyseriid" property="hyseriid" jdbcType="VARCHAR"/>
+		<result column="hyrmoney" property="hyrmoney" jdbcType="DOUBLE"/>
 		<result column="paystate" property="paystate" jdbcType="INTEGER"/>
 		<result column="paynum" property="paynum" jdbcType="INTEGER"/>
 		<result column="payid" property="payid" jdbcType="BIGINT"/>
 		<result column="checkcode" property="checkcode" jdbcType="VARCHAR"/>
 		<result column="clocknum" property="clocknum" jdbcType="DOUBLE"/>
+		<result column="itembillo" property="itembillo" jdbcType="DOUBLE"/>
 		<result column="itembill" property="itembill" jdbcType="DOUBLE"/>
 		<result column="pricetype" property="pricetype" jdbcType="VARCHAR"/>
 		<result column="clocknumyf" property="clocknumyf" jdbcType="DOUBLE"/>
 		<result column="itembillyf" property="itembillyf" jdbcType="DOUBLE"/>
 		<result column="clocknumyy" property="clocknumyy" jdbcType="DOUBLE"/>
 		<result column="pricetypeyf" property="pricetypeyf" jdbcType="VARCHAR"/>
+		<result column="islast" property="islast" jdbcType="INTEGER"/>
+		
+		<result column="leftworknum" property="leftworknum" jdbcType="INTEGER"/>
+		<result column="settimelong" property="settimelong" jdbcType="INTEGER"/>
+		<result column="setovertime" property="setovertime" jdbcType="INTEGER"/>
+		<result column="setprice" property="setprice" jdbcType="DOUBLE"/>
+		<result column="setpriveType" property="setpriveType" jdbcType="INTEGER"/>
+		<result column="setclocknumzs" property="setclocknumzs" jdbcType="DOUBLE"/>
+		<result column="setneedpoint" property="setneedpoint" jdbcType="INTEGER"/>
+		<result column="setisdiscount" property="setisdiscount" jdbcType="INTEGER"/>
+		<result column="sisspecialwork" property="sisspecialwork" jdbcType="INTEGER"/>
+		<result column="dSalaryLz" property="dSalaryLz" jdbcType="DOUBLE"/>
+		<result column="dSalaryDz" property="dSalaryDz" jdbcType="DOUBLE"/>
+		<result column="dSalaryDp" property="dSalaryDp" jdbcType="DOUBLE"/>
+		<result column="dSalarySz" property="dSalarySz" jdbcType="DOUBLE"/>
+		<result column="defsalarylz" property="defsalarylz" jdbcType="DOUBLE"/>
+		<result column="defsalarydz" property="defsalarydz" jdbcType="DOUBLE"/>
+		<result column="defsalarydp" property="defsalarydp" jdbcType="DOUBLE"/>
+		<result column="defsalarysz" property="defsalarysz" jdbcType="DOUBLE"/>
+		<result column="dongpaitype" property="dongpaitype" jdbcType="INTEGER"/>
+		<result column="dianzhongdongpaitype" property="dianzhongdongpaitype" jdbcType="INTEGER"/>
+		
     </resultMap>
     <select id="getAllWaiterItem" resultMap="BaseResultMap" statementType="PREPARED">
-        select wi.* from ${company}_waiteritem wi order by wi.dayid
+        select wi.* from aikang_waiteritem wi where wi.company=#{company} order by wi.dayid
     </select>
     <select id="getWaiterItemsByHid" resultMap="BaseResultMap" statementType="PREPARED">
-        select wi.id,wi.rmid,wi.rmname,wi.wtype,wi.dayid,wi.sid,wi.sname,wi.hid,wi.hcode,wi.hname,
-        wi.workstate,wi.worktime,wi.waittime,wi.breakstart,wi.breaklong,wi.finishtime
-        from ${company}_waiteritem wi 
-        where hid=#{hid}
+        select wi.*
+        from aikang_waiteritem wi 
+        where wi.hid=#{hid} and wi.company=#{company}
         order by wi.dayid
     </select>
     <select id="getCompanyWaiterItemById" resultMap="BaseResultMap" statementType="PREPARED">
-        select wi.* from ${company}_waiteritem wi
-        where id=#{id}
+        select wi.*,
+        IFNULL(sm.`timelong`,0) as settimelong,
+        IFNULL(sm.`overtime`,0) as setovertime,
+        IFNULL(sm.`price`,0) as setprice,
+        IFNULL(sm.`priveType`,0) as setpriveType,
+        IFNULL(sm.`clocknum`,0) as setclocknumzs,
+        IFNULL(sm.`needpoint`,0) as setneedpoint,
+        IFNULL(sm.`isdiscount`,0) as setisdiscount,
+        IFNULL(sm.`isspecialwork`,0) as sisspecialwork,
+        IFNULL(sm.`dSalaryLz`,0) as dSalaryLz,
+        IFNULL(sm.`dSalaryDz`,0) as dSalaryDz,
+        IFNULL(sm.`dSalaryDp`,0) as dSalaryDp,
+        IFNULL(sm.`dSalarySz`,0) as dSalarySz,
+        IFNULL(ss.`defsalarylz`,0) as defsalarylz,
+        IFNULL(ss.`defsalarydz`,0) as defsalarydz,
+        IFNULL(ss.`defsalarydp`,0) as defsalarydp,
+        IFNULL(ss.`defsalarysz`,0) as defsalarysz 
+        from aikang_waiteritem wi
+        left join aikang_serviceitem sm on wi.`sid`=sm.`id`
+        left join aikang_servicesalary ss on wi.`hid`=ss.`hid` and wi.`sid`=ss.`sid`
+        where wi.id=#{id} and wi.company=#{company}
     </select>
     <select id="getCompanyWaiterItemByIds" resultMap="BaseResultMap" statementType="PREPARED">
-        select wi.* from ${company}_waiteritem wi 
-        where id in
+        select wi.*,       
+        IFNULL(sm.`timelong`,0) as settimelong,
+        IFNULL(sm.`overtime`,0) as setovertime,
+        IFNULL(sm.`price`,0) as setprice,
+        IFNULL(sm.`priveType`,0) as setpriveType,
+        IFNULL(sm.`clocknum`,0) as setclocknumzs,
+        IFNULL(sm.`needpoint`,0) as setneedpoint,
+        IFNULL(sm.`isdiscount`,0) as setisdiscount,
+        IFNULL(sm.`isspecialwork`,0) as sisspecialwork,
+        IFNULL(sm.`dSalaryLz`,0) as dSalaryLz,
+        IFNULL(sm.`dSalaryDz`,0) as dSalaryDz,
+        IFNULL(sm.`dSalaryDp`,0) as dSalaryDp,
+        IFNULL(sm.`dSalarySz`,0) as dSalarySz,
+        IFNULL(ss.`defsalarylz`,0) as defsalarylz,
+        IFNULL(ss.`defsalarydz`,0) as defsalarydz,
+        IFNULL(ss.`defsalarydp`,0) as defsalarydp,
+        IFNULL(ss.`defsalarysz`,0) as defsalarysz
+        from aikang_waiteritem wi
+        left join aikang_serviceitem sm on wi.`sid`=sm.`id`
+        left join aikang_servicesalary ss on wi.`hid`=ss.`hid` and wi.`sid`=ss.`sid`
+        where  wi.company=#{company} and wi.id in
         <foreach collection="ids" item="item" open="(" close=")" separator=",">
         	#{item}
         </foreach>
         order by wi.dayid
     </select>
-    <select id="getCompanyWaiterItemByDayidAndHid" resultMap="BaseResultMap" statementType="PREPARED">
-        select wi.* from ${company}_waiteritem wi 
-        where dayid=#{dayid} and hid=#{hid}
+    <select id="getAllWaiterItemByIds" resultMap="BaseResultMap" statementType="PREPARED">
+        select wi.* from aikang_waiteritem wi 
+        where wi.id in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+        	#{item}
+        </foreach>
         order by wi.dayid
     </select>
+    <select id="getAllNoHidWaiterItemByDateStr" resultMap="BaseResultMap" statementType="PREPARED">
+        select 
+        wi.*,
+        IFNULL(sm.`timelong`,0) as settimelong,
+        IFNULL(sm.`overtime`,0) as setovertime,
+        IFNULL(sm.`price`,0) as setprice,
+        IFNULL(sm.`priveType`,0) as setpriveType,
+        IFNULL(sm.`clocknum`,0) as setclocknumzs,
+        IFNULL(sm.`needpoint`,0) as setneedpoint,
+        IFNULL(sm.`isdiscount`,0) as setisdiscount,
+        IFNULL(sm.`isspecialwork`,0) as sisspecialwork,
+        IFNULL(sm.`dSalaryLz`,0) as dSalaryLz,
+        IFNULL(sm.`dSalaryDz`,0) as dSalaryDz,
+        IFNULL(sm.`dSalaryDp`,0) as dSalaryDp,
+        IFNULL(sm.`dSalarySz`,0) as dSalarySz 
+        from aikang_waiteritem wi
+        left join aikang_serviceitem sm on wi.`sid`=sm.`id`
+        where 
+        wi.hid <![CDATA[ <= ]]> 0 
+        and
+        str_to_date(wi.waittime,'%Y-%m-%d %H:%i:%S')
+		BETWEEN 
+		str_to_date(#{startdate}, '%Y-%m-%d %H:%i:%S') 
+		AND 
+		str_to_date(#{enddate}, '%Y-%m-%d %H:%i:%S')
+        order by wi.company,wi.billnumber,wi.gukeidx
+    </select>
+    
+    <select id="getAllHasPayAndPassFinishYjTime" resultMap="BaseResultMap" statementType="PREPARED">
+        select 
+        wi.*,
+        IFNULL(sm.`timelong`,0) as settimelong,
+        IFNULL(sm.`overtime`,0) as setovertime,
+        IFNULL(sm.`price`,0) as setprice,
+        IFNULL(sm.`priveType`,0) as setpriveType,
+        IFNULL(sm.`clocknum`,0) as setclocknumzs,
+        IFNULL(sm.`needpoint`,0) as setneedpoint,
+        IFNULL(sm.`isdiscount`,0) as setisdiscount,
+        IFNULL(sm.`isspecialwork`,0) as sisspecialwork,
+        IFNULL(sm.`dSalaryLz`,0) as dSalaryLz,
+        IFNULL(sm.`dSalaryDz`,0) as dSalaryDz,
+        IFNULL(sm.`dSalaryDp`,0) as dSalaryDp,
+        IFNULL(sm.`dSalarySz`,0) as dSalarySz,
+        IFNULL(ss.`defsalarylz`,0) as defsalarylz,
+        IFNULL(ss.`defsalarydz`,0) as defsalarydz,
+        IFNULL(ss.`defsalarydp`,0) as defsalarydp,
+        IFNULL(ss.`defsalarysz`,0) as defsalarysz, 
+        IFNULL(rs.`dongpai_type`,0) as dongpaitype,
+        IFNULL(rs.`dianzhong_budongpai`,0) as dianzhongdongpaitype  
+        from aikang_waiteritem wi 
+        left join aikang_serviceitem sm on wi.`sid`=sm.`id`
+        left join aikang_servicesalary ss on wi.`hid`=ss.`hid` and wi.`sid`=ss.`sid`
+        left join aikang_roundsconfig rs on rs.`company`=wi.`company`
+        where 
+        wi.paystate <![CDATA[ >= ]]> #{paystate} 
+        and 
+        wi.workstate <![CDATA[ >= ]]> #{workstate_1} and wi.workstate <![CDATA[ < ]]> #{workstate_2}
+        and 
+        str_to_date(wi.`finishtimeyj`,'%Y-%m-%d %H:%i:%S')
+		<![CDATA[ <= ]]> 
+		str_to_date(#{nowdate}, '%Y-%m-%d %H:%i:%S') 
+        order by wi.company,wi.billnumber,wi.gukeidx
+    </select>
+    
+    <select id="getCompanyWaiterItemByDayidAndHid" resultMap="BaseResultMap" statementType="PREPARED">
+        select 
+        wi.*,
+        IFNULL(sm.`timelong`,0) as settimelong,
+        IFNULL(sm.`overtime`,0) as setovertime,
+        IFNULL(sm.`price`,0) as setprice,
+        IFNULL(sm.`priveType`,0) as setpriveType,
+        IFNULL(sm.`clocknum`,0) as setclocknumzs,
+        IFNULL(sm.`needpoint`,0) as setneedpoint,
+        IFNULL(sm.`isdiscount`,0) as setisdiscount,
+        IFNULL(sm.`isspecialwork`,0) as sisspecialwork,
+        IFNULL(sm.`dSalaryLz`,0) as dSalaryLz,
+        IFNULL(sm.`dSalaryDz`,0) as dSalaryDz,
+        IFNULL(sm.`dSalaryDp`,0) as dSalaryDp,
+        IFNULL(sm.`dSalarySz`,0) as dSalarySz,
+        IFNULL(ss.`defsalarylz`,0) as defsalarylz,
+        IFNULL(ss.`defsalarydz`,0) as defsalarydz,
+        IFNULL(ss.`defsalarydp`,0) as defsalarydp,
+        IFNULL(ss.`defsalarysz`,0) as defsalarysz 
+        from aikang_waiteritem wi 
+        left join aikang_serviceitem sm on wi.`sid`=sm.`id`
+        left join aikang_servicesalary ss on wi.`hid`=ss.`hid` and wi.`sid`=ss.`sid`
+        where wi.dayid=#{dayid} and wi.hid=#{hid} and wi.company=#{company}
+        order by wi.dayid
+    </select>
+    
+    <select id="getCompanyWaiterItemByBillnumber" resultMap="BaseResultMap" statementType="PREPARED">
+        select wi.* from aikang_waiteritem wi 
+        where wi.billnumber=#{billnumber} and wi.company=#{company}
+        order by wi.gukeidx
+    </select>
+    
     <insert id="insertWaiterItem" parameterType="com.aikang.Bean.WaiterItem" useGeneratedKeys="true" keyProperty="record.id" keyColumn="id" statementType="PREPARED">
-    insert into ${company}_waiteritem 
+    insert into aikang_waiteritem 
     (
+    	company,
+    	ordertype,
+    	gukenum,
+    	gukeidx,
+    	billnumber,
+    	serinumber,
     	rmid,
     	rmname,
     	wtype,
+    	wtypek,
+    	wlev,
     	dayid,
     	daynum,
     	sid, 
-    	sname, 
+    	sname,
+    	salarylz,
+    	stimelong, 
     	hid, 
     	hcode, 
       	hname,
@@ -87,70 +271,116 @@
       	worktime, 
       	breakstart, 
       	breaklong, 
-      	finishtime, 
+      	finishtime,
+      	finishtimeyj, 
       	remark, 
       	kid, 
-      	kname, 
+      	kname,
+      	hyid,
+		hyname,
+		hyseriid,
+		hyrmoney, 
       	paystate,
       	paynum, 
       	payid, 
       	checkcode,
       	clocknum,
+      	itembillo,
       	itembill,
       	pricetype,
       	clocknumyf,
       	itembillyf,
       	pricetypeyf,
-      	clocknumyy
+      	clocknumyy,
+      	islast
     )
     values 
     <foreach collection="record" item="WaiterItem" separator=","> 
       (
-      #{WaiterItem.rmid,jdbcType=INTEGER},
-      #{WaiterItem.rmname,jdbcType=VARCHAR},
-      #{WaiterItem.wtype,jdbcType=INTEGER}, 
-      #{WaiterItem.dayid,jdbcType=INTEGER}, 
-      #{WaiterItem.daynum,jdbcType=INTEGER}, 
-      #{WaiterItem.sid,jdbcType=INTEGER}, 
-      #{WaiterItem.sname,jdbcType=VARCHAR}, 
-      #{WaiterItem.hid,jdbcType=INTEGER},
-      #{WaiterItem.hcode,jdbcType=VARCHAR}, 
-      #{WaiterItem.hname,jdbcType=VARCHAR}, 
-      #{WaiterItem.movsdx,jdbcType=INTEGER},
-      #{WaiterItem.workstate,jdbcType=INTEGER}, 
-      #{WaiterItem.changenum,jdbcType=INTEGER}, 
-      #{WaiterItem.changelist,jdbcType=VARCHAR},
-      #{WaiterItem.maketime,jdbcType=VARCHAR}, 
-      #{WaiterItem.waittime,jdbcType=VARCHAR}, 
-      #{WaiterItem.worktime,jdbcType=VARCHAR}, 
-      #{WaiterItem.breakstart,jdbcType=VARCHAR}, 
-      #{WaiterItem.breaklong,jdbcType=INTEGER}, 
-      #{WaiterItem.finishtime,jdbcType=VARCHAR}, 
-      #{WaiterItem.remark,jdbcType=VARCHAR},
-      #{WaiterItem.kid,jdbcType=BIGINT},
-      #{WaiterItem.kname,jdbcType=VARCHAR},
-      #{WaiterItem.paystate,jdbcType=INTEGER},
-      #{WaiterItem.paynum,jdbcType=INTEGER},
-      #{WaiterItem.payid,jdbcType=BIGINT},
-      #{WaiterItem.checkcode,jdbcType=VARCHAR},
-      #{WaiterItem.clocknum,jdbcType=DOUBLE},
-      #{WaiterItem.itembill,jdbcType=DOUBLE},
-      #{WaiterItem.pricetype,jdbcType=VARCHAR},
-      #{WaiterItem.clocknumyf,jdbcType=DOUBLE},
-      #{WaiterItem.itembillyf,jdbcType=DOUBLE},
-      #{WaiterItem.pricetypeyf,jdbcType=VARCHAR},
-      #{WaiterItem.clocknumyy,jdbcType=DOUBLE}
+      IFNULL(#{company,jdbcType=VARCHAR},""),
+      IFNULL(#{WaiterItem.ordertype,jdbcType=INTEGER}, 0),
+      IFNULL(#{WaiterItem.gukenum,jdbcType=INTEGER}, 0),
+      IFNULL(#{WaiterItem.gukeidx,jdbcType=INTEGER}, 0),
+      IFNULL(#{WaiterItem.billnumber,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.serinumber,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.rmid,jdbcType=BIGINT}, 0),
+      IFNULL(#{WaiterItem.rmname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.wtype,jdbcType=INTEGER}, 0),
+      IFNULL(#{WaiterItem.wtypek,jdbcType=INTEGER}, 0),
+      IFNULL(#{WaiterItem.wlev,jdbcType=INTEGER}, 0), 
+      IFNULL(#{WaiterItem.dayid,jdbcType=VARCHAR}, 0), 
+      IFNULL(#{WaiterItem.daynum,jdbcType=INTEGER}, 0), 
+      IFNULL(#{WaiterItem.sid,jdbcType=INTEGER}, 0), 
+      IFNULL(#{WaiterItem.sname,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{WaiterItem.salarylz,jdbcType=DOUBLE}, 0),
+      IFNULL(#{WaiterItem.stimelong,jdbcType=INTEGER}, 0),
+      IFNULL(#{WaiterItem.hid,jdbcType=BIGINT}, 0),
+      IFNULL(#{WaiterItem.hcode,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{WaiterItem.hname,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{WaiterItem.movsdx,jdbcType=INTEGER}, 0),
+      IFNULL(#{WaiterItem.workstate,jdbcType=INTEGER}, 0), 
+      IFNULL(#{WaiterItem.changenum,jdbcType=INTEGER}, 0), 
+      IFNULL(#{WaiterItem.changelist,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.maketime,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{WaiterItem.waittime,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{WaiterItem.worktime,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{WaiterItem.breakstart,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{WaiterItem.breaklong,jdbcType=INTEGER}, 0), 
+      IFNULL(#{WaiterItem.finishtime,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{WaiterItem.finishtimeyj,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.remark,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.kid,jdbcType=BIGINT}, 0),
+      IFNULL(#{WaiterItem.kname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.hyid,jdbcType=BIGINT}, 0),
+      IFNULL(#{WaiterItem.hyname,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.hyseriid,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.hyrmoney,jdbcType=DOUBLE}, 0),
+      IFNULL(#{WaiterItem.paystate,jdbcType=INTEGER}, 0),
+      IFNULL(#{WaiterItem.paynum,jdbcType=INTEGER}, 0),
+      IFNULL(#{WaiterItem.payid,jdbcType=BIGINT}, 0),
+      IFNULL(#{WaiterItem.checkcode,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.clocknum,jdbcType=DOUBLE}, 0),
+      IFNULL(#{WaiterItem.itembillo,jdbcType=DOUBLE}, 0),
+      IFNULL(#{WaiterItem.itembill,jdbcType=DOUBLE}, 0),
+      IFNULL(#{WaiterItem.pricetype,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.clocknumyf,jdbcType=DOUBLE}, 1),
+      IFNULL(#{WaiterItem.itembillyf,jdbcType=DOUBLE}, 0),
+      IFNULL(#{WaiterItem.pricetypeyf,jdbcType=VARCHAR}, ""),
+      IFNULL(#{WaiterItem.clocknumyy,jdbcType=DOUBLE}, 0),
+      IFNULL(#{WaiterItem.islast,jdbcType=INTEGER}, 0)     
       )
      </foreach>
   </insert>
+  <update id="updateAllHasPayAndPassTimeItem" parameterType="com.aikang.Bean.WaiterItem" statementType="PREPARED">
+        update aikang_waiteritem
+        set	
+        workstate = #{workstate_3},
+        finishtime = #{nowdate}
+        where 
+        ordertype <![CDATA[ >= ]]> #{ordertype_1} and ordertype <![CDATA[ < ]]> #{ordertype_2}
+        and
+        paystate <![CDATA[ >= ]]> #{paystate}
+        and 
+        workstate <![CDATA[ >= ]]> #{workstate_1} and workstate <![CDATA[ < ]]> #{workstate_2}
+        and 
+        str_to_date(finishtimeyj,'%Y-%m-%d %H:%i:%S')
+		<![CDATA[ <= ]]> 
+		str_to_date(#{nowdate}, '%Y-%m-%d %H:%i:%S')
+  </update>
+  
   <update id="updateCheckCodeByDayidAndHid" parameterType="com.aikang.Bean.WaiterItem" statementType="PREPARED">
-        update ${company}_waiteritem
+        update aikang_waiteritem
         set	checkcode = #{checkcode}
-        where dayid=#{dayid} and hid=#{hid}
+        where dayid=#{dayid} and hid=#{hid} and company=#{company}
   </update>
   <update id="updateWaiterStateListByIdSelective"  parameterType="java.util.List" statementType="PREPARED">
-      update ${company}_waiteritem
+      update aikang_waiteritem
       <trim prefix="set" suffixOverrides=",">
+      	<trim prefix="upfree = case" suffix="end,">        <!-- upfree   这个字段保证不为空 从而保证语法的完整， 如果所有字段为空 那么set语义就出现不了 -->
+          <foreach collection="record" item="WaiterItem">
+              when id=#{WaiterItem.id} then 1   
+          </foreach>
+        </trim>
         <trim prefix="workstate = case" suffix="end,">
           <foreach collection="record" item="WaiterItem">
             <if test="WaiterItem.workstate != null">
@@ -164,17 +394,162 @@
             id = #{WaiterItem.id}
         </foreach>
   </update>
+  
+
+  <update id="updatePayStateListByIdSelective"  parameterType="java.util.List" statementType="PREPARED">
+      update aikang_waiteritem
+      <trim prefix="set" suffixOverrides=",">
+      	<trim prefix="upfree = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem">
+              when id=#{WaiterItem.id} then 1
+          </foreach>
+        </trim>
+        <trim prefix="billnumber = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem">
+            <if test="WaiterItem.billnumber != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.billnumber}
+            </if>
+           </foreach>
+        </trim>
+        <trim prefix="paystate = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.paystate != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.paystate,jdbcType=INTEGER}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="paynum = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.paynum != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.paynum,jdbcType=INTEGER}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="payid = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.payid != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.payid,jdbcType=BIGINT}
+      		</if>
+      		</foreach>
+        </trim>
+        
+      </trim>
+      where
+        <foreach collection="record" item="WaiterItem" separator="or">
+            id = #{WaiterItem.id}
+        </foreach>
+  </update>
+  
+  <update id="updateListHidByIdsAtSomeCompany"  parameterType="java.util.List" statementType="PREPARED">
+      update aikang_waiteritem
+      <trim prefix="set" suffixOverrides=",">
+      	<trim prefix="upfree = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem">
+              when id=#{WaiterItem.id} then 1
+          </foreach>
+        </trim>
+        <trim prefix="hid = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem">
+            <if test="WaiterItem.hid != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.hid}
+            </if>
+           </foreach>
+        </trim>
+        <trim prefix="hname = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.hname != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.hname}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="hcode = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.hcode != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.hcode}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="workstate = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.workstate != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.workstate}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="itembill = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.itembill != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.itembill}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="hyid = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.hyid != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.hyid}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="hyname = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.hyname != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.hyname}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="hyseriid = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.hyseriid != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.hyseriid}
+      		</if>
+      		</foreach>
+        </trim>
+        <trim prefix="hyrmoney = case" suffix="end,">
+          <foreach collection="record" item="WaiterItem"> 
+      		<if test="WaiterItem.hyrmoney != null">
+              when id=#{WaiterItem.id} then #{WaiterItem.hyrmoney}
+      		</if>
+      		</foreach>
+        </trim>
+      </trim>
+      where
+        <foreach collection="record" item="WaiterItem" separator="or">
+            id = #{WaiterItem.id}
+        </foreach>
+  </update>
+  
   <update id="updateByPrimaryKeySelective" parameterType="com.aikang.Bean.WaiterItem" statementType="PREPARED">
-        update ${company}_waiteritem
-        <set>      
+        update aikang_waiteritem
+        <set>
+        	<if test="record.ordertype != null">
+                ordertype = #{record.ordertype,jdbcType=INTEGER},
+            </if>
+            <if test="record.gukenum != null">
+                gukenum = #{record.gukenum,jdbcType=INTEGER},
+            </if>
+            <if test="record.gukeidx != null">
+                gukeidx = #{record.gukeidx,jdbcType=INTEGER},
+            </if> 
+            <if test="record.billnumber != null">
+                billnumber = #{record.billnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="record.serinumber != null">
+                serinumber = #{record.serinumber,jdbcType=VARCHAR},
+            </if>      
             <if test="record.rmid != null">
-                rmid = #{record.rmid,jdbcType=INTEGER},
+                rmid = #{record.rmid,jdbcType=BIGINT},
             </if>
             <if test="record.rmname != null">
                 rmname = #{record.rmname,jdbcType=VARCHAR},
             </if>
             <if test="record.wtype != null">
                 wtype = #{record.wtype,jdbcType=INTEGER},
+            </if>
+            <if test="record.wtypek != null">
+                wtypek = #{record.wtypek,jdbcType=INTEGER},
+            </if>
+            <if test="record.wlev != null">
+                wlev = #{record.wlev,jdbcType=INTEGER},
             </if>
             <if test="record.dayid != null">
                 dayid = #{record.dayid,jdbcType=INTEGER},
@@ -187,9 +562,15 @@
             </if>
       		<if test="record.sname != null">
                 sname = #{record.sname,jdbcType=VARCHAR},
-            </if> 
+            </if>
+            <if test="record.salarylz != null">
+                salarylz = #{record.salarylz,jdbcType=VARCHAR},
+            </if>  
+            <if test="record.stimelong != null">
+                stimelong = #{record.stimelong,jdbcType=INTEGER},
+            </if>
       		<if test="record.hid != null">
-                hid = #{record.hid,jdbcType=INTEGER},
+                hid = #{record.hid,jdbcType=BIGINT},
             </if>
             <if test="record.hcode != null">
                 hcode = #{record.hcode,jdbcType=INTEGER},
@@ -227,6 +608,9 @@
       		<if test="record.finishtime != null">
                 finishtime = #{record.finishtime,jdbcType=VARCHAR},
             </if> 
+            <if test="record.finishtimeyj != null">
+                finishtimeyj = #{record.finishtimeyj,jdbcType=VARCHAR},
+            </if>
       		<if test="record.remark != null">
                 remark = #{record.remark,jdbcType=VARCHAR},
             </if>
@@ -235,6 +619,18 @@
             </if>
       		<if test="record.kname != null">
                 kname = #{record.kname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.hyid != null">
+                hyid = #{record.hyid,jdbcType=BIGINT},
+            </if>
+            <if test="record.hyname != null">
+                hyname = #{record.hyname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.hyseriid != null">
+                hyseriid = #{record.hyseriid,jdbcType=VARCHAR},
+            </if>
+            <if test="record.hyrmoney != null">
+                hyrmoney = #{record.hyrmoney,jdbcType=VARCHAR},
             </if>
       		<if test="record.paystate != null">
                 paystate = #{record.paystate,jdbcType=INTEGER},
@@ -249,10 +645,13 @@
                 checkcode = #{record.checkcode,jdbcType=VARCHAR},
       		</if>
       		<if test="record.clocknum != null">
-                clocknum = #{record.clocknum,jdbcType=VARCHAR},
+                clocknum = #{record.clocknum,jdbcType=DOUBLE},
+      		</if>
+      		<if test="record.itembillo != null">
+                itembillo = #{record.itembillo,jdbcType=DOUBLE},
       		</if>
       		<if test="record.itembill != null">
-                itembill = #{record.itembill,jdbcType=VARCHAR},
+                itembill = #{record.itembill,jdbcType=DOUBLE},
       		</if>
       		<if test="record.pricetype != null">
                 pricetype = #{record.pricetype,jdbcType=VARCHAR},
@@ -269,14 +668,20 @@
       		<if test="record.clocknumyy != null">
                 clocknumyy = #{record.clocknumyy,jdbcType=DOUBLE},
       		</if>
+      		<if test="record.islast != null">
+                islast = #{record.islast,jdbcType=INTEGER},
+      		</if>
         </set>
-        where id = #{record.id,jdbcType=INTEGER}
+        where id = #{record.id,jdbcType=BIGINT} and company=#{company}
     </update>
   	<delete id="deleteWaiterItemByID">
-    	delete from ${company}_waiteritem where id=#{id}
+    	delete from aikang_waiteritem where id=#{id} and company=#{company}
   	</delete>
+  	<insert id="copyItemToReceiveTableByID">
+  		insert into aikang_waiteritem_rec select * FROM aikang_waiteritem where id=#{id} and company=#{company}
+  	</insert>
   	<delete id="deleteWaiterItemByIds">
-    	delete from ${company}_waiteritem
+    	delete from aikang_waiteritem
     	 where id in
         <foreach collection="ids" item="item" open="(" close=")" separator=",">
         	#{item}

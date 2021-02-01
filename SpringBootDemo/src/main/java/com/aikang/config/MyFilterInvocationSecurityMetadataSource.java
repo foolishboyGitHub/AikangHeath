@@ -13,10 +13,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import java.util.Collection;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.aikang.Bean.PerUrl;
 import com.aikang.Bean.Role;
@@ -32,6 +35,9 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
     protected final Log logger = LogFactory.getLog(getClass());
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
+    	
+    	//这个方法是获取访问当前URL所需要的权限集合  
+    	
     	//admin管理员 特权
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     	Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
@@ -42,13 +48,37 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
         		return SecurityConfig.createList("ROLE_admin");
             }
         }
-
+    	
+    	
     	
     	String requestUrl = ((FilterInvocation) object).getRequestUrl();
-        List<PerUrl> perurls = perurlService.getAllMenusWithRole();      
+    	HttpServletRequest req = ((FilterInvocation) object).getRequest();
+    	StringBuffer requrl = req.getRequestURL();
+		String requri = req.getRequestURI();
+		String reqsp = req.getServletPath();
+		
+		//顾客只能访问伊特特定的目录
+		for (GrantedAuthority authority : authorities) {
+        	
+        	String ur = authority.getAuthority();
+        	if (ur.equals("ROLE_GUKE")) {
+        		//顾客只能访问伊特特定的目录
+        		AntPathRequestMatcher antPathMatcher = new AntPathRequestMatcher("/ShopInfo/**");
+                if (antPathMatcher.matches(req)) {
+                	return SecurityConfig.createList("ROLE_GUKE");
+                }else{
+                	return SecurityConfig.createList("ROLE_NOTHISURLROLE");
+                }
+        		
+            }
+        }
+		
+		//以下是门店管理人员的权限
+        List<PerUrl> perurls = Util.getAllMenusWithRole(perurlService);      
         for (PerUrl perurl : perurls) {
         	String pus = perurl.getUrl();
-            if (antPathMatcher.match(pus, requestUrl)) {
+        	AntPathRequestMatcher antPathMatcher = new AntPathRequestMatcher(pus);
+            if (antPathMatcher.matches(req)) {
                 List<Role> roles = perurl.getRoles();
                 String[] str = new String[roles.size()];
                 for (int i = 0; i < roles.size(); i++) {

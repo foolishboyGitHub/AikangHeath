@@ -1,32 +1,82 @@
 package com.aikang.utils;
 
+import com.aikang.Bean.PerUrl;
 import com.aikang.Bean.RespBean;
+import com.aikang.Bean.ServiceItem;
 import com.aikang.Bean.User;
+import com.aikang.Bean.WaiterItem;
+import com.aikang.mapper.UserMapper;
+import com.aikang.service.PerUrlService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 public class Util {
+	
 	public static int MSG_OK = 200;
 	public static int MSG_ERROR = 500;
 	public static int MSG_LOGOUT = 701;
 	
+	public static Map<String,Authentication> _usrAuthenticationMap = new HashMap<String,Authentication>();
 	
+	public static void removeUsrAuthenticationMap(Authentication authentication){
+		User user = (User) authentication.getPrincipal();
+		Iterator<Entry<String,Authentication>> _iter = _usrAuthenticationMap.entrySet().iterator(); 
+        while (_iter.hasNext()) 
+        { 
+            Map.Entry<String,Authentication> entry = (Map.Entry<String,Authentication>) _iter.next();
+            
+            Authentication au = entry.getValue();
+            User u = (User) au.getPrincipal();
+            String un1 = user.getUsername();
+            String un2 = u.getUsername();
+            long id1 = user.getId();
+            long id2 = u.getId();
+            String cn1 = user.getCompany();
+            String cn2 = u.getCompany();
+            if(un1.equals(un2) && id1==id2 && cn1.equals(cn2)){
+            	_usrAuthenticationMap.remove(entry.getKey());
+            }
+        }
+		
+	}
+	public static void addUsrAuthenticationMap(String token, Authentication authentication){
+		if(!_usrAuthenticationMap.containsKey(token)){
+			_usrAuthenticationMap.put(token, authentication);
+		}
+	}
+	public static Authentication getUsrAuthenticationByToken(String token){
+		if(_usrAuthenticationMap.containsKey(token)){
+			return _usrAuthenticationMap.get(token);
+		}
+		return null;
+	}
 	public static User getCurrentUser() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(!(o instanceof User)){
+			return null;
+		}
+        User user = (User) o;
         return user;
     }
 	
@@ -48,8 +98,13 @@ public class Util {
 		String s = new ObjectMapper().writeValueAsString(rspb);
 		return s;
 	}
-
 	public static String getConpnany_Name() {
+		if(getCurrentUser() == null){
+			return "";
+		}
+		return getCurrentUser().getCompany();
+	}
+	public static String getSession_ConpnanyName() {
 		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
         RequestContextHolder.getRequestAttributes();
 		//从session里面获取对应的值
@@ -66,7 +121,7 @@ public class Util {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			RespBean respBean = RespBean.configRsp(Util.MSG_ERROR, "/NoAuthority_ANONYMOUS", "you need login!");
+			RespBean respBean = RespBean.configRsp(Util.MSG_ERROR, "/NoAuthority_ANONYMOUS", "you need login company null!");
             String s = null;
 			try {
 				s = setResponseToClientString(request, response, respBean);
@@ -146,5 +201,40 @@ public class Util {
 			f.set(obj, null);
 		}	
 	}
-
+	public static List<PerUrl> getAllMenusWithRole(PerUrlService perurlService)
+	{	
+		return perurlService.getAllMenusWithRole();
+	}
+	public static String randomStringOfNumber(int rlen) {
+		  String chars = "0123456789"; //默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1
+		  int maxPos = chars.length();
+		  String pwd = "";
+		  for (int i = 0; i < rlen; i++) {
+		    pwd += chars.charAt((int)Math.floor(Math.random() * maxPos));
+		  }
+		  return pwd;
+		}
+	public static String randomString(int rlen) {
+	  String chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz0123456789"; //默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1
+	  int maxPos = chars.length();
+	  String pwd = "";
+	  for (int i = 0; i < rlen; i++) {
+	    pwd += chars.charAt((int)Math.floor(Math.random() * maxPos));
+	  }
+	  return pwd;
+	}
+	
+	public static  boolean checkObjFieldIsNull(Object obj) throws IllegalAccessException {
+		 
+	    boolean flag = false;
+	    for(Field f : obj.getClass().getDeclaredFields()){
+	        f.setAccessible(true);
+	        if(f.get(obj) == null){
+	            flag = true;
+	            return flag;
+	        }
+	    }
+	    return flag;
+	}
+	
 }

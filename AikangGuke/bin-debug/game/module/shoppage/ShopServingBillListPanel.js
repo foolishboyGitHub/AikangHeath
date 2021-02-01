@@ -19,18 +19,21 @@ var ShopServingBillListPanel = (function (_super) {
         this._AddClick(this._btn_goshop, this._OnClick);
     };
     ShopServingBillListPanel.prototype.OnOpen = function () {
+        EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_GetHistoryShopInfo, this.onServerEventData, this);
+        this.gethistoryinfo();
+    };
+    ShopServingBillListPanel.prototype.OnClose = function () {
+        EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_GetHistoryShopInfo, this.onServerEventData, this);
+    };
+    ;
+    ShopServingBillListPanel.prototype.gethistoryinfo = function () {
         var comanyname = GameGlobal.CurrentCompany;
         var cmpany = {
             name: comanyname
         };
         var rurl = FuncUrlUtil.ShopInfo_GetHistoryShopInfo;
         sproto.sprotoRequest.sendPostRequestJson(JSON.stringify(cmpany), rurl);
-        EventCenter.Instance.addEventListener(FuncUrlUtil.ShopInfo_GetHistoryShopInfo, this.onServerEventData, this);
     };
-    ShopServingBillListPanel.prototype.OnClose = function () {
-        EventCenter.Instance.removeEventListener(FuncUrlUtil.ShopInfo_GetHistoryShopInfo, this.onServerEventData, this);
-    };
-    ;
     ShopServingBillListPanel.prototype.onServerEventData = function (e) {
         var json = e.data;
         switch (json.msg) {
@@ -49,7 +52,7 @@ var ShopServingBillListPanel = (function (_super) {
         var wArr = [];
         wArr.push(knarray[0]);
         var idx = 0;
-        for (var i = 0; i < knarray.length; i++) {
+        for (var i = 1; i < knarray.length; i++) {
             var kenvo = knarray[i];
             if (kenvo.billnumber != wArr[0].billnumber) {
                 mArr.push({ idx: idx, d: wArr });
@@ -61,7 +64,9 @@ var ShopServingBillListPanel = (function (_super) {
                 wArr.push(kenvo);
             }
         }
-        mArr.push({ idx: idx, d: wArr });
+        if (wArr.length > 0) {
+            mArr.push({ idx: idx, d: wArr });
+        }
         var mCollection = new eui.ArrayCollection(mArr);
         this.listorder.dataProvider = mCollection;
         this.listorder.itemRenderer = listHistoryBillInfoItem;
@@ -82,50 +87,69 @@ __reflect(ShopServingBillListPanel.prototype, "ShopServingBillListPanel");
 var listHistoryBillInfoItem = (function (_super) {
     __extends(listHistoryBillInfoItem, _super);
     function listHistoryBillInfoItem() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._point = { x: 0, y: 0 };
+        return _this;
     }
     /////////////////////////////////////////////////////////////////////////////
     listHistoryBillInfoItem.prototype.createChildren = function () {
         _super.prototype.childrenCreated.call(this);
+        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._on_touch_begin, this);
+        this.addEventListener(egret.TouchEvent.TOUCH_END, this._on_touch_end, this);
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, this._on_tap_this, this);
         this._btn_likethisagin.addEventListener(egret.TouchEvent.TOUCH_TAP, this._on_order_again, this);
         this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemove, this);
     };
+    listHistoryBillInfoItem.prototype._on_touch_begin = function (e) {
+        var point = { x: e.stageX, y: e.stageY };
+        this._point = point;
+    };
+    listHistoryBillInfoItem.prototype._on_touch_end = function (e) {
+        var point = { x: e.stageX, y: e.stageY };
+        if (Math.abs(this._point.x - point.x) <= 10 && Math.abs(this._point.y - point.y) <= 10) {
+            ViewManager.ins().open(ShopServingBillDetialPanel, this.data.d);
+        }
+    };
     listHistoryBillInfoItem.prototype._on_order_again = function (event) {
     };
     listHistoryBillInfoItem.prototype._on_tap_this = function (event) {
-        ViewManager.ins().open(ShopServingBillDetialPanel, this.data.d);
     };
     listHistoryBillInfoItem.prototype.dataChanged = function () {
         var knarray = this.data.d;
         if (knarray.length <= 0) {
             return;
         }
+        this.lab_itemstate.text = "已完成";
         var kenvo = knarray[0];
-        this.lab_itemcompany.text = kenvo.company;
-        if (kenvo.workstate == 2) {
-            this.lab_itemstate.text = "进行中...";
-            this.lab_itemstate.textColor = 0x7BB22C;
+        var sn = decodeURI(kenvo.cmcname);
+        if (sn.length > 12) {
+            sn = sn.substr(0, 11) + "...";
         }
-        else {
-            this.lab_itemstate.text = "已完成";
-            this.lab_itemstate.textColor = 0x757575;
+        this.lab_itemcompany.text = sn;
+        var money = 0;
+        for (var i = 0; i < knarray.length; i++) {
+            money += knarray[i].money;
         }
-        var strname = kenvo.sname;
-        var oldstr = strname;
-        for (var i = 1; i < knarray.length; i++) {
-            var k = knarray[i];
-            if (oldstr != k.sname) {
-                strname += "+" + k.sname;
-                oldstr = k.sname;
-            }
-        }
-        if (strname.length > 12) {
-            strname = strname.substring(0, 12) + "...";
-        }
-        this.lab_servname.text = strname;
+        this.lab_itemprice.text = "" + money;
         this.lab_itemnum.text = "共 " + knarray.length + " 项";
-        this.lab_itemprice.text = kenvo.paynum;
+        sproto.sprotoRequest.loadURLImgOnThisDress(kenvo.cpic, function (event) {
+            var loader = event.target;
+            //获取加载到的纹理对象
+            var texture = loader.data;
+            var bitmap = new egret.Bitmap(texture);
+            bitmap.width = this.group_companypic.width;
+            bitmap.height = this.group_companypic.height;
+            this.group_companypic.addChild(bitmap);
+        }, this);
+        var mArr = [];
+        for (var i = 0; i < knarray.length; i++) {
+            var kenvo_1 = knarray[i];
+            mArr.push({ idx: i, d: kenvo_1 });
+        }
+        var mCollection = new eui.ArrayCollection(mArr);
+        this.listorder.dataProvider = mCollection;
+        this.listorder.itemRenderer = listHistoryBillInfoItemChild;
+        this.listorder.validateNow();
     };
     listHistoryBillInfoItem.prototype.doSomeChange = function () {
     };
@@ -137,4 +161,41 @@ var listHistoryBillInfoItem = (function (_super) {
     return listHistoryBillInfoItem;
 }(eui.ItemRenderer));
 __reflect(listHistoryBillInfoItem.prototype, "listHistoryBillInfoItem");
+var listHistoryBillInfoItemChild = (function (_super) {
+    __extends(listHistoryBillInfoItemChild, _super);
+    function listHistoryBillInfoItemChild() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    /////////////////////////////////////////////////////////////////////////////
+    listHistoryBillInfoItemChild.prototype.createChildren = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemove, this);
+    };
+    listHistoryBillInfoItemChild.prototype._on_order_again = function (event) {
+    };
+    listHistoryBillInfoItemChild.prototype.dataChanged = function () {
+        var kenvo = this.data.d;
+        var sn = kenvo.sname;
+        if (sn.length > 7) {
+            sn = sn.substr(0, 6) + "...";
+        }
+        this.lab_name.text = sn;
+        sproto.sprotoRequest.loadURLImgOnThisDress(kenvo.spic, function (event) {
+            var loader = event.target;
+            //获取加载到的纹理对象
+            var texture = loader.data;
+            var bitmap = new egret.Bitmap(texture);
+            bitmap.width = this.group_img.width;
+            bitmap.height = this.group_img.height;
+            this.group_img.addChild(bitmap);
+        }, this);
+    };
+    listHistoryBillInfoItemChild.prototype.doSomeChange = function () {
+    };
+    listHistoryBillInfoItemChild.prototype.onRemove = function () {
+        this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemove, this);
+    };
+    return listHistoryBillInfoItemChild;
+}(eui.ItemRenderer));
+__reflect(listHistoryBillInfoItemChild.prototype, "listHistoryBillInfoItemChild");
 //# sourceMappingURL=ShopServingBillListPanel.js.map

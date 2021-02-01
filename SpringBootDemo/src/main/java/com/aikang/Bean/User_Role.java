@@ -2,25 +2,25 @@ package com.aikang.Bean;
 
 public class User_Role {
 
-	private Integer id;
+	private Long id;
 
-    private Integer hrid;
+    private Long hrid;
 
     private Integer rid;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getHrid() {
+    public Long getHrid() {
         return hrid;
     }
 
-    public void setHrid(Integer hrid) {
+    public void setHrid(Long hrid) {
         this.hrid = hrid;
     }
 

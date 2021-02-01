@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aikang.mapper.SpeTimesecMapper" >
+  <resultMap id="BaseResultMap" type="com.aikang.Bean.SpeTimesec" >
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="company" property="company" jdbcType="VARCHAR"/>
+    <result column="type" property="type" jdbcType="INTEGER"/>
+    <result column="name" property="name" jdbcType="VARCHAR"/>
+    <result column="start" property="start" jdbcType="VARCHAR"/>
+    <result column="end" property="end" jdbcType="VARCHAR"/>
+    <result column="mark" property="mark" jdbcType="VARCHAR"/>
+    <result column="reset" property="reset" jdbcType="INTEGER"/>
+  </resultMap>
+  
+  <select id="getAllSpetimesecs" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from aikang_spetimesec where company=#{company}
+    </select>
+   <select id="getAllTypeSpetimesecs" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from aikang_spetimesec where type =#{type} and company=#{company}
+    </select>
+    <select id="getAllTypeSpetimesecAtSometime" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from aikang_spetimesec 
+        where  
+        (
+	        (
+		        str_to_date(start,'%Y-%m-%d %H:%i:%S')
+				<![CDATA[ <= ]]> 
+				str_to_date(#{nowdate1}, '%Y-%m-%d %H:%i:%S')
+				and
+				str_to_date(end,'%Y-%m-%d %H:%i:%S')
+				<![CDATA[ > ]]> 
+				str_to_date(#{nowdate1}, '%Y-%m-%d %H:%i:%S')
+			) 
+			or 
+			(
+				str_to_date(start,'%Y-%m-%d %H:%i:%S')
+				<![CDATA[ <= ]]> 
+				str_to_date(#{nowdate2}, '%Y-%m-%d %H:%i:%S')
+				and
+				str_to_date(end,'%Y-%m-%d %H:%i:%S')
+				<![CDATA[ > ]]> 
+				str_to_date(#{nowdate2}, '%Y-%m-%d %H:%i:%S')
+			)
+		)
+		and
+		type =#{type} and company=#{company}
+    </select>
+    
+    <select id="getAllTypeSpetimesecAtSometimeInCompanylist" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from aikang_spetimesec 
+        where  
+        (
+	        (
+		        str_to_date(start,'%Y-%m-%d %H:%i:%S')
+				<![CDATA[ <= ]]> 
+				str_to_date(#{nowdate1}, '%Y-%m-%d %H:%i:%S')
+				and
+				str_to_date(end,'%Y-%m-%d %H:%i:%S')
+				<![CDATA[ > ]]> 
+				str_to_date(#{nowdate1}, '%Y-%m-%d %H:%i:%S')
+			) 
+			or 
+			(
+				str_to_date(start,'%Y-%m-%d %H:%i:%S')
+				<![CDATA[ <= ]]> 
+				str_to_date(#{nowdate2}, '%Y-%m-%d %H:%i:%S')
+				and
+				str_to_date(end,'%Y-%m-%d %H:%i:%S')
+				<![CDATA[ > ]]> 
+				str_to_date(#{nowdate2}, '%Y-%m-%d %H:%i:%S')
+			)
+		)
+		and
+		type =#{type} 
+		and company in
+        <foreach collection="companylist" item="item" open="(" close=")" separator=",">
+        	#{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+  <select id="getAllSpetimesecByID" resultMap="BaseResultMap" statementType="PREPARED">
+        select * from aikang_spetimesec where id=#{id} and company=#{company}
+    </select>
+  <insert id="insertSpeTimesec" parameterType="com.aikang.Bean.SpeTimesec" statementType="PREPARED">
+	   <selectKey keyProperty="record.id" order="AFTER" resultType="java.lang.Long">
+	       select LAST_INSERT_ID()
+	   </selectKey>
+    insert into aikang_spetimesec 
+    (
+    	company,
+	    type, 
+	    name, 
+	    start, 
+	    end,
+	    mark,
+	    reset
+    )
+    values 
+    (
+      IFNULL(#{company,jdbcType=VARCHAR}, ""),  
+      IFNULL(#{record.type,jdbcType=INTEGER}, 0), 
+      IFNULL(#{record.name,jdbcType=VARCHAR}, ""), 
+      IFNULL(#{record.start,jdbcType=VARCHAR}, "2000-01-01 00:00:00"), 
+      IFNULL(#{record.end,jdbcType=VARCHAR}, "2000-01-01 00:00:01"), 
+      IFNULL(#{record.mark,jdbcType=VARCHAR}, ""),
+      IFNULL(#{record.reset,jdbcType=INTEGER}, 0) 
+    )
+  </insert>
+  <update id="updateSpeTimesecByIDSelective" parameterType="com.aikang.Bean.RoundsConfig" statementType="PREPARED">
+        update aikang_spetimesec
+        <set>
+            <if test="record.type != null">
+                type = #{record.type,jdbcType=INTEGER},
+            </if>
+            <if test="record.name != null">
+                name = #{record.name,jdbcType=VARCHAR},
+            </if>
+            <if test="record.start != null">
+                start = #{record.start,jdbcType=VARCHAR},
+            </if>
+            <if test="record.end != null">
+                end = #{record.end,jdbcType=VARCHAR},
+            </if>
+            <if test="record.mark != null">
+                mark = #{record.mark,jdbcType=VARCHAR},
+            </if>
+            <if test="record.reset != null">
+                reset = #{record.reset,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{record.id} and company=#{company}
+    </update>
+    <delete id="delSpeTimesec">
+    	delete from aikang_spetimesec where id=#{id} and company=#{company}
+  	</delete>
+</mapper>

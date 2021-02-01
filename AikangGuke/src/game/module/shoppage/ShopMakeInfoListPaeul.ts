@@ -40,6 +40,11 @@ class ShopMakeInfoListPaeul   extends BaseEuiView {
 			case FuncUrlUtil.ShopInfo_DelShopItem:			
 				ShopPageManage.ins().data_ShopMakeList = json.obj;
 				this.setShopInfoList();
+				EventCenter.Instance.dispatchEvent(new DataTransEvent(DataTransEvent.Event_ShopInfo_MakeShop_BotHit, null));
+				let knarray: Array<any> = json.obj;
+				if(knarray.length <= 0){
+					this._on_hide();
+				}
 			break; 
 			 
 		}
@@ -186,6 +191,10 @@ class listShopMakeInfoItem extends eui.ItemRenderer {
         let mCollection: eui.ArrayCollection = new eui.ArrayCollection(mArr);
         this.listShopGukeIdx.dataProvider = mCollection;
         this.listShopGukeIdx.itemRenderer = listGukeIdxItem;
+		this.setRectSize();
+	}
+	protected setRectSize(){
+		let knarray: Array<any> = this.data.d;
 		this.rect_back3.visible = false;
 		if(knarray.length <= 0){
 			this.height = 160;
@@ -196,7 +205,7 @@ class listShopMakeInfoItem extends eui.ItemRenderer {
 		}
 		this.group_addNew.y = this.listShopGukeIdx.y + this.listShopGukeIdx.height+20;
 		
-		if(ShopPageManage.ins()._selGukeIdx == data.idx){
+		if(ShopPageManage.ins()._selGukeIdx == this.data.idx){
 			this._radio_sevidx.selected = true;
 			this.rect_back1.strokeColor = 0xE8B610;
 			this.rect_back1.strokeWeight = 5;
@@ -212,7 +221,8 @@ class listShopMakeInfoItem extends eui.ItemRenderer {
 		this.rect_back2.height = this.rect_back1.height - 60;
 	}
     public doSomeChange() {
-		this.setData();
+		// this.setData();
+		this.setRectSize();
 		for (var i = 0; i < this.listShopGukeIdx.$indexToRenderer.length; i++) {
 			if(!this.listShopGukeIdx.$indexToRenderer[i])
 				continue;
@@ -231,7 +241,7 @@ class listGukeIdxItem extends eui.ItemRenderer {
     /////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////////
-	protected pic_item: eui.Image;
+	protected group_img: eui.Group;
 	protected lab_itemname:eui.Label;
 	protected lab_itemtime:eui.Label;
 	protected lab_itemprice:eui.Label;
@@ -296,6 +306,19 @@ class listGukeIdxItem extends eui.ItemRenderer {
 		if(data.idx >= data.allnum -1){
 			this._btn_del.visible = true;//按顺序删除
 		}
+		let strpic:string = this.data.d.headpic;
+		let strl = strpic.split(".");
+		let minpic = strl[0]+"_min."+strl[1];
+		sproto.sprotoRequest.loadURLImgOnThisDress(strpic, function(event:egret.Event){
+			var loader:egret.URLLoader = <egret.URLLoader>event.target;
+			//获取加载到的纹理对象
+			var texture:egret.Texture = <egret.Texture>loader.data;
+			let bitmap = new egret.Bitmap(texture);
+			bitmap.width= this.group_img.width;
+			bitmap.height = this.group_img.height;
+			this.group_img.addChild(bitmap);
+		},
+		this);
 	}
     public doSomeChange() {
 		

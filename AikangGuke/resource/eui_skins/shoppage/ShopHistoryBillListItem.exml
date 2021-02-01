@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="ShopHistoryBillListItem" width="710" height="280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
-    <e:Rect width="100%" height="100%" fillColor="0xffffff" ellipseWidth="30" ellipseHeight="30"/>
+<e:Skin class="ShopHistoryBillListItem" width="710" height="320" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Rect width="100%" height="100%" ellipseWidth="30" ellipseHeight="30" fillColor="0xffffff"/>
     <e:Group width="100%" height="100%">
-        <e:Label id="lab_itemcompany"  y="19" size="32" anchorOffsetX="0" width="424" stroke="0.2" strokeColor="0x000000" text="爱康推拿（江南西...  " fontFamily="SimHei" textAlign="left" textColor="0x000000" x="50"/>
-        <e:Label id="lab_itemcoco"  y="19" size="32" anchorOffsetX="0" width="26" stroke="0.2" strokeColor="0x000000" text="&gt;" fontFamily="SimHei" textAlign="left" x="518" textColor="0x757575"/>
+        <e:Group id="group_companypic" width="80" height="64" x="35" y="13"/>
+			<e:Rect width="90" height="72" x="30" y="8" ellipseWidth="20" ellipseHeight="20" fillAlpha="0" strokeWeight="8" strokeColor="0xffffff"/>
+        <e:Label id="lab_itemcompany"  y="21" size="26" anchorOffsetX="0" width="338" stroke="0.2" strokeColor="0x000000" text="爱康推拿（江南西.）" fontFamily="SimHei" textAlign="left" textColor="0x000000" x="129" height="26"/>
+        <e:Label id="lab_itemcoco"  y="19" size="32" anchorOffsetX="0" width="26" stroke="0.2" strokeColor="0x000000" text="&gt;" fontFamily="SimHei" textAlign="left" x="502" textColor="0x757575"/>
         <e:Label id="lab_itemstate"  y="21" size="26" anchorOffsetX="0" width="103" stroke="0.2" strokeColor="0x000000" text="进行中" fontFamily="Tahoma" textAlign="left" x="573" textColor="0x757575"/>
-        <e:Label id="lab_itembilldis"  y="50" size="20" anchorOffsetX="0" width="300" stroke="0.2" strokeColor="0x000000" text="" fontFamily="Tahoma" textAlign="left" x="50" textColor="0xc13838"/>
-        <e:Group y="90" width="100%" height="90">
-            <e:Image id="pic_item" anchorOffsetX="0" width="120" anchorOffsetY="0" height="88" x="50" source="" y="0"/>
-            <e:Label id="lab_servname"  size="24" anchorOffsetX="0" width="199" stroke="0.2" strokeColor="0x000000" text="中式古法沐足+精油推背" fontFamily="Tahoma" textAlign="left" x="200" textColor="0x3d3d3d" verticalCenter="0"/>
-            <e:Label id="lab_itemprice"  size="32" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="28" text="¥86 " fontFamily="Tahoma" textAlign="center" x="560" y="15" verticalAlign="middle" textColor="0x141414"/>
-            <e:Label id="lab_itemnum"  size="24" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="28" text="共3项" fontFamily="Tahoma" textAlign="center" x="560" y="49" verticalAlign="middle" textColor="0x727171"/>
+        <e:Group y="90" width="100%" height="140">
+            <e:Scroller id="scrollMy" bounces="false" skinName="scrollHasNoBar" x="30" y="0" width="680" anchorOffsetY="0" height="100%">
+            <e:List id="listorder" itemRendererSkinName="ShopHistoryBillListItemChild">
+                <e:ArrayCollection>
+                    <e:Array>
+                    </e:Array>
+                </e:ArrayCollection>
+							<e:layout>
+								<e:HorizontalLayout/>
+							</e:layout>
+                </e:List>
+            </e:Scroller>
         </e:Group>
-        <e:Button id="_btn_likethisagin" x="543" y="200" label="再来一单" skinName="btnShopGiveThisAgin" width="120" height="40"/>
+        <e:Group y="90" width="130" height="140" x="584">
+            <e:Rect ellipseWidth="10" ellipseHeight="10" fillColor="0xf7f7f7" fillAlpha="0.9" width="100%" height="100%"/>
+            <e:Label id="lab_itemprice"  size="32" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="28" text="¥86 " fontFamily="Tahoma" textAlign="center" x="0" y="33" verticalAlign="middle" textColor="0x141414"/>
+            <e:Label id="lab_itemnum"  size="24" anchorOffsetX="0" width="120" stroke="0.2" strokeColor="0x000000" height="28" text="共3项" fontFamily="Tahoma" textAlign="center" x="0" y="86" verticalAlign="middle" textColor="0x727171"/>
+        </e:Group>
+        <e:Button id="_btn_likethisagin" x="556" y="262" label="再来一单" skinName="btnShopGiveThisAgin" width="120" height="40"/>
     </e:Group>
 </e:Skin>

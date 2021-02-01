@@ -6,7 +6,7 @@
         <e:Rect id="rect_back3" y="60" width="100%" fillColor="0xffffff" strokeColor="0x424242" horizontalCenter="0"/>
         <e:RadioButton id="_radio_sevidx"  x="18" y="10" label="服务我自己" anchorOffsetX="0" skinName="RadioShopSel02"/>
         <e:Label id="lab_waitestate" textAlign="left" verticalAlign="middle" 
-            x="296"  size="20" stroke="0.5" strokeColor="0x000000" text="等待中  技师全忙" width="358" y="22" anchorOffsetX="0" textColor="0xd83457"/>
+            x="296"  size="20" stroke="0.5" strokeColor="0x000000" text="" width="358" y="22" anchorOffsetX="0" textColor="0xd83457"/>
         
         <e:List id="listShopGukeIdx" itemRendererSkinName="ShopMakeOrderItem" x="5" y="60">
             <e:ArrayCollection>

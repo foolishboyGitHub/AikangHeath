@@ -20,9 +20,9 @@ public interface PerUrlMapper {
 
     int updateByPrimaryKey(PerUrl record);
 
-    List<PerUrl> getMenusByHrId(@Param("hrid") Integer hrid, @Param("company") String company);
+    List<PerUrl> getMenusByHrId(@Param("hrid") Long hrid, @Param("company") String company);
     
-    List<PerUrl> getMenusByHrId3(@Param("hrid") Integer hrid, @Param("company") String company);
+    List<PerUrl> getMenusByHrId3(@Param("hrid") Long hrid, @Param("company") String company);
 
     List<PerUrl> getAllMenusWithRole(@Param("company") String company);
     

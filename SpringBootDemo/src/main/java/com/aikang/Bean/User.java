@@ -15,8 +15,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 public class User implements UserDetails {
-	private Integer id;
-
+	private Long id;
+	
+	private String company;
+	
 	private String memid;
 	
 	private String socialnumber;
@@ -24,6 +26,8 @@ public class User implements UserDetails {
     private String name;
     
     private String sex;
+    
+    private Integer level;
     
     private String servicecode;
 
@@ -38,13 +42,43 @@ public class User implements UserDetails {
     private String username;
 
     private String password;
+    
+    private String passwordtest;
 
     private String userface;
 
     private String remark;
     
-    private Integer cloudid;
+    private Long cloudid;
     
+    
+    //登录相关的记录
+    /**
+     * 如果是商家登录 则临时记录登录用的公司名;
+     * 如果是顾客登录则记录 顾客所在门店公司名;
+     * */
+     
+    private String companytest; 
+    
+    /**
+     * 客户端类型
+     * manager_wnd = 商家后台;
+     * wxweb = 微信顾客登录;
+     * */
+     
+    private String wndtype;
+    
+    
+    private String wxsessioncode;
+    
+    private String wxopenid;
+    
+    private String wxsessiontempkey;
+    
+    /**
+     * 手机是否验证
+     */
+    private Integer isteled;
     
     private List<Role> roles;
 
@@ -56,11 +90,11 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -99,7 +133,8 @@ public class User implements UserDetails {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
-
+    
+ 
     public String getUsername() {
         return username;
     }
@@ -121,7 +156,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return enabled == null ? false : enabled;
     }
 
     public void setUsername(String username) {
@@ -194,12 +229,85 @@ public class User implements UserDetails {
 		this.servicecode = servicecode;
 	}
 
-	public Integer getCloudid() {
+	public Long getCloudid() {
 		return cloudid;
 	}
 
-	public void setCloudid(Integer cloudid) {
+	public void setCloudid(Long cloudid) {
 		this.cloudid = cloudid;
 	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public String getPasswordtest() {
+		return passwordtest;
+	}
+
+	public void setPasswordtest(String passwordtest) {
+		this.passwordtest = passwordtest;
+	}
+
+	public String getCompanytest() {
+		return companytest;
+	}
+
+	public void setCompanytest(String companytest) {
+		this.companytest = companytest;
+	}
+
+	public String getWxsessioncode() {
+		return wxsessioncode;
+	}
+
+	public void setWxsessioncode(String wxsessioncode) {
+		this.wxsessioncode = wxsessioncode;
+	}
+
+	public String getWxopenid() {
+		return wxopenid;
+	}
+
+	public void setWxopenid(String wxopenid) {
+		this.wxopenid = wxopenid;
+	}
+
+	public String getWxsessiontempkey() {
+		return wxsessiontempkey;
+	}
+
+	public void setWxsessiontempkey(String wxsessiontempkey) {
+		this.wxsessiontempkey = wxsessiontempkey;
+	}
+
+	public String getWndtype() {
+		return wndtype;
+	}
+
+	public void setWndtype(String wndtype) {
+		this.wndtype = wndtype;
+	}
+
+	public Integer getIsteled() {
+		return isteled;
+	}
+
+	public void setIsteled(Integer isteled) {
+		this.isteled = isteled;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+
 
 }
